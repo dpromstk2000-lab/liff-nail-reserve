@@ -1,9 +1,9 @@
-<!doctype html>　
-<html lang="ja">
+<!doctype html>
+<html lang="ja">a
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>DPRO NAIL LINE 店頭iPad画面 STEP NAIL-8</title>
+  <title>DPRO NAIL LINE 店頭iPad画面 STEP NAIL-10</title>
   <style>
     :root{
       --bg:#fbf7f4;--panel:#ffffff;--ink:#27211e;--muted:#786b64;--line:#eaded6;
@@ -28,7 +28,7 @@
         <div style="display:flex;gap:14px;align-items:flex-start">
           <div class="mark">N</div>
           <div>
-            <div class="badge">STEP NAIL-8 / iPad</div>
+            <div class="badge">STEP NAIL-10 / iPad</div>
             <h1>DPRO NAIL LINE 店頭iPad画面</h1>
             <p class="lead">電話予約・店頭予約・Instagram DM予約を、施術中や会計時にすぐ登録するための画面です。PC管理画面よりも、現場で触る操作だけに絞っています。</p>
           </div>
@@ -222,11 +222,13 @@
       }).join("");
       wrap.innerHTML=html||flat.map(renderReservation).join("");
     }
+    function formatEndTimeLabel(r){const end=(r.end_time||"").slice(0,5); return end?`${end}まで確保`:"終了未定";}
+    function formatReservationMinutes(r){const base=Number(r.base_minutes||0); const option=Number(r.option_minutes||0); const buffer=Number(r.buffer_minutes||0); const treatment=base+option; if(treatment>0&&buffer>0)return `施術目安${treatment}分＋片付け${buffer}分`; if(treatment>0)return `施術目安${treatment}分`; return `${Number(r.total_minutes||0)}分`;}
     function renderReservation(r){
       const options=Array.isArray(r.option_names)?r.option_names:[];
       const line=r.line_user_id?'<span class="badge line">LINE連携</span>':'<span class="badge no">LINE未連携</span>';
       const staff=r.is_staff_requested?'<span class="badge staff">指名あり</span>':'<span class="badge">指名なし</span>';
-      return `<article class="reservation-card"><div class="time-box"><b>${esc((r.start_time||"").slice(0,5))}</b><span>${esc((r.end_time||"").slice(0,5))}まで</span></div><div><div class="card-title">${esc(r.customer_name||"お客様")}</div><div class="card-sub">${esc(r.service_name||"")}　${Number(r.total_minutes||0)}分　${esc(r.staff_name||"")}</div><div class="chips"><span class="badge">${esc(statusLabel(r.status))}</span><span class="badge">${esc(sourceLabel(r.source))}</span>${staff}${line}</div>${options.length?`<div class="memo">オプション：${esc(options.join("、"))}</div>`:""}${r.design_note?`<div class="memo">希望デザイン：${esc(r.design_note)}</div>`:""}</div></article>`;
+      return `<article class="reservation-card"><div class="time-box"><b>${esc((r.start_time||"").slice(0,5))}</b><span>${esc(formatEndTimeLabel(r))}</span></div><div><div class="card-title">${esc(r.customer_name||"お客様")}</div><div class="card-sub">${esc(r.service_name||"")}　${esc(formatReservationMinutes(r))}　${esc(r.staff_name||"")}</div><div class="chips"><span class="badge">${esc(statusLabel(r.status))}</span><span class="badge">${esc(sourceLabel(r.source))}</span>${staff}${line}</div>${options.length?`<div class="memo">オプション：${esc(options.join("、"))}</div>`:""}${r.design_note?`<div class="memo">希望デザイン：${esc(r.design_note)}</div>`:""}</div></article>`;
     }
 
     function renderTasks(tasks){
@@ -235,7 +237,7 @@
       wrap.innerHTML=tasks.map(t=>{
         if(t.type==="line_message"){
           const m=t.line_message||{}; if(m.id) state.messages.set(String(m.id),m);
-          return `<article class="task-card"><div class="card-top"><div><div class="card-title">${esc(t.title||"LINE文面")}</div><div class="card-sub">${esc(t.customer_name||"お客様")}</div></div><span class="badge line">文面</span></div><div class="card-actions"><button class="btn ok small" onclick="openMessageById('${esc(m.id||"")}')">文面を確認・コピー</button></div></article>`;
+          return `<article class="task-card"><div class="card-top"><div><div class="card-title">${esc(t.title||"LINE文面")}</div><div class="card-sub">${esc(t.customer_name||"お客様")}</div></div><span class="badge line">文面</span></div>${t.memo?`<div class="memo">${esc(t.memo)}</div>`:""}<div class="card-actions"><button class="btn ok small" onclick="openMessageById('${esc(m.id||"")}')">文面を確認・コピー</button></div></article>`;
         }
         return `<article class="task-card"><div class="card-top"><div><div class="card-title">${esc(t.title||"フォロー")}</div><div class="card-sub">${esc(t.customer_name||"お客様")}　期限：${esc(t.due_date||"")}</div></div><span class="badge warn">フォロー</span></div>${t.memo?`<div class="memo">${esc(t.memo)}</div>`:""}<div class="card-actions"><button class="btn secondary small" onclick='copyText(${JSON.stringify(t.memo||t.title||"")})'>メモをコピー</button><button class="btn ok small" onclick="markFollowupDone('${esc(t.id)}')">対応済み</button></div></article>`;
       }).join("");
