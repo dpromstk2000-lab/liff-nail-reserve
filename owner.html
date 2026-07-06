@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>DPRO NAIL LINE｜オーナー管理画面</title>
+  <title>DPRO NAIL LINE｜オーナー管理画面 STEP NAIL-11A</title>
   <meta name="description" content="DPRO NAIL LINE ネイルサロン向けPC管理画面" />
   <style>
     :root{
@@ -203,6 +203,17 @@
     .danger-note{background:#fff3f1;border:1px solid #f1d6d0;color:#8b433b;border-radius:16px;padding:10px 12px;font-size:12px;line-height:1.6;margin-top:10px}
     .staff-toggle-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
     .tiny-label{font-size:11px;color:var(--muted);font-weight:900;letter-spacing:.05em;text-transform:uppercase;margin:10px 0 6px}
+
+    .settings-summary{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .setting-main{min-width:0;flex:1}
+    .setting-main h4{margin:0 0 5px;font-size:16px}
+    .setting-main small{display:block;color:var(--muted);font-size:12px;line-height:1.5}
+    .setting-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .setting-chip{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;background:#fff;padding:5px 8px;font-size:12px;font-weight:900;color:#6c5b51}
+    .setting-detail{margin-top:12px;border-top:1px dashed var(--line);padding-top:12px}
+    .settings-count-note{background:#fff;border:1px dashed #ddcfc3;border-radius:16px;padding:10px 12px;color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:10px}
+    .setting-card.compact{background:#fff}
+    .setting-status{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
     .toast{
       position:fixed;right:16px;bottom:16px;z-index:80;background:#24312d;color:#fff;border-radius:18px;padding:13px 16px;box-shadow:0 18px 48px rgba(0,0,0,.22);display:none;max-width:min(420px,calc(100vw - 32px));line-height:1.5
     }
@@ -223,7 +234,7 @@
         <div class="brand-row">
           <div class="logo">N</div>
           <div>
-            <div class="kicker">STEP NAIL-11 / OWNER DASHBOARD</div>
+            <div class="kicker">STEP NAIL-11A / OWNER DASHBOARD</div>
             <h1>DPRO NAIL LINE</h1>
           </div>
         </div>
@@ -494,13 +505,13 @@
       <div class="modal-head">
         <div>
           <h2>店舗設定・メニュー簡単設定</h2>
-          <p>日常変更はオーナー側で変更できます。予約枠に影響する時間は、安全プリセットから選ぶ形です。</p>
+          <p>日常変更はオーナー側で変更できます。メニュー・オプション・スタッフは一覧で確認し、必要な項目だけ開いて編集します。</p>
         </div>
         <button class="btn secondary small" onclick="closeModal('settingsModal')">閉じる</button>
       </div>
       <div class="modal-body">
         <div class="safe-note">
-          初期メニュー構成は岩口さん側で設定し、店舗側では「営業時間・表示/非表示・価格・説明・安全な時間プリセット・スタッフON/OFF」を変更できる想定です。既存予約は勝手に書き換えず、今後の空き時間判定に反映します。
+          初期メニュー構成は岩口さん側で設定し、店舗側では「営業時間・表示/非表示・価格・説明・安全な時間プリセット・スタッフON/OFF」を変更できる想定です。メニューが増えても見やすいよう、一覧から必要な項目だけ開いて編集します。
         </div>
 
         <div class="settings-block">
@@ -567,19 +578,19 @@
 
         <div class="settings-block">
           <h3>2. メニュー簡単設定</h3>
-          <p>価格・説明・表示ON/OFF・施術時間プリセット・対応スタッフを変更できます。時間は自由入力ではなく安全プリセットです。</p>
+          <p>一覧で全メニューを確認し、必要なメニューだけ「編集」を開いて変更します。時間は自由入力ではなく安全プリセットです。</p>
           <div id="easyServiceList" class="settings-list"></div>
         </div>
 
         <div class="settings-block">
           <h3>3. オプション簡単設定</h3>
-          <p>付け替えオフ、長さ出し、亀裂補修などの表示・価格・追加時間を変更できます。</p>
+          <p>一覧で確認し、必要なオプションだけ編集します。追加時間も安全プリセットです。</p>
           <div id="easyOptionList" class="settings-list"></div>
         </div>
 
         <div class="settings-block">
           <h3>4. スタッフ簡単設定</h3>
-          <p>スタッフの表示名、指名受付、予約受付ON/OFFを変更できます。</p>
+          <p>スタッフを一覧で確認し、予約受付・指名受付・紹介文を必要な人だけ編集します。</p>
           <div id="easyStaffList" class="settings-list"></div>
         </div>
 
@@ -597,7 +608,7 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    const STEP = "STEP NAIL-11";
+    const STEP = "STEP NAIL-11A";
     const API_BASE = "https://dpro-nail-line-api.dpromstk2000.workers.dev";
     const SHOP_CODE = "nail_demo";
     let ADMIN_CODE = localStorage.getItem("dpro_nail_admin_code") || "1234";
@@ -1242,8 +1253,11 @@
       const wrap = $("easyServiceList");
       if(!wrap) return;
       if(!state.services.length){ wrap.innerHTML = `<div class="empty">メニューがありません。</div>`; return; }
-      wrap.innerHTML = state.services.map((s, i) => {
+      const activeCount = state.services.filter(s => s.is_active !== false).length;
+      wrap.innerHTML = `<div class="settings-count-note">メニュー ${state.services.length}件 / 表示中 ${activeCount}件。必要なメニューだけ「編集」を開いて変更します。</div>` + state.services.map((s, i) => {
         const active = s.is_active !== false;
+        const detailId = `svc_detail_${i}`;
+        const staffNames = state.staff.filter(st => serviceStaffChecked(s, st.id)).map(st => st.display_name || st.staff_name).join("、") || "未設定";
         const staffChecks = state.staff.map(st => `
           <label class="check-card">
             <input type="checkbox" name="svc_staff_${i}" value="${esc(st.id)}" ${serviceStaffChecked(s, st.id) ? "checked" : ""} />
@@ -1251,26 +1265,39 @@
           </label>
         `).join("");
         return `
-          <div class="setting-card">
-            <div class="setting-card-head">
-              <div><h4>${esc(s.service_name)}</h4><small>${esc(s.service_code)} / 現在 ${Number(s.base_minutes||0)}分 + 片付け${Number(s.buffer_minutes||0)}分 / ${yen(s.base_price||0)}</small></div>
-              <span class="badge ${active ? "normal" : "high"}">${active ? "表示中" : "非表示"}</span>
+          <div class="setting-card compact">
+            <div class="settings-summary">
+              <div class="setting-main">
+                <h4>${esc(s.service_name)}</h4>
+                <small>${esc(s.description || "説明未設定")}</small>
+                <div class="setting-meta">
+                  <span class="setting-chip">${Number(s.base_minutes||0)}分 + 片付け${Number(s.buffer_minutes||0)}分</span>
+                  <span class="setting-chip">${yen(s.base_price||0)}</span>
+                  <span class="setting-chip">対応：${esc(staffNames)}</span>
+                </div>
+              </div>
+              <div class="setting-status">
+                <span class="badge ${active ? "normal" : "high"}">${active ? "表示中" : "非表示"}</span>
+                <button class="btn secondary small" type="button" onclick="toggleSettingDetail('${detailId}', this)">編集</button>
+              </div>
             </div>
-            <div class="form-grid">
-              <div class="field"><label>メニュー名</label><input id="svc_name_${i}" value="${esc(s.service_name || "")}" /></div>
-              <div class="field"><label>価格</label><input id="svc_price_${i}" type="number" min="0" step="100" value="${Number(s.base_price || 0)}" /></div>
-              <div class="field"><label>施術時間プリセット</label><select id="svc_minutes_${i}">${minuteOptions([45,60,75,90,105,120,150,180,210,240], s.base_minutes || 60)}</select></div>
-              <div class="field"><label>片付け時間</label><select id="svc_buffer_${i}">${minuteOptions([0,5,10,15,20,30], s.buffer_minutes || 10)}</select></div>
+            <div id="${detailId}" class="setting-detail hidden">
+              <div class="form-grid">
+                <div class="field"><label>メニュー名</label><input id="svc_name_${i}" value="${esc(s.service_name || "")}" /></div>
+                <div class="field"><label>価格</label><input id="svc_price_${i}" type="number" min="0" step="100" value="${Number(s.base_price || 0)}" /></div>
+                <div class="field"><label>施術時間プリセット</label><select id="svc_minutes_${i}">${minuteOptions([45,60,75,90,105,120,150,180,210,240], s.base_minutes || 60)}</select></div>
+                <div class="field"><label>片付け時間</label><select id="svc_buffer_${i}">${minuteOptions([0,5,10,15,20,30], s.buffer_minutes || 10)}</select></div>
+              </div>
+              <div class="field" style="margin-top:10px"><label>説明文</label><textarea id="svc_desc_${i}">${esc(s.description || "")}</textarea></div>
+              <div class="option-checks" style="margin-top:10px">
+                <label class="check-card"><input type="checkbox" id="svc_active_${i}" ${active ? "checked" : ""}/><span><strong>予約画面に表示する</strong><span>OFFにすると新規予約では選べません。</span></span></label>
+                <label class="check-card"><input type="checkbox" id="svc_request_${i}" ${s.allow_staff_request !== false ? "checked" : ""}/><span><strong>指名受付を許可</strong><span>このメニューでネイリスト指名を使います。</span></span></label>
+              </div>
+              <div class="tiny-label">対応スタッフ</div>
+              <div class="staff-toggle-grid">${staffChecks || `<div class="empty">スタッフがありません。</div>`}</div>
+              <div class="safe-note">変更は今後の空き時間判定に反映します。既存予約の履歴は自動で書き換えません。</div>
+              <div class="setting-actions"><button class="btn ok" id="svc_save_${i}" onclick="saveEasyService(${i})">このメニューを保存</button></div>
             </div>
-            <div class="field" style="margin-top:10px"><label>説明文</label><textarea id="svc_desc_${i}">${esc(s.description || "")}</textarea></div>
-            <div class="option-checks" style="margin-top:10px">
-              <label class="check-card"><input type="checkbox" id="svc_active_${i}" ${active ? "checked" : ""}/><span><strong>予約画面に表示する</strong><span>OFFにすると新規予約では選べません。</span></span></label>
-              <label class="check-card"><input type="checkbox" id="svc_request_${i}" ${s.allow_staff_request !== false ? "checked" : ""}/><span><strong>指名受付を許可</strong><span>このメニューでネイリスト指名を使います。</span></span></label>
-            </div>
-            <div class="tiny-label">対応スタッフ</div>
-            <div class="staff-toggle-grid">${staffChecks || `<div class="empty">スタッフがありません。</div>`}</div>
-            <div class="safe-note">変更は今後の空き時間判定に反映します。既存予約の履歴は自動で書き換えません。</div>
-            <div class="setting-actions"><button class="btn ok" id="svc_save_${i}" onclick="saveEasyService(${i})">このメニューを保存</button></div>
           </div>`;
       }).join("");
     }
@@ -1279,24 +1306,39 @@
       const wrap = $("easyOptionList");
       if(!wrap) return;
       if(!state.options.length){ wrap.innerHTML = `<div class="empty">オプションがありません。</div>`; return; }
-      wrap.innerHTML = state.options.map((o, i) => {
+      const activeCount = state.options.filter(o => o.is_active !== false).length;
+      wrap.innerHTML = `<div class="settings-count-note">オプション ${state.options.length}件 / 表示中 ${activeCount}件。必要なオプションだけ「編集」を開きます。</div>` + state.options.map((o, i) => {
         const active = o.is_active !== false;
         const min = Number(o.additional_minutes ?? o.add_minutes ?? 0);
         const price = Number(o.additional_price ?? o.add_price ?? 0);
+        const detailId = `opt_detail_${i}`;
         return `
-          <div class="setting-card">
-            <div class="setting-card-head">
-              <div><h4>${esc(o.option_name)}</h4><small>${esc(o.option_code)} / 現在 +${min}分 / +${yen(price)}</small></div>
-              <span class="badge ${active ? "normal" : "high"}">${active ? "表示中" : "非表示"}</span>
+          <div class="setting-card compact">
+            <div class="settings-summary">
+              <div class="setting-main">
+                <h4>${esc(o.option_name)}</h4>
+                <small>${esc(o.description || "説明未設定")}</small>
+                <div class="setting-meta">
+                  <span class="setting-chip">+${min}分</span>
+                  <span class="setting-chip">+${yen(price)}</span>
+                  <span class="setting-chip">${esc(o.option_code)}</span>
+                </div>
+              </div>
+              <div class="setting-status">
+                <span class="badge ${active ? "normal" : "high"}">${active ? "表示中" : "非表示"}</span>
+                <button class="btn secondary small" type="button" onclick="toggleSettingDetail('${detailId}', this)">編集</button>
+              </div>
             </div>
-            <div class="form-grid">
-              <div class="field"><label>オプション名</label><input id="opt_name_${i}" value="${esc(o.option_name || "")}" /></div>
-              <div class="field"><label>追加料金</label><input id="opt_price_${i}" type="number" min="0" step="100" value="${price}" /></div>
-              <div class="field"><label>追加時間プリセット</label><select id="opt_minutes_${i}">${minuteOptions([0,15,30,45,60,90,120], min)}</select></div>
-              <label class="check-card" style="align-self:end"><input type="checkbox" id="opt_active_${i}" ${active ? "checked" : ""}/><span><strong>予約画面に表示する</strong><span>OFFにすると選べません。</span></span></label>
+            <div id="${detailId}" class="setting-detail hidden">
+              <div class="form-grid">
+                <div class="field"><label>オプション名</label><input id="opt_name_${i}" value="${esc(o.option_name || "")}" /></div>
+                <div class="field"><label>追加料金</label><input id="opt_price_${i}" type="number" min="0" step="100" value="${price}" /></div>
+                <div class="field"><label>追加時間プリセット</label><select id="opt_minutes_${i}">${minuteOptions([0,15,30,45,60,90,120], min)}</select></div>
+                <label class="check-card" style="align-self:end"><input type="checkbox" id="opt_active_${i}" ${active ? "checked" : ""}/><span><strong>予約画面に表示する</strong><span>OFFにすると選べません。</span></span></label>
+              </div>
+              <div class="field" style="margin-top:10px"><label>説明文</label><textarea id="opt_desc_${i}">${esc(o.description || "")}</textarea></div>
+              <div class="setting-actions"><button class="btn ok" id="opt_save_${i}" onclick="saveEasyOption(${i})">このオプションを保存</button></div>
             </div>
-            <div class="field" style="margin-top:10px"><label>説明文</label><textarea id="opt_desc_${i}">${esc(o.description || "")}</textarea></div>
-            <div class="setting-actions"><button class="btn ok" id="opt_save_${i}" onclick="saveEasyOption(${i})">このオプションを保存</button></div>
           </div>`;
       }).join("");
     }
@@ -1305,26 +1347,48 @@
       const wrap = $("easyStaffList");
       if(!wrap) return;
       if(!state.staff.length){ wrap.innerHTML = `<div class="empty">スタッフがありません。</div>`; return; }
-      wrap.innerHTML = state.staff.map((s, i) => {
+      const activeCount = state.staff.filter(s => s.is_active !== false).length;
+      wrap.innerHTML = `<div class="settings-count-note">スタッフ ${state.staff.length}名 / 予約受付中 ${activeCount}名。必要なスタッフだけ「編集」を開きます。</div>` + state.staff.map((s, i) => {
         const active = s.is_active !== false;
+        const detailId = `staff_detail_${i}`;
         return `
-          <div class="setting-card">
-            <div class="setting-card-head">
-              <div><h4>${esc(s.display_name || s.staff_name)}</h4><small>${esc(s.staff_code)} / ${active ? "予約受付中" : "停止中"}</small></div>
-              <span class="badge ${active ? "normal" : "high"}">${active ? "受付中" : "停止中"}</span>
+          <div class="setting-card compact">
+            <div class="settings-summary">
+              <div class="setting-main">
+                <h4>${esc(s.display_name || s.staff_name)}</h4>
+                <small>${esc(s.profile || "紹介文未設定")}</small>
+                <div class="setting-meta">
+                  <span class="setting-chip">${esc(s.staff_code)}</span>
+                  <span class="setting-chip">指名：${s.can_be_requested !== false ? "ON" : "OFF"}</span>
+                </div>
+              </div>
+              <div class="setting-status">
+                <span class="badge ${active ? "normal" : "high"}">${active ? "受付中" : "停止中"}</span>
+                <button class="btn secondary small" type="button" onclick="toggleSettingDetail('${detailId}', this)">編集</button>
+              </div>
             </div>
-            <div class="form-grid">
-              <div class="field"><label>スタッフ名</label><input id="staff_name_${i}" value="${esc(s.staff_name || "")}" /></div>
-              <div class="field"><label>表示名</label><input id="staff_display_${i}" value="${esc(s.display_name || "")}" /></div>
+            <div id="${detailId}" class="setting-detail hidden">
+              <div class="form-grid">
+                <div class="field"><label>スタッフ名</label><input id="staff_name_${i}" value="${esc(s.staff_name || "")}" /></div>
+                <div class="field"><label>表示名</label><input id="staff_display_${i}" value="${esc(s.display_name || "")}" /></div>
+              </div>
+              <div class="field" style="margin-top:10px"><label>紹介文</label><textarea id="staff_profile_${i}">${esc(s.profile || "")}</textarea></div>
+              <div class="option-checks" style="margin-top:10px">
+                <label class="check-card"><input type="checkbox" id="staff_active_${i}" ${active ? "checked" : ""}/><span><strong>予約受付ON</strong><span>OFFにすると新規予約の割当対象から外れます。</span></span></label>
+                <label class="check-card"><input type="checkbox" id="staff_request_${i}" ${s.can_be_requested !== false ? "checked" : ""}/><span><strong>指名受付ON</strong><span>OFFにすると指名候補から外れます。</span></span></label>
+              </div>
+              <div class="setting-actions"><button class="btn ok" id="staff_save_${i}" onclick="saveEasyStaff(${i})">このスタッフを保存</button></div>
             </div>
-            <div class="field" style="margin-top:10px"><label>紹介文</label><textarea id="staff_profile_${i}">${esc(s.profile || "")}</textarea></div>
-            <div class="option-checks" style="margin-top:10px">
-              <label class="check-card"><input type="checkbox" id="staff_active_${i}" ${active ? "checked" : ""}/><span><strong>予約受付ON</strong><span>OFFにすると新規予約の割当対象から外れます。</span></span></label>
-              <label class="check-card"><input type="checkbox" id="staff_request_${i}" ${s.can_be_requested !== false ? "checked" : ""}/><span><strong>指名受付ON</strong><span>OFFにすると指名候補から外れます。</span></span></label>
-            </div>
-            <div class="setting-actions"><button class="btn ok" id="staff_save_${i}" onclick="saveEasyStaff(${i})">このスタッフを保存</button></div>
           </div>`;
       }).join("");
+    }
+
+    function toggleSettingDetail(id, btn){
+      const el = $(id);
+      if(!el) return;
+      const isHidden = el.classList.toggle("hidden");
+      if(btn) btn.textContent = isHidden ? "編集" : "閉じる";
+      if(!isHidden){ setTimeout(() => el.scrollIntoView({behavior:"smooth", block:"nearest"}), 40); }
     }
 
     async function reloadSettingsForModal(show=true){
