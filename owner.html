@@ -1,0 +1,1130 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>DPRO NAIL LINE｜オーナー管理画面</title>
+  <meta name="description" content="DPRO NAIL LINE ネイルサロン向けPC管理画面" />
+  <style>
+    :root{
+      --bg:#f8f3ee;
+      --card:#ffffff;
+      --ink:#24312d;
+      --muted:#718078;
+      --line:#eadfd5;
+      --brand:#8d6f5d;
+      --brand2:#c79a7b;
+      --soft:#fff8f2;
+      --soft2:#f2ebe4;
+      --danger:#b05b50;
+      --warn:#bd7d25;
+      --ok:#557867;
+      --info:#58748a;
+      --shadow:0 18px 50px rgba(60,42,32,.10);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",Helvetica,Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(199,154,123,.20), transparent 34%),
+        linear-gradient(180deg,#fffaf6 0%,var(--bg) 46%,#f7efe8 100%);
+      min-height:100vh;
+    }
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    .wrap{max-width:1360px;margin:0 auto;padding:18px 16px 80px}
+    .hero{
+      background:linear-gradient(135deg,#fff 0%,#fff9f4 56%,#f2e4d8 100%);
+      border:1px solid rgba(141,111,93,.18);
+      border-radius:32px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .hero:after{
+      content:"";
+      position:absolute;
+      right:-70px;top:-70px;
+      width:250px;height:250px;border-radius:50%;
+      background:rgba(199,154,123,.15);
+    }
+    .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;position:relative;z-index:1}
+    .brand-row{display:flex;gap:14px;align-items:center}
+    .logo{
+      width:58px;height:58px;border-radius:18px;
+      display:grid;place-items:center;
+      color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));
+      font-weight:900;font-size:24px;letter-spacing:.06em;
+      box-shadow:0 12px 24px rgba(141,111,93,.22);
+      flex:0 0 auto;
+    }
+    .kicker{font-size:12px;font-weight:900;letter-spacing:.14em;color:var(--brand);text-transform:uppercase;margin-bottom:4px}
+    h1{margin:0;font-size:30px;line-height:1.15;letter-spacing:.01em}
+    .lead{position:relative;z-index:1;margin:16px 0 0;color:#52645c;line-height:1.75;font-size:15px;max-width:880px}
+    .header-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+    .btn{
+      border:0;border-radius:999px;padding:12px 16px;font-weight:900;letter-spacing:.02em;background:var(--ink);color:#fff;box-shadow:0 12px 24px rgba(36,49,45,.18);
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;text-decoration:none;
+    }
+    .btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none}
+    .btn.accent{background:linear-gradient(135deg,var(--brand),var(--brand2))}
+    .btn.ok{background:var(--ok)}
+    .btn.warn{background:var(--warn)}
+    .btn.danger{background:var(--danger)}
+    .btn.ghost{background:transparent;color:var(--brand);border:1px solid rgba(141,111,93,.25);box-shadow:none}
+    .btn.small{padding:8px 11px;font-size:12px}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .stats{
+      display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:18px;position:relative;z-index:1
+    }
+    .stat{background:rgba(255,255,255,.78);border:1px solid rgba(141,111,93,.14);border-radius:18px;padding:13px}
+    .stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:4px;font-weight:800}
+    .stat b{font-size:20px;line-height:1}
+    .stat span{display:block;color:var(--muted);font-size:12px;margin-top:6px}
+    .nav{
+      display:flex;gap:8px;overflow:auto;padding:14px 0 2px;
+    }
+    .nav a{min-width:max-content;text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 13px;color:var(--muted);font-size:13px;font-weight:900}
+    .nav a:hover{color:var(--ink);border-color:rgba(141,111,93,.35)}
+    .layout{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;margin-top:14px}
+    .panel{
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(141,111,93,.14);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      padding:20px;
+      margin-bottom:14px;
+    }
+    .section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
+    .section-head h2{font-size:22px;line-height:1.25;margin:0}
+    .section-head p{margin:7px 0 0;color:var(--muted);font-size:14px;line-height:1.6}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:var(--soft);border:1px solid var(--line);font-size:12px;font-weight:900;color:var(--brand)}
+    .badge.high{background:#fff0ef;border-color:#f0cfca;color:var(--danger)}
+    .badge.normal{background:#f2f7f4;border-color:#d3e8dc;color:var(--ok)}
+    .badge.staff{background:#eef4f7;border-color:#d3e1e8;color:var(--info)}
+    .badge.source{background:#f8f0e6;border-color:#eadac5;color:#8b633d}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+    .toolbar-left,.toolbar-right{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+    .date-input,.select-input,.text-input,.textarea-input{
+      border:1px solid var(--line);background:#fff;border-radius:14px;padding:11px 12px;outline:none;color:var(--ink)
+    }
+    .date-input:focus,.select-input:focus,.text-input:focus,.textarea-input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(141,111,93,.14)}
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .task-card,.reservation-card,.customer-card{
+      background:#fff;border:1px solid var(--line);border-radius:22px;padding:15px;min-height:124px;
+      transition:.18s ease;
+    }
+    .task-card:hover,.reservation-card:hover,.customer-card:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(60,42,32,.08)}
+    .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .icon{
+      width:44px;height:44px;border-radius:16px;display:grid;place-items:center;background:#f6f3ef;border:1px solid var(--line);flex:0 0 auto;font-size:21px;
+    }
+    .card-title{font-weight:900;font-size:15px;margin:0 0 4px}
+    .card-sub{font-size:12px;color:var(--muted);line-height:1.45}
+    .card-name{font-size:14px;line-height:1.6;margin:10px 0;color:#52645c}
+    .card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .memo{background:#fffaf6;border:1px dashed #e6d4c6;border-radius:16px;padding:10px 12px;color:#65544a;font-size:13px;line-height:1.6;margin-top:10px;white-space:pre-wrap}
+    .empty{background:#fff;border:1px dashed #ddcfc3;border-radius:22px;padding:24px;color:var(--muted);line-height:1.7;text-align:center}
+    .staff-group{border:1px solid var(--line);border-radius:24px;background:#fff;padding:14px;margin-bottom:12px}
+    .staff-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px dashed #eadfd5;padding-bottom:10px;margin-bottom:10px}
+    .staff-head h3{margin:0;font-size:18px}
+    .reservation-list{display:grid;gap:10px}
+    .reservation-card{min-height:auto;display:grid;grid-template-columns:100px 1fr;gap:12px;align-items:flex-start}
+    .time-box{
+      background:linear-gradient(135deg,#fffaf4,#f6ede5);
+      border:1px solid var(--line);border-radius:18px;padding:12px;text-align:center
+    }
+    .time-box b{display:block;font-size:18px}
+    .time-box span{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+    .meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+    .pill{background:#f7f0e9;border:1px solid #eadfd5;color:#67574c;border-radius:999px;padding:5px 8px;font-size:12px;font-weight:800}
+    .pill.ok{background:#eef7f2;border-color:#cfe5d8;color:#446f5a}
+    .pill.no{background:#f8eeee;border-color:#efd2ce;color:#9b5149}
+    .pill.info{background:#eef4f7;border-color:#d3e1e8;color:#496a7f}
+    .quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .quick-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px}
+    .quick-card h3{margin:0 0 7px;font-size:15px}.quick-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+    .search-row{display:flex;gap:8px;margin-bottom:12px}
+    .search-row input{flex:1}
+    .table-like{display:grid;gap:8px}
+    .mini-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px}
+    .mini-row strong{display:block;font-size:13px}.mini-row small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+    .notice{padding:13px 14px;border-radius:18px;background:#fff8ee;border:1px solid #eed7bd;color:#6a5141;line-height:1.55;font-size:14px;margin:12px 0}
+    .notice.ok{background:#eef7f2;border-color:#cfe5d8;color:#446f5a}
+    .notice.err{background:#fff0ef;border-color:#f0cfca;color:#9b5149}
+    .notice.info{background:#eef4f7;border-color:#d3e1e8;color:#496a7f}
+    .hidden{display:none!important}
+    .loading{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:14px}
+    .spinner{width:16px;height:16px;border:2px solid #e9ddd3;border-top-color:var(--brand);border-radius:50%;animation:spin .9s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .modal-backdrop{
+      position:fixed;inset:0;background:rgba(32,30,28,.42);z-index:50;display:none;align-items:flex-start;justify-content:center;padding:28px 12px;overflow:auto
+    }
+    .modal-backdrop.show{display:flex}
+    .modal{
+      width:min(920px,100%);background:#fff;border-radius:28px;border:1px solid rgba(141,111,93,.18);box-shadow:0 28px 80px rgba(20,20,20,.22);overflow:hidden
+    }
+    .modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line);background:#fffaf6}
+    .modal-head h2{margin:0;font-size:22px}.modal-head p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.6}
+    .modal-body{padding:18px 20px}
+    .modal-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;border-top:1px solid var(--line);padding:14px 20px;background:#fffaf6}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .field label{display:block;font-weight:900;margin:0 0 7px;font-size:13px}
+    .field input,.field textarea,.field select{
+      width:100%;border:1px solid var(--line);background:#fff;border-radius:15px;padding:12px 13px;outline:none;color:var(--ink)
+    }
+    .field textarea{min-height:115px;resize:vertical;line-height:1.6}
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(141,111,93,.14)}
+    .field .help{color:var(--muted);font-size:12px;line-height:1.5;margin-top:6px}
+    .option-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .check-card{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:11px}
+    .check-card input{width:18px;height:18px;margin-top:2px;accent-color:var(--brand)}
+    .check-card strong{display:block;font-size:13px}.check-card span{display:block;color:var(--muted);font-size:12px;line-height:1.4;margin-top:3px}
+    .time-buttons{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px}
+    .time-btn{border:1px solid var(--line);background:#fff;border-radius:16px;padding:10px 8px;text-align:center}
+    .time-btn b{display:block;font-size:14px}.time-btn small{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+    .time-btn.selected{background:var(--ink);border-color:var(--ink);color:#fff}
+    .time-btn.selected small{color:rgba(255,255,255,.78)}
+    .time-btn:disabled{opacity:.42;cursor:not-allowed;background:#f7f3ef}
+    .toast{
+      position:fixed;right:16px;bottom:16px;z-index:80;background:#24312d;color:#fff;border-radius:18px;padding:13px 16px;box-shadow:0 18px 48px rgba(0,0,0,.22);display:none;max-width:min(420px,calc(100vw - 32px));line-height:1.5
+    }
+    .toast.show{display:block}
+    .toast.err{background:var(--danger)}
+    @media (max-width:1000px){
+      .layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.cards{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}
+    }
+    @media (max-width:720px){
+      .wrap{padding:12px 10px 80px}.hero{padding:18px;border-radius:28px}.topbar{display:block}.header-actions{justify-content:flex-start;margin-top:14px}h1{font-size:25px}.stats{grid-template-columns:1fr 1fr}.panel{padding:16px;border-radius:24px}.section-head{display:block}.section-head .badge{margin-top:10px}.reservation-card{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.option-checks{grid-template-columns:1fr}.time-buttons{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="topbar">
+        <div class="brand-row">
+          <div class="logo">N</div>
+          <div>
+            <div class="kicker">STEP NAIL-5 / OWNER DASHBOARD</div>
+            <h1>DPRO NAIL LINE</h1>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn accent" type="button" onclick="prepareDemo()">営業前DEMO準備</button>
+          <button class="btn secondary" type="button" onclick="openManualModal()">電話・店頭予約</button>
+          <button class="btn secondary" type="button" onclick="openSettingsModal()">店舗設定</button>
+          <button class="btn" type="button" onclick="loadAll()">更新</button>
+        </div>
+      </div>
+      <p class="lead">ネイルサロン向けのPC管理画面です。今日やること、本日の施術予定、スタッフ別予約、LINE文面、電話・店頭・Instagram予約をまとめて確認できます。</p>
+      <div class="stats" id="stats">
+        <div class="stat"><small>API</small><b id="apiState">確認中</b><span>Worker接続</span></div>
+        <div class="stat"><small>本日の予約</small><b id="statToday">-</b><span>施術予定</span></div>
+        <div class="stat"><small>今月の予約</small><b id="statMonth">-</b><span>有効予約</span></div>
+        <div class="stat"><small>未対応フォロー</small><b id="statFollow">-</b><span>今日やること</span></div>
+        <div class="stat"><small>LINE顧客</small><b id="statLine">-</b><span>連携済み</span></div>
+      </div>
+    </header>
+
+    <nav class="nav">
+      <a href="#tasks">今日やること</a>
+      <a href="#today">本日の施術予定</a>
+      <a href="#next">次営業日の予定</a>
+      <a href="#customers">顧客検索</a>
+      <a href="#quick">確認URL</a>
+    </nav>
+
+    <main class="layout">
+      <div>
+        <section class="panel" id="tasks">
+          <div class="section-head">
+            <div>
+              <h2>今日やること（未対応のみ）</h2>
+              <p>来店前デザイン確認、次回付け替え案内、未コピーLINE文面だけを表示します。予約予定は下の「本日の施術予定」で確認できます。</p>
+            </div>
+            <span class="badge">ACTION REQUIRED</span>
+          </div>
+          <div id="taskList" class="cards">
+            <div class="loading"><span class="spinner"></span>読み込み中...</div>
+          </div>
+        </section>
+
+        <section class="panel" id="today">
+          <div class="section-head">
+            <div>
+              <h2>本日の施術予定</h2>
+              <p>スタッフ別に、今日来店予定のお客様を表示します。対応が必要なものだけ上の「今日やること」に表示されます。</p>
+            </div>
+            <span class="badge staff">SCHEDULE</span>
+          </div>
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <input class="date-input" id="targetDate" type="date" onchange="loadDay()" />
+              <button class="btn secondary small" type="button" onclick="setToday()">今日</button>
+            </div>
+            <div class="toolbar-right">
+              <button class="btn small" type="button" onclick="loadDay()">予定を更新</button>
+            </div>
+          </div>
+          <div id="todaySchedule">
+            <div class="loading"><span class="spinner"></span>読み込み中...</div>
+          </div>
+        </section>
+
+        <section class="panel" id="next">
+          <div class="section-head">
+            <div>
+              <h2>次営業日の施術予定</h2>
+              <p>明日以降の次営業日の予約です。営業デモでは、本日と次営業日の流れを見せると分かりやすいです。</p>
+            </div>
+            <span class="badge">NEXT BUSINESS DAY</span>
+          </div>
+          <div id="nextSchedule">
+            <div class="loading"><span class="spinner"></span>読み込み中...</div>
+          </div>
+        </section>
+      </div>
+
+      <aside>
+        <section class="panel" id="quick">
+          <div class="section-head">
+            <div>
+              <h2>確認URL</h2>
+              <p>営業デモで使うURLです。必ずフルURLで開いて確認します。</p>
+            </div>
+            <span class="badge">URL</span>
+          </div>
+          <div class="quick-grid">
+            <div class="quick-card">
+              <h3>お客様予約フォーム</h3>
+              <p>メニュー・オフ有無・指名を選んで予約します。</p>
+              <div class="card-actions"><a class="btn secondary small" target="_blank" href="https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?v=step-nail-5">開く</a><button class="btn small" onclick="copyText('https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?v=step-nail-5')">URLコピー</button></div>
+            </div>
+            <div class="quick-card">
+              <h3>PC管理画面</h3>
+              <p>今日やること・本日の施術予定・LINE文面を確認します。</p>
+              <div class="card-actions"><button class="btn small" onclick="copyText('https://dpromstk2000-lab.github.io/liff-nail-reserve/owner.html?v=step-nail-5')">URLコピー</button></div>
+            </div>
+            <div class="quick-card">
+              <h3>Worker health</h3>
+              <p>APIが動いているか確認します。</p>
+              <div class="card-actions"><a class="btn secondary small" target="_blank" href="https://dpro-nail-line-api.dpromstk2000.workers.dev/api/health">開く</a><button class="btn small" onclick="copyText('https://dpro-nail-line-api.dpromstk2000.workers.dev/api/health')">URLコピー</button></div>
+            </div>
+            <div class="quick-card">
+              <h3>管理コード</h3>
+              <p>商談中の体験用コードです。本番時は店舗ごとに変更します。</p>
+              <div class="card-actions"><button class="btn warn small" onclick="copyText('1234')">1234 コピー</button></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="customers">
+          <div class="section-head">
+            <div>
+              <h2>顧客検索</h2>
+              <p>名前・電話番号・LINE名・デザインメモから探せます。</p>
+            </div>
+            <span class="badge">CUSTOMER</span>
+          </div>
+          <div class="search-row">
+            <input class="text-input" id="customerKeyword" placeholder="例：山田 / 090 / ピンク" onkeydown="if(event.key==='Enter') searchCustomers()" />
+            <button class="btn small" onclick="searchCustomers()">検索</button>
+          </div>
+          <div id="customerResults" class="table-like">
+            <div class="empty">キーワードを入れて検索してください。</div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <h2>店舗状態</h2>
+              <p>管理コードと店舗設定の簡易確認です。</p>
+            </div>
+            <span class="badge">STATUS</span>
+          </div>
+          <div id="shopStatus" class="table-like">
+            <div class="loading"><span class="spinner"></span>読み込み中...</div>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="messageModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h2>LINE文面を確認・コピー</h2>
+          <p>内容を確認し、必要なら編集してからコピーできます。「コピーして対応済み」で今日やることから消えます。</p>
+        </div>
+        <button class="btn secondary small" onclick="closeModal('messageModal')">閉じる</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="msgId" />
+        <input type="hidden" id="msgFollowupId" />
+        <div class="form-grid">
+          <div class="field">
+            <label>お客様名</label>
+            <input id="msgCustomer" readonly />
+          </div>
+          <div class="field">
+            <label>文面タイトル</label>
+            <input id="msgTitle" />
+          </div>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label>LINE文面</label>
+          <textarea id="msgBody"></textarea>
+          <div class="help">この文面をコピーして、LINE公式アカウントのチャット画面に貼り付けます。</div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn secondary" onclick="copyOnlyMessage()">コピーだけ</button>
+        <button class="btn ok" onclick="copyAndMarkMessage()">コピーして対応済みにする</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="manualModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h2>電話・店頭・Instagram予約登録</h2>
+          <p>LINE予約以外の予約も同じ管理画面に入れます。LINE未連携のお客様は、後でLINE登録案内の文面が作られます。</p>
+        </div>
+        <button class="btn secondary small" onclick="closeModal('manualModal')">閉じる</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="field">
+            <label>予約元</label>
+            <select id="manualSource" onchange="updateManualSourceHint()">
+              <option value="phone">電話予約</option>
+              <option value="shop">店頭予約</option>
+              <option value="instagram">Instagram DM予約</option>
+              <option value="other">その他</option>
+            </select>
+            <div class="help" id="manualSourceHint">LINE未連携として管理し、LINE登録案内文面を作成します。</div>
+          </div>
+          <div class="field">
+            <label>お客様名</label>
+            <input id="manualName" placeholder="例：山田はるか" />
+          </div>
+          <div class="field">
+            <label>電話番号</label>
+            <input id="manualPhone" placeholder="例：09011112222" />
+          </div>
+          <div class="field">
+            <label>メニュー</label>
+            <select id="manualService" onchange="renderManualOptions(); loadManualTimes();"></select>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="field">
+            <label>オフ・追加内容</label>
+          </div>
+          <div id="manualOptions" class="option-checks"></div>
+        </div>
+
+        <div class="form-grid" style="margin-top:12px">
+          <div class="field">
+            <label>指名</label>
+            <select id="manualStaffMode" onchange="toggleManualStaff(); loadManualTimes();">
+              <option value="none">指名なし・自動割当</option>
+              <option value="requested">指名あり</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>担当ネイリスト</label>
+            <select id="manualStaff" onchange="loadManualTimes()" disabled></select>
+          </div>
+          <div class="field">
+            <label>予約日</label>
+            <input id="manualDate" type="date" onchange="loadManualTimes()" />
+          </div>
+          <div class="field">
+            <label>選択中の時間</label>
+            <input id="manualTime" readonly placeholder="下の空き時間から選択" />
+          </div>
+        </div>
+
+        <div class="notice info" id="manualTimeNotice">メニュー・オプション・日付を選ぶと空き時間を確認できます。</div>
+        <div id="manualTimes" class="time-buttons"></div>
+
+        <div class="form-grid" style="margin-top:12px">
+          <div class="field">
+            <label>希望デザイン・相談内容</label>
+            <textarea id="manualDesign" placeholder="例：ベージュ系ワンカラー、持ち込み画像あり、オフあり"></textarea>
+          </div>
+          <div class="field">
+            <label>店舗メモ</label>
+            <textarea id="manualMemo" placeholder="例：電話で受付。次回来店時にLINE登録案内。"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn secondary" onclick="loadManualTimes()">空き時間を再確認</button>
+        <button class="btn ok" onclick="submitManualReservation()">予約を登録する</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h2>店舗設定</h2>
+          <p>営業時間は30分単位です。デモ用管理コードは 1234 のまま使います。</p>
+        </div>
+        <button class="btn secondary small" onclick="closeModal('settingsModal')">閉じる</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="field">
+            <label>店舗名</label>
+            <input id="setShopName" />
+          </div>
+          <div class="field">
+            <label>サービス名</label>
+            <input id="setServiceName" />
+          </div>
+          <div class="field">
+            <label>開始時間</label>
+            <select id="setOpenTime"></select>
+          </div>
+          <div class="field">
+            <label>終了時間</label>
+            <select id="setCloseTime"></select>
+          </div>
+          <div class="field">
+            <label>予約受付日数</label>
+            <input id="setBookingDays" type="number" min="7" max="180" />
+          </div>
+          <div class="field">
+            <label>片付け時間（分）</label>
+            <input id="setBuffer" type="number" min="0" max="60" />
+          </div>
+        </div>
+
+        <div class="option-checks" style="margin-top:14px">
+          <label class="check-card">
+            <input type="checkbox" id="setMultiStaff" />
+            <span><strong>複数スタッフ対応</strong><span>スタッフ別予約表と指名選択を使います。</span></span>
+          </label>
+          <label class="check-card">
+            <input type="checkbox" id="setStaffRequest" />
+            <span><strong>指名予約を許可</strong><span>お客様がネイリストを選べるようにします。</span></span>
+          </label>
+          <label class="check-card">
+            <input type="checkbox" id="setAutoAssign" />
+            <span><strong>指名なし自動割当</strong><span>空いている対応可能スタッフに自動で割り当てます。</span></span>
+          </label>
+          <label class="check-card">
+            <input type="checkbox" id="setResource" />
+            <span><strong>席・設備管理</strong><span>初期はOFF推奨。将来ONにできる設計です。</span></span>
+          </label>
+        </div>
+
+        <div class="field" style="margin-top:14px">
+          <label>サロン住所</label>
+          <input id="setAddress" />
+        </div>
+        <div class="field" style="margin-top:14px">
+          <label>来店前案内</label>
+          <textarea id="setSalonNote"></textarea>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn ok" onclick="saveSettings()">設定を保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STEP = "STEP NAIL-5";
+    const API_BASE = "https://dpro-nail-line-api.dpromstk2000.workers.dev";
+    const SHOP_CODE = "nail_demo";
+    let ADMIN_CODE = localStorage.getItem("dpro_nail_admin_code") || "1234";
+
+    const state = {
+      health:null,
+      settings:null,
+      summary:null,
+      day:null,
+      services:[],
+      options:[],
+      staff:[],
+      selectedMessage:null,
+      manualTimes:[],
+    };
+
+    const $ = id => document.getElementById(id);
+
+    function todayStr(){
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function yen(n){ return Number(n || 0).toLocaleString("ja-JP") + "円"; }
+    function esc(v){ return String(v ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function sourceLabel(source){
+      const s = String(source || "");
+      if(s === "line") return "LINE予約";
+      if(s === "phone") return "電話予約";
+      if(s === "shop") return "店頭予約";
+      if(s === "instagram") return "Instagram";
+      return s || "予約";
+    }
+    function statusLabel(status){
+      const map = {
+        reserved:"予約中", phone_reserved:"電話予約", shop_reserved:"店頭予約", instagram_reserved:"Instagram予約",
+        changed:"予約変更", cancelled:"キャンセル", completed:"施術完了"
+      };
+      return map[status] || status || "予約";
+    }
+    function priorityBadge(priority){
+      const p = String(priority || "normal");
+      if(p === "high") return '<span class="badge high">重要</span>';
+      return '<span class="badge normal">通常</span>';
+    }
+    function formatDateJa(dateStr){
+      if(!dateStr) return "";
+      const d = new Date(dateStr + "T00:00:00");
+      const w = ["日","月","火","水","木","金","土"][d.getDay()];
+      return `${d.getMonth()+1}/${d.getDate()}（${w}）`;
+    }
+    function showToast(message, isError=false){
+      const t = $("toast");
+      t.textContent = message;
+      t.className = "toast show" + (isError ? " err" : "");
+      setTimeout(() => { t.className = "toast"; }, 3600);
+    }
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        showToast("コピーしました。");
+      }catch(e){
+        showToast("コピーに失敗しました。手動でコピーしてください。", true);
+      }
+    }
+
+    function buildUrl(path, params={}){
+      const url = new URL(API_BASE + path);
+      Object.entries(params).forEach(([k,v]) => {
+        if(v !== undefined && v !== null && v !== "") url.searchParams.set(k, v);
+      });
+      return url.toString();
+    }
+
+    async function apiGet(path, params={}){
+      const url = buildUrl(path, { shop_code:SHOP_CODE, admin_code:ADMIN_CODE, ...params });
+      const res = await fetch(url);
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok || data.ok === false) throw new Error(data.error || data.message || "APIエラー");
+      return data;
+    }
+
+    async function apiPost(path, body={}){
+      const res = await fetch(API_BASE + path, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({ shop_code:SHOP_CODE, admin_code:ADMIN_CODE, ...body }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok || data.ok === false) throw new Error(data.error || data.message || "APIエラー");
+      return data;
+    }
+
+    async function loadAll(){
+      try{
+        $("apiState").textContent = "確認中";
+        if(!$("targetDate").value) $("targetDate").value = todayStr();
+
+        const [health, settings, services, staff] = await Promise.all([
+          fetch(API_BASE + "/api/health").then(r => r.json()),
+          apiGet("/api/admin/settings"),
+          apiGet("/api/admin/services"),
+          apiGet("/api/admin/staff"),
+        ]);
+        state.health = health;
+        state.settings = settings.settings;
+        state.services = services.services || [];
+        state.options = services.options || [];
+        state.staff = staff.staff || [];
+        $("apiState").textContent = health.ok ? "OK" : "NG";
+
+        await Promise.all([loadSummary(), loadDay()]);
+        renderShopStatus();
+        renderManualSelects();
+      }catch(e){
+        $("apiState").textContent = "NG";
+        showToast(e.message || "読み込みに失敗しました。", true);
+      }
+    }
+
+    async function loadSummary(){
+      const summary = await apiGet("/api/admin/summary");
+      state.summary = summary;
+      const c = summary.counts || {};
+      $("statToday").textContent = c.today_reservations ?? "-";
+      $("statMonth").textContent = c.month_reservations ?? "-";
+      $("statFollow").textContent = c.open_followups ?? "-";
+      $("statLine").textContent = c.line_connected_customers ?? "-";
+    }
+
+    async function loadDay(){
+      try{
+        const date = $("targetDate").value || todayStr();
+        const day = await apiGet("/api/admin/day", { date });
+        state.day = day;
+        renderTasks(day.today_tasks || []);
+        renderTodaySchedule(day.today_reservations_by_staff || [], day.today_reservations || []);
+        renderNextSchedule(day.next_business_reservations || [], day.next_business_date);
+      }catch(e){
+        $("taskList").innerHTML = `<div class="empty">読み込みに失敗しました：${esc(e.message)}</div>`;
+        $("todaySchedule").innerHTML = `<div class="empty">読み込みに失敗しました：${esc(e.message)}</div>`;
+        showToast(e.message || "予定の読み込みに失敗しました。", true);
+      }
+    }
+
+    function setToday(){
+      $("targetDate").value = todayStr();
+      loadDay();
+    }
+
+    function renderTasks(tasks){
+      const wrap = $("taskList");
+      if(!tasks.length){
+        wrap.innerHTML = `<div class="empty">本日の未対応はありません。<br>予約予定は下の「本日の施術予定」で確認できます。</div>`;
+        return;
+      }
+      wrap.innerHTML = tasks.map(t => {
+        if(t.type === "line_message"){
+          const m = t.line_message || {};
+          return `
+            <article class="task-card">
+              <div class="card-top">
+                <div style="display:flex;gap:12px;align-items:flex-start">
+                  <div class="icon">💬</div>
+                  <div>
+                    <div class="card-title">${esc(t.title || "LINE文面")}</div>
+                    <div class="card-sub">${esc(t.subtitle || "line_message")}</div>
+                  </div>
+                </div>
+                ${priorityBadge(t.priority)}
+              </div>
+              <div class="card-name">${esc(t.customer_name || "お客様")}</div>
+              <div class="card-actions">
+                <button class="btn ok small" onclick='openMessageModal(${JSON.stringify(m).replace(/'/g,"&#39;")})'>文面を確認・コピー</button>
+              </div>
+            </article>
+          `;
+        }
+        const f = t.followup || {};
+        return `
+          <article class="task-card">
+            <div class="card-top">
+              <div style="display:flex;gap:12px;align-items:flex-start">
+                <div class="icon">📌</div>
+                <div>
+                  <div class="card-title">${esc(t.title || "フォロー")}</div>
+                  <div class="card-sub">${esc(t.subtitle || "followup")}　期限：${esc(t.due_date || "")}</div>
+                </div>
+              </div>
+              ${priorityBadge(t.priority)}
+            </div>
+            <div class="card-name">${esc(t.customer_name || "お客様")}</div>
+            ${t.memo ? `<div class="memo">${esc(t.memo)}</div>` : ""}
+            <div class="card-actions">
+              <button class="btn secondary small" onclick='copyText(${JSON.stringify(t.memo || t.title || "")})'>メモをコピー</button>
+              <button class="btn ok small" onclick="markFollowupDone('${esc(t.id)}')">対応済みにする</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderTodaySchedule(groups, flatReservations){
+      const wrap = $("todaySchedule");
+      if(!flatReservations.length){
+        wrap.innerHTML = `<div class="empty">この日の施術予定はありません。</div>`;
+        return;
+      }
+      const html = groups.map(group => {
+        const staffName = group.staff?.display_name || group.staff?.staff_name || "未割当";
+        const reservations = group.reservations || [];
+        if(!reservations.length) return "";
+        return `
+          <div class="staff-group">
+            <div class="staff-head">
+              <h3>${esc(staffName)}</h3>
+              <span class="badge staff">${reservations.length}件</span>
+            </div>
+            <div class="reservation-list">
+              ${reservations.map(renderReservationCard).join("")}
+            </div>
+          </div>
+        `;
+      }).join("");
+      wrap.innerHTML = html || flatReservations.map(renderReservationCard).join("");
+    }
+
+    function renderNextSchedule(reservations, date){
+      const wrap = $("nextSchedule");
+      if(!reservations.length){
+        wrap.innerHTML = `<div class="empty">次営業日（${esc(formatDateJa(date || ""))}）の施術予定はありません。</div>`;
+        return;
+      }
+      wrap.innerHTML = `
+        <div class="notice info">次営業日：${esc(formatDateJa(date || ""))}</div>
+        <div class="reservation-list">${reservations.map(renderReservationCard).join("")}</div>
+      `;
+    }
+
+    function renderReservationCard(r){
+      const options = Array.isArray(r.option_names) ? r.option_names : [];
+      const lineState = r.line_user_id ? '<span class="pill ok">LINE連携</span>' : '<span class="pill no">LINE未連携</span>';
+      const requested = r.is_staff_requested ? '<span class="pill info">指名あり</span>' : '<span class="pill">指名なし</span>';
+      return `
+        <article class="reservation-card">
+          <div class="time-box">
+            <b>${esc((r.start_time || "").slice(0,5))}</b>
+            <span>${esc((r.end_time || "").slice(0,5))}まで</span>
+          </div>
+          <div>
+            <div class="card-title">${esc(r.customer_name || "お客様")}</div>
+            <div class="card-sub">${esc(r.service_name || "")}　${Number(r.total_minutes || 0)}分　${yen(r.total_price || 0)}</div>
+            <div class="meta">
+              <span class="pill">${esc(statusLabel(r.status))}</span>
+              <span class="pill source">${esc(sourceLabel(r.source))}</span>
+              <span class="pill">${esc(r.staff_name || "担当未定")}</span>
+              ${requested}
+              ${lineState}
+              ${r.has_off ? '<span class="pill info">オフあり</span>' : ""}
+              ${options.map(o => `<span class="pill">${esc(o)}</span>`).join("")}
+            </div>
+            ${r.design_note ? `<div class="memo">${esc(r.design_note)}</div>` : ""}
+          </div>
+        </article>
+      `;
+    }
+
+    async function markFollowupDone(id){
+      if(!id) return;
+      try{
+        await apiPost("/api/admin/followups/update-status", { followup_id:id, status:"handled", handled_note:"管理画面から対応済みにしました。" });
+        showToast("対応済みにしました。");
+        await Promise.all([loadDay(), loadSummary()]);
+      }catch(e){
+        showToast(e.message || "更新に失敗しました。", true);
+      }
+    }
+
+    function openMessageModal(message){
+      state.selectedMessage = message || {};
+      $("msgId").value = state.selectedMessage.id || "";
+      $("msgFollowupId").value = state.selectedMessage.followup_id || "";
+      $("msgCustomer").value = state.selectedMessage.customer_name || "";
+      $("msgTitle").value = state.selectedMessage.message_title || "";
+      $("msgBody").value = state.selectedMessage.message_body || "";
+      openModal("messageModal");
+    }
+
+    async function copyOnlyMessage(){
+      const body = $("msgBody").value || "";
+      if(!body.trim()) return showToast("コピーする文面がありません。", true);
+      await copyText(body);
+    }
+
+    async function copyAndMarkMessage(){
+      const body = $("msgBody").value || "";
+      const id = $("msgId").value || "";
+      const followupId = $("msgFollowupId").value || "";
+      if(!body.trim()) return showToast("コピーする文面がありません。", true);
+      try{
+        await navigator.clipboard.writeText(body);
+        await apiPost("/api/line/log-copy", {
+          message_id:id,
+          followup_id:followupId,
+          message_title:$("msgTitle").value || "",
+          message_body:body,
+          mark_followup_handled:true,
+          source_screen:"owner.html",
+        });
+        closeModal("messageModal");
+        showToast("コピーして対応済みにしました。");
+        await Promise.all([loadDay(), loadSummary()]);
+      }catch(e){
+        showToast(e.message || "コピーまたは保存に失敗しました。", true);
+      }
+    }
+
+    function renderShopStatus(){
+      const s = state.settings || {};
+      $("shopStatus").innerHTML = `
+        <div class="mini-row"><div><strong>${esc(s.shop_name || "DPRO NAIL")}</strong><small>${esc(s.service_name || "DPRO NAIL LINE")}</small></div><span class="badge">店舗</span></div>
+        <div class="mini-row"><div><strong>${esc(s.open_time || "10:00")}〜${esc(s.close_time || "19:00")}</strong><small>営業時間・30分単位</small></div><span class="badge">時間</span></div>
+        <div class="mini-row"><div><strong>${s.multi_staff_enabled ? "複数スタッフON" : "1人サロン表示"}</strong><small>指名予約：${s.staff_request_enabled ? "ON" : "OFF"} / 自動割当：${s.auto_assign_staff_enabled ? "ON" : "OFF"}</small></div><span class="badge staff">スタッフ</span></div>
+        <div class="mini-row"><div><strong>管理コード 1234</strong><small>商談中の体験用。本番導入時は店舗ごとに変更。</small></div><span class="badge">DEMO</span></div>
+      `;
+    }
+
+    async function searchCustomers(){
+      const q = $("customerKeyword").value.trim();
+      const wrap = $("customerResults");
+      if(!q){
+        wrap.innerHTML = `<div class="empty">キーワードを入れて検索してください。</div>`;
+        return;
+      }
+      wrap.innerHTML = `<div class="loading"><span class="spinner"></span>検索中...</div>`;
+      try{
+        const data = await apiGet("/api/admin/customers/search", { q });
+        const customers = data.customers || [];
+        if(!customers.length){
+          wrap.innerHTML = `<div class="empty">該当する顧客は見つかりませんでした。</div>`;
+          return;
+        }
+        wrap.innerHTML = customers.map(c => `
+          <div class="mini-row">
+            <div>
+              <strong>${esc(c.customer_name || "お客様")}</strong>
+              <small>${esc(c.phone || "")}　${c.line_user_id ? "LINE連携" : "LINE未連携"}</small>
+              ${c.last_design_note ? `<small>前回メモ：${esc(c.last_design_note)}</small>` : ""}
+            </div>
+            <span class="badge">${esc(c.source || "customer")}</span>
+          </div>
+        `).join("");
+      }catch(e){
+        wrap.innerHTML = `<div class="empty">検索に失敗しました：${esc(e.message)}</div>`;
+      }
+    }
+
+    function renderManualSelects(){
+      const serviceSelect = $("manualService");
+      if(serviceSelect){
+        serviceSelect.innerHTML = state.services.map(s => `<option value="${esc(s.service_code)}">${esc(s.service_name)} / ${Number(s.base_minutes || 0)}分 / ${yen(s.base_price || 0)}</option>`).join("");
+      }
+      const staffSelect = $("manualStaff");
+      if(staffSelect){
+        staffSelect.innerHTML = state.staff.map(s => `<option value="${esc(s.id)}">${esc(s.display_name || s.staff_name)}</option>`).join("");
+      }
+      renderManualOptions();
+    }
+
+    function renderManualOptions(){
+      const wrap = $("manualOptions");
+      if(!wrap) return;
+      const serviceCode = $("manualService")?.value || "";
+      const options = state.options.filter(o => {
+        const codes = Array.isArray(o.compatible_service_codes) ? o.compatible_service_codes : [];
+        return codes.length === 0 || codes.includes(serviceCode);
+      });
+      if(!options.length){
+        wrap.innerHTML = `<div class="empty">このメニューに追加できるオプションはありません。</div>`;
+        return;
+      }
+      wrap.innerHTML = options.map(o => `
+        <label class="check-card">
+          <input type="checkbox" name="manualOption" value="${esc(o.option_code)}" onchange="loadManualTimes()" ${o.option_code === "replace_off" ? "data-off='1'" : ""} />
+          <span><strong>${esc(o.option_name)}</strong><span>+${Number(o.additional_minutes || 0)}分 / +${yen(o.additional_price || 0)}</span></span>
+        </label>
+      `).join("");
+    }
+
+    function openManualModal(){
+      if(!state.services.length) renderManualSelects();
+      $("manualDate").value = $("targetDate").value || todayStr();
+      $("manualTime").value = "";
+      updateManualSourceHint();
+      openModal("manualModal");
+      setTimeout(loadManualTimes, 80);
+    }
+
+    function updateManualSourceHint(){
+      const v = $("manualSource").value;
+      const label = sourceLabel(v);
+      $("manualSourceHint").textContent = `${label}として登録します。LINE未連携の場合はLINE登録案内文面が作成されます。`;
+    }
+
+    function toggleManualStaff(){
+      $("manualStaff").disabled = $("manualStaffMode").value !== "requested";
+    }
+
+    function manualOptionCodes(){
+      return [...document.querySelectorAll("input[name='manualOption']:checked")].map(i => i.value);
+    }
+
+    async function loadManualTimes(){
+      const serviceCode = $("manualService")?.value || "";
+      const date = $("manualDate")?.value || "";
+      const timeWrap = $("manualTimes");
+      if(!serviceCode || !date || !timeWrap) return;
+      timeWrap.innerHTML = `<div class="loading"><span class="spinner"></span>空き時間確認中...</div>`;
+      try{
+        const optionCodes = manualOptionCodes();
+        const staffRequested = $("manualStaffMode").value === "requested";
+        const staffId = staffRequested ? $("manualStaff").value : "";
+        const params = {
+          date,
+          service_code:serviceCode,
+          option_codes:optionCodes.join(","),
+          has_off:optionCodes.includes("replace_off") ? "true" : "false",
+          staff_requested:staffRequested ? "true" : "false",
+          staff_id:staffId,
+        };
+        const url = new URL(API_BASE + "/api/public/available-times");
+        Object.entries({shop_code:SHOP_CODE, ...params}).forEach(([k,v]) => { if(v !== "") url.searchParams.set(k,v); });
+        const data = await fetch(url.toString()).then(r => r.json());
+        if(data.ok === false) throw new Error(data.error || "空き時間取得エラー");
+        state.manualTimes = data.times || [];
+        $("manualTimeNotice").textContent = `目安時間：約${data.total_minutes || "-"}分 / 目安料金：${yen(data.total_price || 0)}`;
+        const times = state.manualTimes;
+        if(!times.length){
+          timeWrap.innerHTML = `<div class="empty">この日の空き時間はありません。</div>`;
+          return;
+        }
+        timeWrap.innerHTML = times.map(t => `
+          <button type="button" class="time-btn" ${t.can_reserve ? "" : "disabled"} onclick="selectManualTime('${esc(t.time)}')">
+            <b>${esc(t.time)}</b>
+            <small>${t.can_reserve ? `${esc(t.end_time)}まで / ${t.available_staff_count || 0}名可` : esc(t.disabled_reason || "不可")}</small>
+          </button>
+        `).join("");
+      }catch(e){
+        timeWrap.innerHTML = `<div class="empty">空き時間の取得に失敗しました：${esc(e.message)}</div>`;
+      }
+    }
+
+    function selectManualTime(time){
+      $("manualTime").value = time;
+      [...document.querySelectorAll(".time-btn")].forEach(btn => {
+        btn.classList.toggle("selected", btn.textContent.trim().startsWith(time));
+      });
+    }
+
+    async function submitManualReservation(){
+      const optionCodes = manualOptionCodes();
+      const staffRequested = $("manualStaffMode").value === "requested";
+      const payload = {
+        source:$("manualSource").value,
+        customer_name:$("manualName").value.trim(),
+        phone:$("manualPhone").value.trim(),
+        service_code:$("manualService").value,
+        option_codes:optionCodes,
+        has_off:optionCodes.includes("replace_off"),
+        staff_requested:staffRequested,
+        staff_id:staffRequested ? $("manualStaff").value : "",
+        reservation_date:$("manualDate").value,
+        start_time:$("manualTime").value,
+        design_note:$("manualDesign").value.trim(),
+        request_note:$("manualMemo").value.trim(),
+      };
+      if(!payload.customer_name || !payload.phone || !payload.reservation_date || !payload.start_time){
+        return showToast("お客様名・電話番号・日付・時間を入力してください。", true);
+      }
+      try{
+        await apiPost("/api/admin/reservations/manual-create", payload);
+        closeModal("manualModal");
+        showToast("予約を登録しました。");
+        await Promise.all([loadDay(), loadSummary()]);
+      }catch(e){
+        showToast(e.message || "予約登録に失敗しました。", true);
+      }
+    }
+
+    async function prepareDemo(){
+      if(!confirm("営業前DEMO準備を実行しますか？\\n今日の予約・フォロー・LINE文面をデモ用に整えます。")) return;
+      try{
+        const data = await apiPost("/api/admin/demo/prepare", {});
+        showToast(data.message || "営業前DEMO準備が完了しました。");
+        await loadAll();
+      }catch(e){
+        showToast(e.message || "営業前DEMO準備に失敗しました。", true);
+      }
+    }
+
+    function openSettingsModal(){
+      fillTimeSelects();
+      const s = state.settings || {};
+      $("setShopName").value = s.shop_name || "DPRO NAIL";
+      $("setServiceName").value = s.service_name || "DPRO NAIL LINE";
+      $("setOpenTime").value = (s.open_time || "10:00").slice(0,5);
+      $("setCloseTime").value = (s.close_time || "19:00").slice(0,5);
+      $("setBookingDays").value = s.booking_open_days || 60;
+      $("setBuffer").value = s.default_buffer_minutes ?? 10;
+      $("setMultiStaff").checked = !!s.multi_staff_enabled;
+      $("setStaffRequest").checked = !!s.staff_request_enabled;
+      $("setAutoAssign").checked = !!s.auto_assign_staff_enabled;
+      $("setResource").checked = !!s.resource_management_enabled;
+      $("setAddress").value = s.salon_address || "";
+      $("setSalonNote").value = s.salon_note || "";
+      openModal("settingsModal");
+    }
+
+    function fillTimeSelects(){
+      const targets = [$("setOpenTime"), $("setCloseTime")];
+      targets.forEach(sel => {
+        if(!sel || sel.options.length) return;
+        let html = "";
+        for(let h=8; h<=22; h++){
+          ["00","30"].forEach(m => {
+            const time = `${String(h).padStart(2,"0")}:${m}`;
+            html += `<option value="${time}">${time}</option>`;
+          });
+        }
+        sel.innerHTML = html;
+      });
+    }
+
+    async function saveSettings(){
+      const payload = {
+        shop_name:$("setShopName").value.trim(),
+        service_name:$("setServiceName").value.trim(),
+        open_time:$("setOpenTime").value,
+        close_time:$("setCloseTime").value,
+        booking_open_days:Number($("setBookingDays").value || 60),
+        default_buffer_minutes:Number($("setBuffer").value || 10),
+        multi_staff_enabled:$("setMultiStaff").checked,
+        staff_request_enabled:$("setStaffRequest").checked,
+        auto_assign_staff_enabled:$("setAutoAssign").checked,
+        resource_management_enabled:$("setResource").checked,
+        salon_address:$("setAddress").value.trim(),
+        salon_note:$("setSalonNote").value.trim(),
+      };
+      try{
+        await apiPost("/api/admin/settings/update", payload);
+        closeModal("settingsModal");
+        showToast("店舗設定を保存しました。");
+        await loadAll();
+      }catch(e){
+        showToast(e.message || "設定保存に失敗しました。", true);
+      }
+    }
+
+    function openModal(id){ $(id).classList.add("show"); }
+    function closeModal(id){ $(id).classList.remove("show"); }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      $("targetDate").value = todayStr();
+      loadAll();
+      document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
+        backdrop.addEventListener("click", e => {
+          if(e.target === backdrop) backdrop.classList.remove("show");
+        });
+      });
+    });
+  </script>
+</body>
+</html>
