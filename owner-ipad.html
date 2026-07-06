@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>DPRO NAIL LINE 店頭iPad画面 STEP NAIL-10</title>
+  <title>DPRO NAIL LINE 店頭iPad画面 STEP NAIL-10C</title>
   <style>
     :root{
       --bg:#fbf7f4;--panel:#ffffff;--ink:#27211e;--muted:#786b64;--line:#eaded6;
@@ -28,13 +28,13 @@
         <div style="display:flex;gap:14px;align-items:flex-start">
           <div class="mark">N</div>
           <div>
-            <div class="badge">STEP NAIL-10A / iPad</div>
+            <div class="badge">STEP NAIL-10C / iPad</div>
             <h1>DPRO NAIL LINE 店頭iPad画面</h1>
             <p class="lead">電話予約・店頭予約・Instagram DM予約を、施術中や会計時にすぐ登録するための画面です。PC管理画面よりも、現場で触る操作だけに絞っています。</p>
           </div>
         </div>
         <div class="actions">
-          <button class="btn secondary" onclick="reloadAll()">更新</button>
+          <button class="btn secondary" id="ipadReloadBtnTop" onclick="reloadAll(true)">更新</button>
           <button class="btn" onclick="openManualModal('shop')">店頭予約を登録</button>
         </div>
       </div>
@@ -58,7 +58,7 @@
             <p>予約はスタッフ別に表示します。対応が必要なものだけ、右側の「今日やること」に出ます。</p>
           </div>
           <div class="toolbar">
-            <input type="date" id="targetDate" onchange="loadDay()" />
+            <input type="date" id="targetDate" onchange="loadDay(true)" />
             <button class="btn secondary small" onclick="setToday()">今日</button>
           </div>
         </div>
@@ -98,7 +98,7 @@
     <div class="inner">
       <button class="btn" onclick="openManualModal('shop')">＋ 店頭予約</button>
       <button class="btn secondary" onclick="openManualModal('phone')">＋ 電話予約</button>
-      <button class="btn secondary" onclick="reloadAll()">更新</button>
+      <button class="btn secondary" id="ipadReloadBtnBottom" onclick="reloadAll(true)">更新</button>
     </div>
   </div>
 
@@ -172,6 +172,8 @@
     function fmtDate(dateStr){if(!dateStr)return"";const d=new Date(dateStr+"T00:00:00");return `${d.getMonth()+1}/${d.getDate()}（${["日","月","火","水","木","金","土"][d.getDay()]}）`;}
     function sourceLabel(s){return {phone:"電話予約",shop:"店頭予約",instagram:"Instagram DM",line:"LINE予約"}[s] || s || "予約";}
     function statusLabel(s){return {reserved:"予約中",phone_reserved:"電話予約",shop_reserved:"店頭予約",instagram_reserved:"Instagram予約",changed:"変更済み",cancelled:"キャンセル",completed:"施術完了"}[s] || s || "予約";}
+    function nowLabel(){const d=new Date();return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;}
+    function setButtonLoading(ids, loadingText){const list=Array.isArray(ids)?ids:[ids];const restores=list.map(id=>{const btn=$(id);if(!btn)return null;const old=btn.textContent;btn.dataset.oldText=old;btn.textContent=loadingText;btn.disabled=true;return()=>{btn.textContent=btn.dataset.oldText||old;btn.disabled=false;};}).filter(Boolean);return()=>restores.forEach(fn=>fn());}
     function showToast(msg, err=false){const t=$("toast");t.textContent=msg;t.className="toast show"+(err?" err":"");setTimeout(()=>t.className="toast",3600);}
     function openModal(id){$(id).classList.add("show");}
     function closeModal(id){$(id).classList.remove("show");}
@@ -180,7 +182,8 @@
     async function apiGet(path, params={}){const res=await fetch(buildUrl(path,{shop_code:SHOP_CODE,admin_code:ADMIN_CODE,...params}));const data=await res.json().catch(()=>({}));if(!res.ok||data.ok===false)throw new Error(data.error||data.message||"APIエラー");return data;}
     async function apiPost(path, body={}){const res=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({shop_code:SHOP_CODE,admin_code:ADMIN_CODE,...body})});const data=await res.json().catch(()=>({}));if(!res.ok||data.ok===false)throw new Error(data.error||data.message||"APIエラー");return data;}
 
-    async function reloadAll(){
+    async function reloadAll(showFeedback=false){
+      const restoreButton = showFeedback ? setButtonLoading(["ipadReloadBtnTop","ipadReloadBtnBottom"], "更新中...") : null;
       try{
         $("apiState").textContent="確認中"; $("apiState").className="badge warn";
         if(!$("targetDate").value) $("targetDate").value=todayStr();
@@ -195,11 +198,13 @@
         $("statStaff").textContent=state.staff.length;
         $("apiState").textContent="API OK"; $("apiState").className="badge ok";
         renderSelects();
-        await loadDay();
+        await loadDay(false);
+        if(showFeedback) showToast(`iPad画面を更新しました ${nowLabel()}`);
       }catch(e){$("apiState").textContent="API NG";$("apiState").className="badge no";showToast(e.message||"読み込みに失敗しました。",true);}
+      finally{if(restoreButton) restoreButton();}
     }
 
-    async function loadDay(){
+    async function loadDay(showFeedback=false){
       try{
         const date=$("targetDate").value||todayStr();
         const day=await apiGet("/api/admin/day",{date}); state.day=day;
@@ -208,9 +213,10 @@
         $("statTask").textContent=tasks.length;
         renderSchedule(day.today_reservations_by_staff||[], reservations);
         renderTasks(tasks);
+        if(showFeedback) showToast(`予定を更新しました ${nowLabel()}`);
       }catch(e){$("scheduleList").innerHTML=`<div class="empty">読み込みに失敗しました：${esc(e.message)}</div>`;$("taskList").innerHTML=`<div class="empty">読み込みに失敗しました：${esc(e.message)}</div>`;showToast(e.message||"読み込みに失敗しました。",true);}
     }
-    function setToday(){ $("targetDate").value=todayStr(); loadDay(); }
+    function setToday(){ $("targetDate").value=todayStr(); loadDay(true); }
 
     function renderSchedule(groups, flat){
       const wrap=$("scheduleList");
