@@ -211,7 +211,7 @@
         <div class="brand-row">
           <div class="logo">N</div>
           <div>
-            <div class="kicker">STEP NAIL-10 / OWNER DASHBOARD</div>
+            <div class="kicker">STEP NAIL-10B / OWNER DASHBOARD</div>
             <h1>DPRO NAIL LINE</h1>
           </div>
         </div>
@@ -258,8 +258,8 @@
         <section class="panel" id="today">
           <div class="section-head">
             <div>
-              <h2>本日の施術予定</h2>
-              <p>スタッフ別に、今日来店予定のお客様を表示します。対応が必要なものだけ上の「今日やること」に表示されます。</p>
+              <h2 id="scheduleTitle">本日の施術予定</h2>
+              <p id="scheduleLead">スタッフ別に、今日来店予定のお客様を表示します。対応が必要なものだけ上の「今日やること」に表示されます。</p>
             </div>
             <span class="badge staff">SCHEDULE</span>
           </div>
@@ -551,7 +551,7 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    const STEP = "STEP NAIL-10";
+    const STEP = "STEP NAIL-10B";
     const API_BASE = "https://dpro-nail-line-api.dpromstk2000.workers.dev";
     const SHOP_CODE = "nail_demo";
     let ADMIN_CODE = localStorage.getItem("dpro_nail_admin_code") || "1234";
@@ -688,6 +688,7 @@
     async function loadDay(){
       try{
         const date = $("targetDate").value || todayStr();
+        updateScheduleTitle(date);
         const day = await apiGet("/api/admin/day", { date });
         state.day = day;
         renderTasks(day.today_tasks || []);
@@ -703,6 +704,16 @@
     function setToday(){
       $("targetDate").value = todayStr();
       loadDay();
+    }
+
+    function updateScheduleTitle(date){
+      const isToday = date === todayStr();
+      const title = $("scheduleTitle");
+      const lead = $("scheduleLead");
+      if(title) title.textContent = isToday ? "本日の施術予定" : `${formatDateJa(date)} の施術予定`;
+      if(lead) lead.textContent = isToday
+        ? "スタッフ別に、今日来店予定のお客様を表示します。対応が必要なものだけ上の「今日やること」に表示されます。"
+        : "選択した日付の施術予定をスタッフ別に表示します。キャンセル済みや変更前の予約はここには出ません。";
     }
 
     function renderTasks(tasks){
