@@ -166,7 +166,7 @@
       <div class="brand-row">
         <div class="logo">N</div>
         <div>
-          <div class="kicker">STEP NAIL-4 / CUSTOMER</div>
+          <div class="kicker">STEP NAIL-10A / CUSTOMER</div>
           <h1>DPRO NAIL LINE</h1>
         </div>
       </div>
@@ -328,7 +328,7 @@
   </div>
 
   <script>
-    const STEP_VERSION = "STEP NAIL-4";
+    const STEP_VERSION = "STEP NAIL-10A";
     const API_BASE = "https://dpro-nail-line-api.dpromstk2000.workers.dev";
     const SHOP_CODE = "nail_demo";
 
@@ -548,11 +548,11 @@
     async function loadDays(){
       $("dateList").innerHTML = `<div class="loading"><span class="spinner"></span>予約可能日を読み込み中...</div>`;
       try{
-        const data = await api(`/api/public/available-days?${qs({shop_code:SHOP_CODE,service_code:state.selectedService.service_code,option_codes:state.selectedOptions.join(','),staff_id:state.selectedStaff?.id || '',staff_requested:state.staffRequested,days:45})}`);
+        const data = await api(`/api/public/available-days?${qs({shop_code:SHOP_CODE,service_code:state.selectedService.service_code,option_codes:state.selectedOptions.join(','),has_off:state.selectedOptions.includes('replace_off'),staff_id:state.selectedStaff?.id || '',staff_requested:state.staffRequested,days:45})}`);
         state.days = data.days || [];
         renderDays();
       }catch(e){
-        $("dateList").innerHTML = `<div class="notice err">日付取得に失敗しました。<br>${esc(e.message)}</div>`;
+        $("dateList").innerHTML = `<div class="notice err">日付取得に失敗しました。画面を更新して再度お試しください。<br>${esc(e.message)}</div>`;
       }
     }
 
@@ -566,12 +566,17 @@
         $("dateList").innerHTML = `<div class="notice">予約可能日がありません。</div>`;
         return;
       }
-      $("dateList").innerHTML = state.days.slice(0,42).map(d => `
+      $("dateList").innerHTML = state.days.slice(0,42).map(d => {
+        const dayLabel = d.can_reserve
+          ? (d.available_count === null || d.availability_mode === "business_day_only" ? "時間を選択" : `${Number(d.available_count || 0)}枠`)
+          : esc(d.closed_reason || "休業日");
+        return `
         <button class="day-btn ${state.selectedDate===d.date ? "selected" : ""}" type="button" ${d.can_reserve ? "" : "disabled"} onclick="selectDate('${esc(d.date)}')">
           <b>${formatDateLabel(d.date)}</b>
           <small>${esc(d.weekday_label || "")}</small>
-          <small>${d.can_reserve ? `${Number(d.available_count || 0)}枠` : esc(d.closed_reason || "空きなし")}</small>
-        </button>`).join("");
+          <small>${dayLabel}</small>
+        </button>`;
+      }).join("");
     }
 
     async function selectDate(date){
