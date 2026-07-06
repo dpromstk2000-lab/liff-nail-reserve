@@ -211,7 +211,7 @@
         <div class="brand-row">
           <div class="logo">N</div>
           <div>
-            <div class="kicker">STEP NAIL-10B / OWNER DASHBOARD</div>
+            <div class="kicker">STEP NAIL-10C / OWNER DASHBOARD</div>
             <h1>DPRO NAIL LINE</h1>
           </div>
         </div>
@@ -219,7 +219,7 @@
           <button class="btn accent" type="button" onclick="prepareDemo()">営業前DEMO準備</button>
           <button class="btn secondary" type="button" onclick="openManualModal()">電話・店頭予約</button>
           <button class="btn secondary" type="button" onclick="openSettingsModal()">店舗設定</button>
-          <button class="btn" type="button" onclick="loadAll()">更新</button>
+          <button class="btn" id="ownerReloadBtn" type="button" onclick="loadAll(true)">更新</button>
         </div>
       </div>
       <p class="lead">ネイルサロン向けのPC管理画面です。今日やること、本日の施術予定、スタッフ別予約、LINE文面、電話・店頭・Instagram予約をまとめて確認できます。</p>
@@ -265,11 +265,11 @@
           </div>
           <div class="toolbar">
             <div class="toolbar-left">
-              <input class="date-input" id="targetDate" type="date" onchange="loadDay()" />
+              <input class="date-input" id="targetDate" type="date" onchange="loadDay(true)" />
               <button class="btn secondary small" type="button" onclick="setToday()">今日</button>
             </div>
             <div class="toolbar-right">
-              <button class="btn small" type="button" onclick="loadDay()">予定を更新</button>
+              <button class="btn small" id="dayReloadBtn" type="button" onclick="loadDay(true)">予定を更新</button>
             </div>
           </div>
           <div id="todaySchedule">
@@ -606,6 +606,25 @@
       const w = ["日","月","火","水","木","金","土"][d.getDay()];
       return `${d.getMonth()+1}/${d.getDate()}（${w}）`;
     }
+    function nowLabel(){
+      const d = new Date();
+      return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+    }
+    function setButtonLoading(buttonId, loadingText){
+      const btn = $(buttonId);
+      if(!btn) return null;
+      const oldText = btn.textContent;
+      btn.dataset.oldText = oldText;
+      btn.textContent = loadingText;
+      btn.disabled = true;
+      return () => {
+        btn.textContent = btn.dataset.oldText || oldText;
+        btn.disabled = false;
+      };
+    }
+    function showUpdateDone(label="更新しました"){
+      showToast(`${label} ${nowLabel()}`);
+    }
     function showToast(message, isError=false){
       const t = $("toast");
       t.textContent = message;
@@ -648,7 +667,8 @@
       return data;
     }
 
-    async function loadAll(){
+    async function loadAll(showFeedback=false){
+      const restoreButton = showFeedback ? setButtonLoading("ownerReloadBtn", "更新中...") : null;
       try{
         $("apiState").textContent = "確認中";
         if(!$("targetDate").value) $("targetDate").value = todayStr();
@@ -669,9 +689,12 @@
         await Promise.all([loadSummary(), loadDay()]);
         renderShopStatus();
         renderManualSelects();
+        if(showFeedback) showUpdateDone("管理画面を更新しました");
       }catch(e){
         $("apiState").textContent = "NG";
         showToast(e.message || "読み込みに失敗しました。", true);
+      }finally{
+        if(restoreButton) restoreButton();
       }
     }
 
@@ -685,7 +708,8 @@
       $("statLine").textContent = c.line_connected_customers ?? "-";
     }
 
-    async function loadDay(){
+    async function loadDay(showFeedback=false){
+      const restoreButton = showFeedback ? setButtonLoading("dayReloadBtn", "更新中...") : null;
       try{
         const date = $("targetDate").value || todayStr();
         updateScheduleTitle(date);
@@ -694,16 +718,19 @@
         renderTasks(day.today_tasks || []);
         renderTodaySchedule(day.today_reservations_by_staff || [], day.today_reservations || []);
         renderNextSchedule(day.next_business_reservations || [], day.next_business_date);
+        if(showFeedback) showUpdateDone("予定を更新しました");
       }catch(e){
         $("taskList").innerHTML = `<div class="empty">読み込みに失敗しました：${esc(e.message)}</div>`;
         $("todaySchedule").innerHTML = `<div class="empty">読み込みに失敗しました：${esc(e.message)}</div>`;
         showToast(e.message || "予定の読み込みに失敗しました。", true);
+      }finally{
+        if(restoreButton) restoreButton();
       }
     }
 
     function setToday(){
       $("targetDate").value = todayStr();
-      loadDay();
+      loadDay(true);
     }
 
     function updateScheduleTitle(date){
