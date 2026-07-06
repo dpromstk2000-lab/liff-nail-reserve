@@ -191,6 +191,18 @@
     .time-btn.selected{background:var(--ink);border-color:var(--ink);color:#fff}
     .time-btn.selected small{color:rgba(255,255,255,.78)}
     .time-btn:disabled{opacity:.42;cursor:not-allowed;background:#f7f3ef}
+
+    .settings-block{border:1px solid var(--line);border-radius:20px;background:#fff;padding:14px;margin-top:14px}
+    .settings-block h3{margin:0 0 4px;font-size:18px}.settings-block p{margin:0 0 12px;color:var(--muted);font-size:12px;line-height:1.6}
+    .settings-list{display:grid;gap:10px}
+    .setting-card{border:1px solid var(--line);border-radius:18px;background:#fffaf6;padding:13px}
+    .setting-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .setting-card-head h4{margin:0;font-size:16px}.setting-card-head small{display:block;color:var(--muted);margin-top:4px;line-height:1.5}
+    .setting-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end;margin-top:10px}
+    .safe-note{background:#eef8f2;border:1px solid #d7ece0;color:#385f4b;border-radius:16px;padding:10px 12px;font-size:12px;line-height:1.6;margin-top:10px}
+    .danger-note{background:#fff3f1;border:1px solid #f1d6d0;color:#8b433b;border-radius:16px;padding:10px 12px;font-size:12px;line-height:1.6;margin-top:10px}
+    .staff-toggle-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+    .tiny-label{font-size:11px;color:var(--muted);font-weight:900;letter-spacing:.05em;text-transform:uppercase;margin:10px 0 6px}
     .toast{
       position:fixed;right:16px;bottom:16px;z-index:80;background:#24312d;color:#fff;border-radius:18px;padding:13px 16px;box-shadow:0 18px 48px rgba(0,0,0,.22);display:none;max-width:min(420px,calc(100vw - 32px));line-height:1.5
     }
@@ -211,7 +223,7 @@
         <div class="brand-row">
           <div class="logo">N</div>
           <div>
-            <div class="kicker">STEP NAIL-10C / OWNER DASHBOARD</div>
+            <div class="kicker">STEP NAIL-11 / OWNER DASHBOARD</div>
             <h1>DPRO NAIL LINE</h1>
           </div>
         </div>
@@ -478,72 +490,106 @@
   </div>
 
   <div class="modal-backdrop" id="settingsModal">
-    <div class="modal">
+    <div class="modal" style="width:min(1120px,100%)">
       <div class="modal-head">
         <div>
-          <h2>店舗設定</h2>
-          <p>営業時間は30分単位です。デモ用管理コードは 1234 のまま使います。</p>
+          <h2>店舗設定・メニュー簡単設定</h2>
+          <p>日常変更はオーナー側で変更できます。予約枠に影響する時間は、安全プリセットから選ぶ形です。</p>
         </div>
         <button class="btn secondary small" onclick="closeModal('settingsModal')">閉じる</button>
       </div>
       <div class="modal-body">
-        <div class="form-grid">
-          <div class="field">
-            <label>店舗名</label>
-            <input id="setShopName" />
+        <div class="safe-note">
+          初期メニュー構成は岩口さん側で設定し、店舗側では「営業時間・表示/非表示・価格・説明・安全な時間プリセット・スタッフON/OFF」を変更できる想定です。既存予約は勝手に書き換えず、今後の空き時間判定に反映します。
+        </div>
+
+        <div class="settings-block">
+          <h3>1. 店舗基本設定</h3>
+          <p>営業時間・予約受付範囲・指名受付など、日常運用で使う設定です。</p>
+          <div class="form-grid">
+            <div class="field">
+              <label>店舗名</label>
+              <input id="setShopName" />
+            </div>
+            <div class="field">
+              <label>サービス名</label>
+              <input id="setServiceName" />
+            </div>
+            <div class="field">
+              <label>開始時間</label>
+              <select id="setOpenTime"></select>
+            </div>
+            <div class="field">
+              <label>終了時間</label>
+              <select id="setCloseTime"></select>
+            </div>
+            <div class="field">
+              <label>予約受付日数</label>
+              <input id="setBookingDays" type="number" min="7" max="180" />
+            </div>
+            <div class="field">
+              <label>基本片付け時間（分）</label>
+              <select id="setBuffer"></select>
+            </div>
           </div>
-          <div class="field">
-            <label>サービス名</label>
-            <input id="setServiceName" />
+
+          <div class="option-checks" style="margin-top:14px">
+            <label class="check-card">
+              <input type="checkbox" id="setMultiStaff" />
+              <span><strong>複数スタッフ対応</strong><span>スタッフ別予約表と指名選択を使います。</span></span>
+            </label>
+            <label class="check-card">
+              <input type="checkbox" id="setStaffRequest" />
+              <span><strong>指名予約を許可</strong><span>お客様がネイリストを選べるようにします。</span></span>
+            </label>
+            <label class="check-card">
+              <input type="checkbox" id="setAutoAssign" />
+              <span><strong>指名なし自動割当</strong><span>空いている対応可能スタッフに自動で割り当てます。</span></span>
+            </label>
+            <label class="check-card">
+              <input type="checkbox" id="setResource" />
+              <span><strong>席・設備管理</strong><span>初期はOFF推奨。将来ONにできる設計です。</span></span>
+            </label>
           </div>
-          <div class="field">
-            <label>開始時間</label>
-            <select id="setOpenTime"></select>
+
+          <div class="field" style="margin-top:14px">
+            <label>サロン住所</label>
+            <input id="setAddress" />
           </div>
-          <div class="field">
-            <label>終了時間</label>
-            <select id="setCloseTime"></select>
+          <div class="field" style="margin-top:14px">
+            <label>来店前案内</label>
+            <textarea id="setSalonNote"></textarea>
           </div>
-          <div class="field">
-            <label>予約受付日数</label>
-            <input id="setBookingDays" type="number" min="7" max="180" />
-          </div>
-          <div class="field">
-            <label>片付け時間（分）</label>
-            <input id="setBuffer" type="number" min="0" max="60" />
+          <div class="setting-actions">
+            <button class="btn ok" id="saveBasicSettingsBtn" onclick="saveSettings()">店舗基本設定を保存</button>
           </div>
         </div>
 
-        <div class="option-checks" style="margin-top:14px">
-          <label class="check-card">
-            <input type="checkbox" id="setMultiStaff" />
-            <span><strong>複数スタッフ対応</strong><span>スタッフ別予約表と指名選択を使います。</span></span>
-          </label>
-          <label class="check-card">
-            <input type="checkbox" id="setStaffRequest" />
-            <span><strong>指名予約を許可</strong><span>お客様がネイリストを選べるようにします。</span></span>
-          </label>
-          <label class="check-card">
-            <input type="checkbox" id="setAutoAssign" />
-            <span><strong>指名なし自動割当</strong><span>空いている対応可能スタッフに自動で割り当てます。</span></span>
-          </label>
-          <label class="check-card">
-            <input type="checkbox" id="setResource" />
-            <span><strong>席・設備管理</strong><span>初期はOFF推奨。将来ONにできる設計です。</span></span>
-          </label>
+        <div class="settings-block">
+          <h3>2. メニュー簡単設定</h3>
+          <p>価格・説明・表示ON/OFF・施術時間プリセット・対応スタッフを変更できます。時間は自由入力ではなく安全プリセットです。</p>
+          <div id="easyServiceList" class="settings-list"></div>
         </div>
 
-        <div class="field" style="margin-top:14px">
-          <label>サロン住所</label>
-          <input id="setAddress" />
+        <div class="settings-block">
+          <h3>3. オプション簡単設定</h3>
+          <p>付け替えオフ、長さ出し、亀裂補修などの表示・価格・追加時間を変更できます。</p>
+          <div id="easyOptionList" class="settings-list"></div>
         </div>
-        <div class="field" style="margin-top:14px">
-          <label>来店前案内</label>
-          <textarea id="setSalonNote"></textarea>
+
+        <div class="settings-block">
+          <h3>4. スタッフ簡単設定</h3>
+          <p>スタッフの表示名、指名受付、予約受付ON/OFFを変更できます。</p>
+          <div id="easyStaffList" class="settings-list"></div>
+        </div>
+
+        <div class="danger-note">
+          注意：施術時間やオプション時間を短くすると予約枠が増える一方で、施術時間が足りなくなる可能性があります。迷う場合は「通常」または「長め」を選んでください。
         </div>
       </div>
       <div class="modal-actions">
-        <button class="btn ok" onclick="saveSettings()">設定を保存</button>
+        <button class="btn secondary" onclick="reloadSettingsForModal()">設定を再読み込み</button>
+        <button class="btn secondary" onclick="closeModal('settingsModal')">閉じる</button>
       </div>
     </div>
   </div>
@@ -551,7 +597,7 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    const STEP = "STEP NAIL-10B";
+    const STEP = "STEP NAIL-11";
     const API_BASE = "https://dpro-nail-line-api.dpromstk2000.workers.dev";
     const SHOP_CODE = "nail_demo";
     let ADMIN_CODE = localStorage.getItem("dpro_nail_admin_code") || "1234";
@@ -564,6 +610,7 @@
       services:[],
       options:[],
       staff:[],
+      staffServices:[],
       selectedMessage:null,
       manualTimes:[],
     };
@@ -683,6 +730,7 @@
         state.settings = settings.settings;
         state.services = services.services || [];
         state.options = services.options || [];
+        state.staffServices = services.staff_services || [];
         state.staff = staff.staff || [];
         $("apiState").textContent = health.ok ? "OK" : "NG";
 
@@ -993,7 +1041,7 @@
       wrap.innerHTML = options.map(o => `
         <label class="check-card">
           <input type="checkbox" name="manualOption" value="${esc(o.option_code)}" onchange="loadManualTimes()" ${o.option_code === "replace_off" ? "data-off='1'" : ""} />
-          <span><strong>${esc(o.option_name)}</strong><span>+${Number(o.additional_minutes || 0)}分 / +${yen(o.additional_price || 0)}</span></span>
+          <span><strong>${esc(o.option_name)}</strong><span>+${Number(o.additional_minutes ?? o.add_minutes ?? 0)}分 / +${yen(o.additional_price ?? o.add_price ?? 0)}</span></span>
         </label>
       `).join("");
     }
@@ -1117,13 +1165,14 @@
       $("setOpenTime").value = (s.open_time || "10:00").slice(0,5);
       $("setCloseTime").value = (s.close_time || "19:00").slice(0,5);
       $("setBookingDays").value = s.booking_open_days || 60;
-      $("setBuffer").value = s.default_buffer_minutes ?? 10;
+      $("setBuffer").value = String(s.default_buffer_minutes ?? 10);
       $("setMultiStaff").checked = !!s.multi_staff_enabled;
       $("setStaffRequest").checked = !!s.staff_request_enabled;
       $("setAutoAssign").checked = !!s.auto_assign_staff_enabled;
       $("setResource").checked = !!s.resource_management_enabled;
       $("setAddress").value = s.salon_address || "";
       $("setSalonNote").value = s.salon_note || "";
+      renderEasySettings();
       openModal("settingsModal");
     }
 
@@ -1140,6 +1189,8 @@
         }
         sel.innerHTML = html;
       });
+      const buffer = $("setBuffer");
+      if(buffer && !buffer.options.length) buffer.innerHTML = [0,5,10,15,20,30].map(v => `<option value="${v}">${v}分</option>`).join("");
     }
 
     async function saveSettings(){
@@ -1157,14 +1208,201 @@
         salon_address:$("setAddress").value.trim(),
         salon_note:$("setSalonNote").value.trim(),
       };
+      const restoreButton = setButtonLoading("saveBasicSettingsBtn", "保存中...");
       try{
         await apiPost("/api/admin/settings/update", payload);
-        closeModal("settingsModal");
-        showToast("店舗設定を保存しました。");
-        await loadAll();
+        showToast("店舗基本設定を保存しました。");
+        await reloadSettingsForModal(false);
+        await Promise.all([loadSummary(), loadDay()]);
       }catch(e){
         showToast(e.message || "設定保存に失敗しました。", true);
+      }finally{
+        if(restoreButton) restoreButton();
       }
+    }
+
+    function minuteOptions(values, selected){
+      const sel = Number(selected || 0);
+      return values.map(v => `<option value="${v}" ${Number(v)===sel?"selected":""}>${v}分</option>`).join("");
+    }
+
+    function serviceStaffChecked(service, staffId){
+      const rows = state.staffServices.filter(r => String(r.service_id) === String(service.id) && String(r.staff_id) === String(staffId));
+      if(!rows.length) return false;
+      return rows.some(r => r.is_available !== false);
+    }
+
+    function renderEasySettings(){
+      renderEasyServices();
+      renderEasyOptions();
+      renderEasyStaff();
+    }
+
+    function renderEasyServices(){
+      const wrap = $("easyServiceList");
+      if(!wrap) return;
+      if(!state.services.length){ wrap.innerHTML = `<div class="empty">メニューがありません。</div>`; return; }
+      wrap.innerHTML = state.services.map((s, i) => {
+        const active = s.is_active !== false;
+        const staffChecks = state.staff.map(st => `
+          <label class="check-card">
+            <input type="checkbox" name="svc_staff_${i}" value="${esc(st.id)}" ${serviceStaffChecked(s, st.id) ? "checked" : ""} />
+            <span><strong>${esc(st.display_name || st.staff_name)}</strong><span>${st.is_active ? "受付中" : "停止中"}</span></span>
+          </label>
+        `).join("");
+        return `
+          <div class="setting-card">
+            <div class="setting-card-head">
+              <div><h4>${esc(s.service_name)}</h4><small>${esc(s.service_code)} / 現在 ${Number(s.base_minutes||0)}分 + 片付け${Number(s.buffer_minutes||0)}分 / ${yen(s.base_price||0)}</small></div>
+              <span class="badge ${active ? "normal" : "high"}">${active ? "表示中" : "非表示"}</span>
+            </div>
+            <div class="form-grid">
+              <div class="field"><label>メニュー名</label><input id="svc_name_${i}" value="${esc(s.service_name || "")}" /></div>
+              <div class="field"><label>価格</label><input id="svc_price_${i}" type="number" min="0" step="100" value="${Number(s.base_price || 0)}" /></div>
+              <div class="field"><label>施術時間プリセット</label><select id="svc_minutes_${i}">${minuteOptions([45,60,75,90,105,120,150,180,210,240], s.base_minutes || 60)}</select></div>
+              <div class="field"><label>片付け時間</label><select id="svc_buffer_${i}">${minuteOptions([0,5,10,15,20,30], s.buffer_minutes || 10)}</select></div>
+            </div>
+            <div class="field" style="margin-top:10px"><label>説明文</label><textarea id="svc_desc_${i}">${esc(s.description || "")}</textarea></div>
+            <div class="option-checks" style="margin-top:10px">
+              <label class="check-card"><input type="checkbox" id="svc_active_${i}" ${active ? "checked" : ""}/><span><strong>予約画面に表示する</strong><span>OFFにすると新規予約では選べません。</span></span></label>
+              <label class="check-card"><input type="checkbox" id="svc_request_${i}" ${s.allow_staff_request !== false ? "checked" : ""}/><span><strong>指名受付を許可</strong><span>このメニューでネイリスト指名を使います。</span></span></label>
+            </div>
+            <div class="tiny-label">対応スタッフ</div>
+            <div class="staff-toggle-grid">${staffChecks || `<div class="empty">スタッフがありません。</div>`}</div>
+            <div class="safe-note">変更は今後の空き時間判定に反映します。既存予約の履歴は自動で書き換えません。</div>
+            <div class="setting-actions"><button class="btn ok" id="svc_save_${i}" onclick="saveEasyService(${i})">このメニューを保存</button></div>
+          </div>`;
+      }).join("");
+    }
+
+    function renderEasyOptions(){
+      const wrap = $("easyOptionList");
+      if(!wrap) return;
+      if(!state.options.length){ wrap.innerHTML = `<div class="empty">オプションがありません。</div>`; return; }
+      wrap.innerHTML = state.options.map((o, i) => {
+        const active = o.is_active !== false;
+        const min = Number(o.additional_minutes ?? o.add_minutes ?? 0);
+        const price = Number(o.additional_price ?? o.add_price ?? 0);
+        return `
+          <div class="setting-card">
+            <div class="setting-card-head">
+              <div><h4>${esc(o.option_name)}</h4><small>${esc(o.option_code)} / 現在 +${min}分 / +${yen(price)}</small></div>
+              <span class="badge ${active ? "normal" : "high"}">${active ? "表示中" : "非表示"}</span>
+            </div>
+            <div class="form-grid">
+              <div class="field"><label>オプション名</label><input id="opt_name_${i}" value="${esc(o.option_name || "")}" /></div>
+              <div class="field"><label>追加料金</label><input id="opt_price_${i}" type="number" min="0" step="100" value="${price}" /></div>
+              <div class="field"><label>追加時間プリセット</label><select id="opt_minutes_${i}">${minuteOptions([0,15,30,45,60,90,120], min)}</select></div>
+              <label class="check-card" style="align-self:end"><input type="checkbox" id="opt_active_${i}" ${active ? "checked" : ""}/><span><strong>予約画面に表示する</strong><span>OFFにすると選べません。</span></span></label>
+            </div>
+            <div class="field" style="margin-top:10px"><label>説明文</label><textarea id="opt_desc_${i}">${esc(o.description || "")}</textarea></div>
+            <div class="setting-actions"><button class="btn ok" id="opt_save_${i}" onclick="saveEasyOption(${i})">このオプションを保存</button></div>
+          </div>`;
+      }).join("");
+    }
+
+    function renderEasyStaff(){
+      const wrap = $("easyStaffList");
+      if(!wrap) return;
+      if(!state.staff.length){ wrap.innerHTML = `<div class="empty">スタッフがありません。</div>`; return; }
+      wrap.innerHTML = state.staff.map((s, i) => {
+        const active = s.is_active !== false;
+        return `
+          <div class="setting-card">
+            <div class="setting-card-head">
+              <div><h4>${esc(s.display_name || s.staff_name)}</h4><small>${esc(s.staff_code)} / ${active ? "予約受付中" : "停止中"}</small></div>
+              <span class="badge ${active ? "normal" : "high"}">${active ? "受付中" : "停止中"}</span>
+            </div>
+            <div class="form-grid">
+              <div class="field"><label>スタッフ名</label><input id="staff_name_${i}" value="${esc(s.staff_name || "")}" /></div>
+              <div class="field"><label>表示名</label><input id="staff_display_${i}" value="${esc(s.display_name || "")}" /></div>
+            </div>
+            <div class="field" style="margin-top:10px"><label>紹介文</label><textarea id="staff_profile_${i}">${esc(s.profile || "")}</textarea></div>
+            <div class="option-checks" style="margin-top:10px">
+              <label class="check-card"><input type="checkbox" id="staff_active_${i}" ${active ? "checked" : ""}/><span><strong>予約受付ON</strong><span>OFFにすると新規予約の割当対象から外れます。</span></span></label>
+              <label class="check-card"><input type="checkbox" id="staff_request_${i}" ${s.can_be_requested !== false ? "checked" : ""}/><span><strong>指名受付ON</strong><span>OFFにすると指名候補から外れます。</span></span></label>
+            </div>
+            <div class="setting-actions"><button class="btn ok" id="staff_save_${i}" onclick="saveEasyStaff(${i})">このスタッフを保存</button></div>
+          </div>`;
+      }).join("");
+    }
+
+    async function reloadSettingsForModal(show=true){
+      try{
+        const [settings, services, staff] = await Promise.all([apiGet("/api/admin/settings"), apiGet("/api/admin/services"), apiGet("/api/admin/staff")]);
+        state.settings = settings.settings;
+        state.services = services.services || [];
+        state.options = services.options || [];
+        state.staffServices = services.staff_services || [];
+        state.staff = staff.staff || [];
+        renderShopStatus();
+        renderManualSelects();
+        renderEasySettings();
+        if(show) showToast("設定を再読み込みしました。");
+      }catch(e){ showToast(e.message || "設定再読み込みに失敗しました。", true); }
+    }
+
+    async function saveEasyService(i){
+      const s = state.services[i];
+      if(!s) return;
+      const newMinutes = Number($("svc_minutes_"+i).value || s.base_minutes || 60);
+      if(newMinutes < Number(s.base_minutes || 60) && !confirm("施術時間を短くすると予約枠が増えます。時間が足りなくならないか確認してください。保存しますか？")) return;
+      const restoreButton = setButtonLoading("svc_save_"+i, "保存中...");
+      try{
+        await apiPost("/api/admin/services/update", {
+          id:s.id,
+          service_name:$("svc_name_"+i).value.trim(),
+          description:$("svc_desc_"+i).value.trim(),
+          base_price:Number($("svc_price_"+i).value || 0),
+          base_minutes:newMinutes,
+          buffer_minutes:Number($("svc_buffer_"+i).value || 10),
+          allow_staff_request:$("svc_request_"+i).checked,
+          is_active:$("svc_active_"+i).checked,
+        });
+        const staffIds = [...document.querySelectorAll(`input[name="svc_staff_${i}"]:checked`)].map(x => x.value);
+        await apiPost("/api/admin/staff-services/update", { service_id:s.id, staff_ids:staffIds });
+        showToast("メニュー設定を保存しました。");
+        await reloadSettingsForModal(false);
+      }catch(e){ showToast(e.message || "メニュー設定の保存に失敗しました。", true); }
+      finally{ if(restoreButton) restoreButton(); }
+    }
+
+    async function saveEasyOption(i){
+      const o = state.options[i];
+      if(!o) return;
+      const restoreButton = setButtonLoading("opt_save_"+i, "保存中...");
+      try{
+        await apiPost("/api/admin/options/update", {
+          id:o.id,
+          option_name:$("opt_name_"+i).value.trim(),
+          description:$("opt_desc_"+i).value.trim(),
+          add_price:Number($("opt_price_"+i).value || 0),
+          add_minutes:Number($("opt_minutes_"+i).value || 0),
+          is_active:$("opt_active_"+i).checked,
+        });
+        showToast("オプション設定を保存しました。");
+        await reloadSettingsForModal(false);
+      }catch(e){ showToast(e.message || "オプション設定の保存に失敗しました。", true); }
+      finally{ if(restoreButton) restoreButton(); }
+    }
+
+    async function saveEasyStaff(i){
+      const s = state.staff[i];
+      if(!s) return;
+      const restoreButton = setButtonLoading("staff_save_"+i, "保存中...");
+      try{
+        await apiPost("/api/admin/staff/update", {
+          id:s.id,
+          staff_name:$("staff_name_"+i).value.trim(),
+          display_name:$("staff_display_"+i).value.trim(),
+          profile:$("staff_profile_"+i).value.trim(),
+          is_active:$("staff_active_"+i).checked,
+          can_be_requested:$("staff_request_"+i).checked,
+        });
+        showToast("スタッフ設定を保存しました。");
+        await reloadSettingsForModal(false);
+      }catch(e){ showToast(e.message || "スタッフ設定の保存に失敗しました。", true); }
+      finally{ if(restoreButton) restoreButton(); }
     }
 
     function openModal(id){ $(id).classList.add("show"); }
