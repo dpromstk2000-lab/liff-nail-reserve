@@ -211,7 +211,7 @@
         <div class="brand-row">
           <div class="logo">N</div>
           <div>
-            <div class="kicker">STEP NAIL-5 / OWNER DASHBOARD</div>
+            <div class="kicker">STEP NAIL-10 / OWNER DASHBOARD</div>
             <h1>DPRO NAIL LINE</h1>
           </div>
         </div>
@@ -246,7 +246,7 @@
           <div class="section-head">
             <div>
               <h2>今日やること（未対応のみ）</h2>
-              <p>来店前デザイン確認、次回付け替え案内、未コピーLINE文面だけを表示します。予約予定は下の「本日の施術予定」で確認できます。</p>
+              <p>未対応のLINE文面を中心に表示します。フォロー内容は文面カード内にまとめ、予約予定は下の「本日の施術予定」で確認できます。</p>
             </div>
             <span class="badge">ACTION REQUIRED</span>
           </div>
@@ -551,7 +551,7 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    const STEP = "STEP NAIL-5";
+    const STEP = "STEP NAIL-10";
     const API_BASE = "https://dpro-nail-line-api.dpromstk2000.workers.dev";
     const SHOP_CODE = "nail_demo";
     let ADMIN_CODE = localStorage.getItem("dpro_nail_admin_code") || "1234";
@@ -727,6 +727,7 @@
                 ${priorityBadge(t.priority)}
               </div>
               <div class="card-name">${esc(t.customer_name || "お客様")}</div>
+              ${t.memo ? `<div class="memo">${esc(t.memo)}</div>` : ""}
               <div class="card-actions">
                 <button class="btn ok small" onclick='openMessageModal(${JSON.stringify(m).replace(/'/g,"&#39;")})'>文面を確認・コピー</button>
               </div>
@@ -794,6 +795,21 @@
       `;
     }
 
+    function formatEndTimeLabel(r){
+      const end = (r.end_time || "").slice(0,5);
+      return end ? `${end}まで確保` : "終了未定";
+    }
+
+    function formatReservationMinutes(r){
+      const base = Number(r.base_minutes || 0);
+      const option = Number(r.option_minutes || 0);
+      const buffer = Number(r.buffer_minutes || 0);
+      const treatment = base + option;
+      if(treatment > 0 && buffer > 0) return `施術目安${treatment}分＋片付け${buffer}分`;
+      if(treatment > 0) return `施術目安${treatment}分`;
+      return `${Number(r.total_minutes || 0)}分`;
+    }
+
     function renderReservationCard(r){
       const options = Array.isArray(r.option_names) ? r.option_names : [];
       const lineState = r.line_user_id ? '<span class="pill ok">LINE連携</span>' : '<span class="pill no">LINE未連携</span>';
@@ -802,11 +818,11 @@
         <article class="reservation-card">
           <div class="time-box">
             <b>${esc((r.start_time || "").slice(0,5))}</b>
-            <span>${esc((r.end_time || "").slice(0,5))}まで</span>
+            <span>${esc(formatEndTimeLabel(r))}</span>
           </div>
           <div>
             <div class="card-title">${esc(r.customer_name || "お客様")}</div>
-            <div class="card-sub">${esc(r.service_name || "")}　${Number(r.total_minutes || 0)}分　${yen(r.total_price || 0)}</div>
+            <div class="card-sub">${esc(r.service_name || "")}　${esc(formatReservationMinutes(r))}　${yen(r.total_price || 0)}</div>
             <div class="meta">
               <span class="pill">${esc(statusLabel(r.status))}</span>
               <span class="pill source">${esc(sourceLabel(r.source))}</span>
