@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>DPRO NAIL LINE｜会員ページ</title>
+  <meta name="description" content="DPRO NAIL LINE ネイルサロン向け会員ページ・予約確認・変更・キャンセル" />
+  <style>
+    :root{
+      --bg:#f8f3ee;
+      --card:#ffffff;
+      --ink:#24312d;
+      --muted:#718078;
+      --line:#eadfd5;
+      --brand:#8d6f5d;
+      --brand2:#c79a7b;
+      --soft:#fff8f2;
+      --soft2:#f2ebe4;
+      --danger:#b05b50;
+      --warn:#bd7d25;
+      --ok:#557867;
+      --info:#58748a;
+      --shadow:0 18px 50px rgba(60,42,32,.10);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",Helvetica,Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(199,154,123,.20), transparent 34%),
+        linear-gradient(180deg,#fffaf6 0%,var(--bg) 46%,#f7efe8 100%);
+      min-height:100vh;
+    }
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px 14px 88px}
+    .hero{
+      background:linear-gradient(135deg,#fff 0%,#fff9f4 56%,#f2e4d8 100%);
+      border:1px solid rgba(141,111,93,.18);
+      border-radius:32px;
+      padding:24px 20px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .hero:after{
+      content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(199,154,123,.15)
+    }
+    .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;position:relative;z-index:1}
+    .brand-row{display:flex;gap:14px;align-items:center}
+    .logo{
+      width:58px;height:58px;border-radius:18px;display:grid;place-items:center;color:#fff;
+      background:linear-gradient(135deg,var(--brand),var(--brand2));font-weight:900;font-size:24px;letter-spacing:.06em;box-shadow:0 12px 24px rgba(141,111,93,.22);flex:0 0 auto
+    }
+    .kicker{font-size:12px;font-weight:900;letter-spacing:.14em;color:var(--brand);text-transform:uppercase;margin-bottom:4px}
+    h1{margin:0;font-size:29px;line-height:1.15;letter-spacing:.01em}
+    .lead{position:relative;z-index:1;margin:16px 0 0;color:#52645c;line-height:1.75;font-size:15px;max-width:860px}
+    .header-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+    .btn{
+      border:0;border-radius:999px;padding:12px 16px;font-weight:900;letter-spacing:.02em;background:var(--ink);color:#fff;box-shadow:0 12px 24px rgba(36,49,45,.18);
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;text-decoration:none;
+    }
+    .btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none}
+    .btn.accent{background:linear-gradient(135deg,var(--brand),var(--brand2))}
+    .btn.ok{background:var(--ok)}
+    .btn.warn{background:var(--warn)}
+    .btn.danger{background:var(--danger)}
+    .btn.ghost{background:transparent;color:var(--brand);border:1px solid rgba(141,111,93,.25);box-shadow:none}
+    .btn.small{padding:8px 11px;font-size:12px}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px;position:relative;z-index:1}
+    .stat{background:rgba(255,255,255,.78);border:1px solid rgba(141,111,93,.14);border-radius:18px;padding:13px}
+    .stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:4px;font-weight:800}
+    .stat b{font-size:18px;line-height:1}.stat span{display:block;color:var(--muted);font-size:12px;margin-top:6px}
+    .nav{display:flex;gap:8px;overflow:auto;padding:14px 0 2px}
+    .nav a{min-width:max-content;text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 13px;color:var(--muted);font-size:13px;font-weight:900}
+    .layout{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-top:14px}
+    .panel{background:rgba(255,255,255,.92);border:1px solid rgba(141,111,93,.14);border-radius:28px;box-shadow:var(--shadow);padding:20px;margin-bottom:14px}
+    .section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
+    .section-head h2{font-size:22px;line-height:1.25;margin:0}.section-head p{margin:7px 0 0;color:var(--muted);font-size:14px;line-height:1.6}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:var(--soft);border:1px solid var(--line);font-size:12px;font-weight:900;color:var(--brand)}
+    .badge.ok{background:#f2f7f4;border-color:#d3e8dc;color:var(--ok)}.badge.warn{background:#fff5e8;border-color:#ebd4ae;color:var(--warn)}.badge.danger{background:#fff0ef;border-color:#f0cfca;color:var(--danger)}.badge.staff{background:#eef4f7;border-color:#d3e1e8;color:var(--info)}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}.toolbar-left,.toolbar-right{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+    .field{margin-bottom:12px}.field label{display:block;font-weight:900;margin:0 0 7px;font-size:14px}
+    .input,.textarea,.select{width:100%;border:1px solid var(--line);background:#fff;border-radius:16px;padding:13px 14px;outline:none;color:var(--ink)}
+    .textarea{min-height:118px;resize:vertical;line-height:1.6}.input:focus,.textarea:focus,.select:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(141,111,93,.14)}
+    .help{color:var(--muted);font-size:12px;line-height:1.5;margin-top:6px}
+    .notice{background:#fff8ee;border:1px solid #ead8bf;color:#75552d;border-radius:18px;padding:13px 14px;line-height:1.65;font-size:14px}.notice.err{background:#fff0ef;border-color:#f0cfca;color:#9b5149}.notice.ok{background:#eef7f2;border-color:#cfe5d8;color:#446f5a}.notice.info{background:#eef4f7;border-color:#d3e1e8;color:#4d6577}
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:15px;transition:.18s ease}.card:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(60,42,32,.08)}
+    .card.disabled{opacity:.65;background:#faf7f4}.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}.card h3{margin:0;font-size:17px;line-height:1.35}.card p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+    .meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.pill{background:#f7f0e9;border:1px solid #eadfd5;color:#67574c;border-radius:999px;padding:5px 8px;font-size:12px;font-weight:800}.pill.ok{background:#eef7f2;border-color:#cfe5d8;color:#446f5a}.pill.no{background:#f8eeee;border-color:#efd2ce;color:#9b5149}
+    .summary{background:linear-gradient(135deg,#fffaf5,#fff);border:1px solid var(--line);border-radius:22px;padding:16px;margin:12px 0}.summary-row{display:flex;justify-content:space-between;gap:14px;border-bottom:1px dashed #eadfd5;padding:10px 0}.summary-row:first-child{padding-top:0}.summary-row:last-child{border-bottom:0;padding-bottom:0}.summary-row span{color:var(--muted)}.summary-row b{text-align:right}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .days{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.times{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.day-btn,.time-btn{border:1px solid var(--line);background:#fff;border-radius:17px;padding:11px 9px;text-align:center;min-height:70px}.day-btn b,.time-btn b{display:block;font-size:15px;margin-bottom:3px}.day-btn small,.time-btn small{display:block;color:var(--muted);font-size:11px;line-height:1.35}.day-btn.selected,.time-btn.selected{background:var(--ink);border-color:var(--ink);color:#fff}.day-btn.selected small,.time-btn.selected small{color:rgba(255,255,255,.78)}.day-btn:disabled,.time-btn:disabled{opacity:.42;cursor:not-allowed;background:#f7f3ef}
+    .timeline{display:grid;gap:10px}.timeline-item{display:grid;grid-template-columns:110px 1fr;gap:12px;border:1px solid var(--line);background:#fff;border-radius:18px;padding:12px}.timeline-item time{color:var(--brand);font-weight:900;font-size:12px}.timeline-item strong{display:block;margin-bottom:4px}.timeline-item p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(36,49,45,.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:30}.modal-backdrop.show{display:flex}.modal{background:#fff;border-radius:28px;box-shadow:0 25px 80px rgba(0,0,0,.22);max-width:760px;width:100%;max-height:88vh;overflow:auto;padding:20px;border:1px solid var(--line)}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}.modal-head h3{margin:0;font-size:22px}.close{border:0;background:#f7f0e9;border-radius:999px;width:40px;height:40px;font-weight:900;color:var(--ink)}
+    .loading{display:flex;align-items:center;gap:9px;color:var(--muted);font-weight:800;padding:14px}.spinner{width:18px;height:18px;border:3px solid #eadfd5;border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .hidden{display:none!important}.muted{color:var(--muted)}
+    @media (max-width:860px){.topbar{display:block}.header-actions{justify-content:flex-start;margin-top:14px}.stats{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.days,.times{grid-template-columns:repeat(3,1fr)}h1{font-size:26px}.panel{padding:16px}.timeline-item{grid-template-columns:1fr}}
+    @media (max-width:520px){.wrap{padding:12px 10px 86px}.hero{border-radius:26px}.brand-row{align-items:flex-start}.logo{width:50px;height:50px;border-radius:15px}.stats{grid-template-columns:1fr}.days,.times{grid-template-columns:repeat(2,1fr)}.btn{width:100%}.section-head{display:block}.toolbar{display:block}.toolbar-right{margin-top:10px}.summary-row{display:block}.summary-row b{display:block;text-align:left;margin-top:5px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="topbar">
+        <div class="brand-row">
+          <div class="logo">N</div>
+          <div>
+            <div class="kicker">STEP NAIL-6 / MEMBER</div>
+            <h1>DPRO NAIL LINE 会員ページ</h1>
+          </div>
+        </div>
+        <div class="header-actions">
+          <a class="btn secondary" href="https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?v=step-nail-6">新しく予約する</a>
+          <button class="btn accent" type="button" onclick="reloadMember()">予約を再読み込み</button>
+        </div>
+      </div>
+      <p class="lead">予約確認・変更・キャンセルをお客様側で確認できます。希望デザインや相談内容をサロンへ送るためのLINE文面もコピーできます。</p>
+      <div class="stats">
+        <div class="stat"><small>API</small><b id="apiState">確認中</b><span>Cloudflare Worker</span></div>
+        <div class="stat"><small>お客様</small><b id="customerNameStat">未確認</b><span id="customerPhoneStat">電話番号検索も可能</span></div>
+        <div class="stat"><small>有効予約</small><b id="activeCount">0件</b><span>変更・キャンセル対象</span></div>
+        <div class="stat"><small>次回フォロー</small><b id="followupCount">0件</b><span>付け替え案内など</span></div>
+      </div>
+    </header>
+
+    <nav class="nav">
+      <a href="#memberSearch">会員確認</a>
+      <a href="#reservations">予約確認</a>
+      <a href="#consult">相談文面</a>
+      <a href="#history">履歴</a>
+    </nav>
+
+    <section class="panel" id="memberSearch">
+      <div class="section-head">
+        <div>
+          <span class="badge">MEMBER CHECK</span>
+          <h2>会員情報を確認</h2>
+          <p>予約フォームと同じ端末では自動で表示します。別端末で確認する場合は電話番号で検索できます。</p>
+        </div>
+      </div>
+      <div id="memberNotice" class="notice info">会員情報を読み込み中です。</div>
+      <div class="toolbar" style="margin-top:14px">
+        <div class="toolbar-left" style="flex:1">
+          <input id="phoneSearch" class="input" style="min-width:260px" placeholder="電話番号で検索 例：09012345678" />
+          <button class="btn" type="button" onclick="searchByPhone()">電話番号で確認</button>
+        </div>
+        <div class="toolbar-right">
+          <button class="btn secondary" type="button" onclick="clearDemoUser()">この端末のデモIDをリセット</button>
+        </div>
+      </div>
+    </section>
+
+    <main class="layout">
+      <div>
+        <section class="panel" id="reservations">
+          <div class="section-head">
+            <div>
+              <span class="badge ok">RESERVATIONS</span>
+              <h2>予約確認・変更・キャンセル</h2>
+              <p>有効な予約はここから変更・キャンセルできます。変更前の予約は履歴として残し、新しい予約だけを有効にします。</p>
+            </div>
+          </div>
+          <div id="reservationList" class="cards">
+            <div class="loading"><span class="spinner"></span>予約を読み込み中...</div>
+          </div>
+        </section>
+
+        <section class="panel" id="consult">
+          <div class="section-head">
+            <div>
+              <span class="badge staff">LINE COPY</span>
+              <h2>サロンへ相談文面をコピー</h2>
+              <p>デザイン相談・オフの相談・予約前の確認など、LINEで送りやすい文面を作れます。</p>
+            </div>
+          </div>
+          <div class="field">
+            <label for="consultType">相談内容</label>
+            <select id="consultType" class="select" onchange="buildConsultText()">
+              <option value="design">希望デザインを相談したい</option>
+              <option value="off">オフの有無を相談したい</option>
+              <option value="change">予約日時を相談したい</option>
+              <option value="nail_condition">爪の状態を相談したい</option>
+              <option value="other">その他</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="consultMemo">補足メモ</label>
+            <textarea id="consultMemo" class="textarea" placeholder="例：画像に近い雰囲気で、ベージュ系にしたいです。長さ出しも必要か相談したいです。" oninput="buildConsultText()"></textarea>
+          </div>
+          <div class="field">
+            <label for="consultText">コピー用文面</label>
+            <textarea id="consultText" class="textarea"></textarea>
+            <div class="help">文面は編集できます。コピー後、LINEトークへ貼り付けて送信してください。</div>
+          </div>
+          <div class="actions">
+            <button class="btn ok" type="button" onclick="copyConsultText()">相談文面をコピー</button>
+            <a class="btn secondary" href="https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?v=step-nail-6">新しく予約する</a>
+          </div>
+          <div id="consultNotice" class="notice hidden" style="margin-top:12px"></div>
+        </section>
+      </div>
+
+      <aside>
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <span class="badge">CUSTOMER</span>
+              <h2>お客様情報</h2>
+              <p>予約フォームで入力した情報を表示します。</p>
+            </div>
+          </div>
+          <div id="customerBox" class="summary">
+            <div class="summary-row"><span>状態</span><b>読み込み中</b></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <span class="badge warn">FOLLOW</span>
+              <h2>次回付け替え案内</h2>
+              <p>施術後のフォローや次回目安を確認できます。</p>
+            </div>
+          </div>
+          <div id="followupList" class="timeline">
+            <div class="notice">まだ表示できるフォローはありません。</div>
+          </div>
+        </section>
+
+        <section class="panel" id="history">
+          <div class="section-head">
+            <div>
+              <span class="badge">HISTORY</span>
+              <h2>履歴</h2>
+              <p>予約・変更・キャンセルなどの記録です。</p>
+            </div>
+          </div>
+          <div id="historyList" class="timeline">
+            <div class="notice">履歴を読み込み中です。</div>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <div id="changeModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <span class="badge ok">CHANGE</span>
+          <h3>予約日時を変更</h3>
+          <p class="muted" id="changeTargetLabel" style="margin:8px 0 0;line-height:1.6"></p>
+        </div>
+        <button class="close" type="button" onclick="closeModal('changeModal')">×</button>
+      </div>
+      <div class="notice info">メニュー・担当条件は現在の予約を基準に、空いている日時だけ表示します。</div>
+      <div style="margin-top:14px">
+        <h4 style="margin:0 0 10px">日付を選択</h4>
+        <div id="changeDays" class="days"><div class="loading"><span class="spinner"></span>日付を読み込み中...</div></div>
+      </div>
+      <div style="margin-top:18px">
+        <h4 style="margin:0 0 10px">時間を選択</h4>
+        <div id="changeTimes" class="times"><div class="notice">先に日付を選んでください。</div></div>
+      </div>
+      <div class="field" style="margin-top:18px">
+        <label for="changeReason">変更メモ 任意</label>
+        <textarea id="changeReason" class="textarea" placeholder="例：午後の時間に変更希望です。"></textarea>
+      </div>
+      <div class="actions">
+        <button id="changeSubmitBtn" class="btn ok" type="button" onclick="submitChange()" disabled>この日時に変更する</button>
+        <button class="btn secondary" type="button" onclick="closeModal('changeModal')">閉じる</button>
+      </div>
+      <div id="changeNotice" class="notice hidden" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <div id="cancelModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <span class="badge danger">CANCEL</span>
+          <h3>予約をキャンセル</h3>
+          <p class="muted" id="cancelTargetLabel" style="margin:8px 0 0;line-height:1.6"></p>
+        </div>
+        <button class="close" type="button" onclick="closeModal('cancelModal')">×</button>
+      </div>
+      <div class="notice err">キャンセルすると、この予約は有効予約から外れます。必要な場合はサロンから再予約案内を行います。</div>
+      <div class="field" style="margin-top:14px">
+        <label for="cancelReason">キャンセル理由 任意</label>
+        <textarea id="cancelReason" class="textarea" placeholder="例：予定が入ってしまったため。"></textarea>
+      </div>
+      <div class="actions">
+        <button id="cancelSubmitBtn" class="btn danger" type="button" onclick="submitCancel()">キャンセルする</button>
+        <button class="btn secondary" type="button" onclick="closeModal('cancelModal')">閉じる</button>
+      </div>
+      <div id="cancelNotice" class="notice hidden" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <script>
+    const STEP_VERSION = "STEP NAIL-6";
+    const API_BASE = "https://dpro-nail-line-api.dpromstk2000.workers.dev";
+    const SHOP_CODE = "nail_demo";
+    const PAGE_URL = "https://dpromstk2000-lab.github.io/liff-nail-reserve/member.html?v=step-nail-6";
+
+    const state = {
+      lineUserId:null,
+      phone:"",
+      customer:null,
+      reservations:[],
+      history:[],
+      followups:[],
+      lineMessages:[],
+      selectedReservation:null,
+      change:{date:null,time:null,times:[]}
+    };
+
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c]));
+    const qs = obj => new URLSearchParams(Object.entries(obj).filter(([_,v]) => v !== undefined && v !== null && v !== "")).toString();
+    const yen = n => Number(n || 0).toLocaleString("ja-JP") + "円";
+    const activeStatuses = ["reserved","confirmed","changed","manual","phone_reserved","shop_reserved","instagram_reserved"];
+    const statusLabel = s => ({reserved:"予約中",confirmed:"確定",changed:"変更済み",manual:"手入力",phone_reserved:"電話予約",shop_reserved:"店頭予約",instagram_reserved:"Instagram予約",cancelled:"キャンセル",changed_before:"変更前",completed:"施術完了",no_show:"無断キャンセル"}[s] || s || "-");
+
+    function getLineUserId(){
+      const key = "DPRO_NAIL_LINE_DEMO_USER_ID";
+      let id = localStorage.getItem(key);
+      if(!id){
+        id = "DEMO_NAIL_" + Math.random().toString(36).slice(2,10).toUpperCase();
+        localStorage.setItem(key,id);
+      }
+      return id;
+    }
+
+    async function api(path, options={}){
+      const res = await fetch(API_BASE + path, {
+        method: options.method || "GET",
+        headers: {"Content-Type":"application/json"},
+        body: options.body ? JSON.stringify(options.body) : undefined
+      });
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok || data.ok === false) throw new Error(data.error || data.message || "APIエラーが発生しました。");
+      return data;
+    }
+
+    async function init(){
+      state.lineUserId = getLineUserId();
+      $("phoneSearch").value = localStorage.getItem("DPRO_NAIL_LINE_LAST_PHONE") || "";
+      buildConsultText();
+      try{
+        await api(`/api/health`);
+        $("apiState").textContent = "接続OK";
+      }catch(e){
+        $("apiState").textContent = "接続エラー";
+        $("memberNotice").className = "notice err";
+        $("memberNotice").textContent = `API接続に失敗しました：${e.message}`;
+        return;
+      }
+      await loadMember({line_user_id:state.lineUserId});
+    }
+
+    async function loadMember(params){
+      $("memberNotice").className = "notice info";
+      $("memberNotice").textContent = "会員情報を確認中です。";
+      try{
+        const data = await api(`/api/public/customer?${qs({shop_code:SHOP_CODE,...params})}`);
+        applyMemberData(data);
+      }catch(e){
+        $("memberNotice").className = "notice err";
+        $("memberNotice").textContent = e.message;
+      }
+    }
+
+    function applyMemberData(data){
+      state.customer = data.customer || null;
+      state.reservations = data.reservations || [];
+      state.history = data.history || [];
+      state.followups = data.followups || [];
+      state.lineMessages = data.line_messages || [];
+
+      if(!data.found){
+        $("memberNotice").className = "notice";
+        $("memberNotice").innerHTML = "この端末のデモIDでは予約が見つかりませんでした。<br>予約時に入力した電話番号で検索してください。";
+      }else{
+        $("memberNotice").className = "notice ok";
+        $("memberNotice").textContent = "会員情報を表示しています。予約確認・変更・キャンセルができます。";
+        if(state.customer?.phone){
+          $("phoneSearch").value = state.customer.phone;
+          localStorage.setItem("DPRO_NAIL_LINE_LAST_PHONE", state.customer.phone);
+        }
+      }
+      renderAll();
+    }
+
+    function renderAll(){
+      const active = state.reservations.filter(r => activeStatuses.includes(String(r.status || "")) && String(r.reservation_date || "") >= todayString());
+      $("customerNameStat").textContent = state.customer?.customer_name || "未確認";
+      $("customerPhoneStat").textContent = state.customer?.phone || "電話番号検索も可能";
+      $("activeCount").textContent = `${active.length}件`;
+      $("followupCount").textContent = `${state.followups.filter(f => ["open","pending"].includes(String(f.status || "open"))).length}件`;
+      renderCustomer();
+      renderReservations();
+      renderFollowups();
+      renderHistory();
+      buildConsultText();
+    }
+
+    function summaryRows(rows){
+      return rows.map(([k,v]) => `<div class="summary-row"><span>${esc(k)}</span><b>${esc(v || "-")}</b></div>`).join("");
+    }
+
+    function renderCustomer(){
+      if(!state.customer){
+        $("customerBox").innerHTML = summaryRows([["状態","未表示"],["確認方法","電話番号で検索してください"]]);
+        return;
+      }
+      $("customerBox").innerHTML = summaryRows([
+        ["お名前", state.customer.customer_name],
+        ["電話番号", state.customer.phone],
+        ["LINE", state.customer.line_user_id ? "連携済み" : "未連携"],
+        ["前回デザイン", state.customer.last_design_note || state.customer.design_preference || "未登録"],
+        ["アレルギー等", state.customer.allergy_note || "未登録"]
+      ]);
+    }
+
+    function renderReservations(){
+      const box = $("reservationList");
+      if(!state.customer){
+        box.innerHTML = `<div class="notice">会員情報を確認すると予約が表示されます。</div>`;
+        return;
+      }
+      if(!state.reservations.length){
+        box.innerHTML = `<div class="notice">予約はまだありません。新しく予約する場合は予約フォームから進んでください。</div>`;
+        return;
+      }
+      const today = todayString();
+      const active = state.reservations.filter(r => activeStatuses.includes(String(r.status || "")) && String(r.reservation_date || "") >= today)
+        .sort((a,b) => String(a.reservation_date).localeCompare(String(b.reservation_date)) || String(a.start_time).localeCompare(String(b.start_time)));
+      const past = state.reservations.filter(r => !active.includes(r)).slice(0,8);
+      const activeHtml = active.length ? active.map(r => reservationCard(r,true)).join("") : `<div class="notice ok">現在変更・キャンセルできる予約はありません。</div>`;
+      const pastHtml = past.length ? `<div style="grid-column:1/-1;margin-top:6px"><h3 style="margin:8px 0 10px">履歴・過去予約</h3></div>` + past.map(r => reservationCard(r,false)).join("") : "";
+      box.innerHTML = activeHtml + pastHtml;
+    }
+
+    function reservationCard(r, canEdit){
+      const options = Array.isArray(r.option_names) ? r.option_names.join("、") : (r.option_names || "なし");
+      const statusClass = canEdit ? "ok" : (String(r.status).includes("cancel") ? "danger" : "warn");
+      return `
+        <article class="card ${canEdit ? "" : "disabled"}">
+          <div class="card-head">
+            <div>
+              <h3>${esc(r.reservation_date)} ${esc(shortTime(r.start_time))}</h3>
+              <p>${esc(r.service_name || "メニュー未設定")} / ${Number(r.total_minutes || 0)}分</p>
+            </div>
+            <span class="badge ${statusClass}">${esc(statusLabel(r.status))}</span>
+          </div>
+          <div class="meta">
+            <span class="pill staff">担当：${esc(r.staff_name || "自動割当")}</span>
+            <span class="pill">${r.is_staff_requested ? "指名あり" : "指名なし"}</span>
+            <span class="pill">オプション：${esc(options || "なし")}</span>
+            <span class="pill ok">${yen(r.total_price)}</span>
+          </div>
+          ${r.design_note ? `<p style="margin-top:12px"><b>希望デザイン：</b>${esc(r.design_note)}</p>` : ""}
+          ${canEdit ? `<div class="actions"><button class="btn small ok" type="button" onclick="openChange('${esc(r.id)}')">日時を変更</button><button class="btn small danger" type="button" onclick="openCancel('${esc(r.id)}')">キャンセル</button><button class="btn small secondary" type="button" onclick="fillConsultFromReservation('${esc(r.id)}')">この予約で相談文面</button></div>` : ""}
+        </article>`;
+    }
+
+    function renderFollowups(){
+      const rows = state.followups || [];
+      if(!rows.length){
+        $("followupList").innerHTML = `<div class="notice">次回付け替え案内はまだありません。</div>`;
+        return;
+      }
+      $("followupList").innerHTML = rows.slice(0,8).map(f => `
+        <div class="timeline-item">
+          <time>${esc(f.due_date || "-")}</time>
+          <div><strong>${esc(f.title || "フォロー")}</strong><p>${esc(f.memo || "")}</p><div class="meta"><span class="pill ${["handled","done","closed"].includes(String(f.status)) ? "ok" : ""}">${esc(f.status || "open")}</span></div></div>
+        </div>`).join("");
+    }
+
+    function renderHistory(){
+      const rows = state.history || [];
+      if(!rows.length){
+        $("historyList").innerHTML = `<div class="notice">履歴はまだありません。</div>`;
+        return;
+      }
+      $("historyList").innerHTML = rows.slice(0,12).map(h => `
+        <div class="timeline-item">
+          <time>${esc(formatDateTime(h.created_at || h.event_date || ""))}</time>
+          <div><strong>${esc(h.title || h.event_type || "履歴")}</strong><p>${esc(h.memo || h.status || "")}</p></div>
+        </div>`).join("");
+    }
+
+    async function searchByPhone(){
+      const phone = $("phoneSearch").value.trim();
+      if(!phone){ alert("電話番号を入力してください。"); return; }
+      state.phone = phone;
+      localStorage.setItem("DPRO_NAIL_LINE_LAST_PHONE", phone);
+      await loadMember({phone});
+    }
+
+    async function reloadMember(){
+      const phone = $("phoneSearch").value.trim();
+      if(phone) await loadMember({phone});
+      else await loadMember({line_user_id:state.lineUserId});
+    }
+
+    function clearDemoUser(){
+      if(!confirm("この端末のデモ用LINE IDをリセットしますか？ 既存予約は電話番号検索で確認できます。")) return;
+      localStorage.removeItem("DPRO_NAIL_LINE_DEMO_USER_ID");
+      state.lineUserId = getLineUserId();
+      loadMember({line_user_id:state.lineUserId});
+    }
+
+    function findReservation(id){return state.reservations.find(r => String(r.id) === String(id));}
+
+    async function openChange(id){
+      const r = findReservation(id);
+      if(!r) return;
+      state.selectedReservation = r;
+      state.change = {date:null,time:null,times:[]};
+      $("changeTargetLabel").textContent = `${r.reservation_date} ${shortTime(r.start_time)} / ${r.service_name} / 担当：${r.staff_name || "自動割当"}`;
+      $("changeNotice").classList.add("hidden");
+      $("changeSubmitBtn").disabled = true;
+      openModal("changeModal");
+      await loadChangeDays(r);
+    }
+
+    async function loadChangeDays(r){
+      $("changeDays").innerHTML = `<div class="loading"><span class="spinner"></span>日付を読み込み中...</div>`;
+      $("changeTimes").innerHTML = `<div class="notice">先に日付を選んでください。</div>`;
+      try{
+        const data = await api(`/api/public/available-days?${qs({shop_code:SHOP_CODE,service_code:r.service_code,option_codes:optionCodesString(r.option_codes),staff_id:r.staff_id || "",staff_requested:Boolean(r.is_staff_requested),days:45})}`);
+        const days = data.days || [];
+        $("changeDays").innerHTML = days.slice(0,42).map(d => `
+          <button class="day-btn ${state.change.date===d.date ? "selected" : ""}" type="button" ${d.can_reserve ? "" : "disabled"} onclick="selectChangeDate('${esc(d.date)}')">
+            <b>${formatDateLabel(d.date)}</b><small>${esc(d.weekday_label || "")}</small><small>${d.can_reserve ? `${Number(d.available_count || 0)}枠` : esc(d.closed_reason || "空きなし")}</small>
+          </button>`).join("");
+      }catch(e){
+        $("changeDays").innerHTML = `<div class="notice err">日付取得に失敗しました。<br>${esc(e.message)}</div>`;
+      }
+    }
+
+    async function selectChangeDate(date){
+      state.change.date = date;
+      state.change.time = null;
+      $("changeSubmitBtn").disabled = true;
+      await loadChangeTimes();
+      const buttons = document.querySelectorAll("#changeDays .day-btn");
+      buttons.forEach(b => b.classList.toggle("selected", b.textContent.includes(formatDateLabel(date))));
+    }
+
+    async function loadChangeTimes(){
+      const r = state.selectedReservation;
+      $("changeTimes").innerHTML = `<div class="loading"><span class="spinner"></span>空き時間を読み込み中...</div>`;
+      try{
+        const data = await api(`/api/public/available-times?${qs({shop_code:SHOP_CODE,date:state.change.date,service_code:r.service_code,option_codes:optionCodesString(r.option_codes),has_off:Boolean(r.has_off),staff_id:r.staff_id || "",staff_requested:Boolean(r.is_staff_requested)})}`);
+        state.change.times = data.times || [];
+        const available = state.change.times.filter(t => t.can_reserve);
+        if(!available.length){
+          $("changeTimes").innerHTML = `<div class="notice">この日は空きがありません。別日を選んでください。</div>`;
+          return;
+        }
+        $("changeTimes").innerHTML = state.change.times.map(t => `
+          <button class="time-btn ${state.change.time===t.time ? "selected" : ""}" type="button" ${t.can_reserve ? "" : "disabled"} onclick="selectChangeTime('${esc(t.time)}')">
+            <b>${esc(t.time)}</b><small>終了 ${esc(t.end_time || "")}</small><small>${t.can_reserve ? `空き ${Number(t.available_staff_count || 0)}名` : esc(t.disabled_reason || "不可")}</small>
+          </button>`).join("");
+      }catch(e){
+        $("changeTimes").innerHTML = `<div class="notice err">時間取得に失敗しました。<br>${esc(e.message)}</div>`;
+      }
+    }
+
+    function selectChangeTime(time){
+      state.change.time = time;
+      $("changeSubmitBtn").disabled = false;
+      document.querySelectorAll("#changeTimes .time-btn").forEach(b => b.classList.toggle("selected", b.textContent.trim().startsWith(time)));
+    }
+
+    async function submitChange(){
+      const r = state.selectedReservation;
+      if(!r || !state.change.date || !state.change.time) return;
+      const btn = $("changeSubmitBtn");
+      btn.disabled = true;
+      btn.textContent = "変更中...";
+      $("changeNotice").className = "notice info";
+      $("changeNotice").textContent = "予約変更を送信しています。";
+      try{
+        const result = await api("/api/reservations/change", {method:"POST", body:{
+          shop_code:SHOP_CODE,
+          reservation_id:r.id,
+          line_user_id:r.line_user_id || state.lineUserId,
+          phone:r.phone || state.customer?.phone || $("phoneSearch").value.trim(),
+          customer_name:r.customer_name || state.customer?.customer_name || "お客様",
+          service_code:r.service_code,
+          option_codes:normalizeOptionCodes(r.option_codes),
+          staff_id:r.staff_id || "",
+          staff_requested:Boolean(r.is_staff_requested),
+          new_reservation_date:state.change.date,
+          new_start_time:state.change.time,
+          reason:$("changeReason").value.trim(),
+          source:"line",
+          created_by:"member.html"
+        }});
+        $("changeNotice").className = "notice ok";
+        $("changeNotice").innerHTML = `予約を変更しました。<br>${esc(result.reservation?.reservation_date || state.change.date)} ${esc(result.reservation?.start_time || state.change.time)}`;
+        setTimeout(async () => { closeModal("changeModal"); await reloadMember(); }, 900);
+      }catch(e){
+        $("changeNotice").className = "notice err";
+        $("changeNotice").textContent = e.message;
+      }finally{
+        btn.disabled = false;
+        btn.textContent = "この日時に変更する";
+      }
+    }
+
+    function openCancel(id){
+      const r = findReservation(id);
+      if(!r) return;
+      state.selectedReservation = r;
+      $("cancelTargetLabel").textContent = `${r.reservation_date} ${shortTime(r.start_time)} / ${r.service_name} / 担当：${r.staff_name || "自動割当"}`;
+      $("cancelReason").value = "";
+      $("cancelNotice").classList.add("hidden");
+      openModal("cancelModal");
+    }
+
+    async function submitCancel(){
+      const r = state.selectedReservation;
+      if(!r) return;
+      if(!confirm("この予約をキャンセルしますか？")) return;
+      const btn = $("cancelSubmitBtn");
+      btn.disabled = true;
+      btn.textContent = "キャンセル中...";
+      $("cancelNotice").className = "notice info";
+      $("cancelNotice").textContent = "キャンセルを送信しています。";
+      try{
+        await api("/api/reservations/cancel", {method:"POST", body:{
+          shop_code:SHOP_CODE,
+          reservation_id:r.id,
+          line_user_id:r.line_user_id || state.lineUserId,
+          phone:r.phone || state.customer?.phone || $("phoneSearch").value.trim(),
+          reason:$("cancelReason").value.trim(),
+          source:"line"
+        }});
+        $("cancelNotice").className = "notice ok";
+        $("cancelNotice").textContent = "キャンセルを受け付けました。";
+        setTimeout(async () => { closeModal("cancelModal"); await reloadMember(); }, 900);
+      }catch(e){
+        $("cancelNotice").className = "notice err";
+        $("cancelNotice").textContent = e.message;
+      }finally{
+        btn.disabled = false;
+        btn.textContent = "キャンセルする";
+      }
+    }
+
+    function fillConsultFromReservation(id){
+      const r = findReservation(id);
+      if(!r) return;
+      state.selectedReservation = r;
+      $("consultType").value = "design";
+      $("consultMemo").value = r.design_note || "";
+      buildConsultText();
+      location.hash = "#consult";
+    }
+
+    function buildConsultText(){
+      const type = $("consultType")?.value || "design";
+      const memo = $("consultMemo")?.value.trim() || "";
+      const r = state.selectedReservation || state.reservations.find(x => activeStatuses.includes(String(x.status || ""))) || null;
+      const name = state.customer?.customer_name || "";
+      const lines = [];
+      if(name) lines.push(`${name}です。`);
+      else lines.push("予約について相談したいです。");
+      if(r) lines.push(`予約：${r.reservation_date} ${shortTime(r.start_time)} / ${r.service_name || "ネイル予約"}`);
+      lines.push("");
+      if(type === "design") lines.push("希望デザインについて相談したいです。");
+      if(type === "off") lines.push("オフの有無・必要時間について相談したいです。");
+      if(type === "change") lines.push("予約日時について相談したいです。");
+      if(type === "nail_condition") lines.push("爪の状態について事前に相談したいです。");
+      if(type === "other") lines.push("相談したいことがあります。");
+      if(memo){ lines.push(""); lines.push(memo); }
+      lines.push("");
+      lines.push("よろしくお願いします。");
+      if($("consultText")) $("consultText").value = lines.join("\n");
+    }
+
+    async function copyConsultText(){
+      const text = $("consultText").value.trim();
+      if(!text){ alert("コピーする文面がありません。"); return; }
+      try{
+        await navigator.clipboard.writeText(text);
+        $("consultNotice").className = "notice ok";
+        $("consultNotice").textContent = "相談文面をコピーしました。LINEトークへ貼り付けて送信してください。";
+      }catch(e){
+        $("consultText").focus();
+        $("consultText").select();
+        $("consultNotice").className = "notice err";
+        $("consultNotice").textContent = "自動コピーできませんでした。文面を選択してコピーしてください。";
+      }
+    }
+
+    function openModal(id){$(id).classList.add("show")}
+    function closeModal(id){$(id).classList.remove("show")}
+
+    function optionCodesString(value){return normalizeOptionCodes(value).join(",")}
+    function normalizeOptionCodes(value){
+      if(Array.isArray(value)) return value.filter(Boolean);
+      if(typeof value === "string"){
+        try{ const parsed = JSON.parse(value); if(Array.isArray(parsed)) return parsed.filter(Boolean); }catch(_){ }
+        return value.split(",").map(s => s.trim()).filter(Boolean);
+      }
+      return [];
+    }
+
+    function todayString(){
+      const parts = new Intl.DateTimeFormat("ja-JP", {timeZone:"Asia/Tokyo", year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(new Date()).reduce((a,p)=>{a[p.type]=p.value;return a},{});
+      return `${parts.year}-${parts.month}-${parts.day}`;
+    }
+    function formatDateLabel(date){
+      const d = new Date(date + "T00:00:00+09:00");
+      return `${d.getMonth()+1}/${d.getDate()}`;
+    }
+    function shortTime(t){return String(t || "").slice(0,5)}
+    function formatDateTime(v){
+      if(!v) return "-";
+      try{
+        const d = new Date(v);
+        if(!isNaN(d.getTime())) return new Intl.DateTimeFormat("ja-JP", {timeZone:"Asia/Tokyo", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit"}).format(d);
+      }catch(_){ }
+      return String(v).slice(0,16);
+    }
+
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
