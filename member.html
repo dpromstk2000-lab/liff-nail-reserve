@@ -100,6 +100,7 @@
     .modal-backdrop{position:fixed;inset:0;background:rgba(36,49,45,.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:30}.modal-backdrop.show{display:flex}.modal{background:#fff;border-radius:28px;box-shadow:0 25px 80px rgba(0,0,0,.22);max-width:760px;width:100%;max-height:88vh;overflow:auto;padding:20px;border:1px solid var(--line)}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}.modal-head h3{margin:0;font-size:22px}.close{border:0;background:#f7f0e9;border-radius:999px;width:40px;height:40px;font-weight:900;color:var(--ink)}
     .loading{display:flex;align-items:center;gap:9px;color:var(--muted);font-weight:800;padding:14px}.spinner{width:18px;height:18px;border:3px solid #eadfd5;border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
     .hidden{display:none!important}.muted{color:var(--muted)}
+    .toast{position:fixed;right:16px;bottom:16px;z-index:160;background:#2b2522;color:#fff;border-radius:18px;padding:14px 16px;box-shadow:0 20px 60px rgba(0,0,0,.25);max-width:min(460px,calc(100vw - 32px));display:none;line-height:1.55;font-weight:800}.toast.show{display:block}.toast.err{background:#9a3f3f}.btn:disabled{opacity:.55;cursor:not-allowed}
     @media (max-width:860px){.topbar{display:block}.header-actions{justify-content:flex-start;margin-top:14px}.stats{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.days,.times{grid-template-columns:repeat(3,1fr)}h1{font-size:26px}.panel{padding:16px}.timeline-item{grid-template-columns:1fr}}
     @media (max-width:520px){.wrap{padding:12px 10px 86px}.hero{border-radius:26px}.brand-row{align-items:flex-start}.logo{width:50px;height:50px;border-radius:15px}.stats{grid-template-columns:1fr}.days,.times{grid-template-columns:repeat(2,1fr)}.btn{width:100%}.section-head{display:block}.toolbar{display:block}.toolbar-right{margin-top:10px}.summary-row{display:block}.summary-row b{display:block;text-align:left;margin-top:5px}}
   </style>
@@ -111,13 +112,13 @@
         <div class="brand-row">
           <div class="logo">N</div>
           <div>
-            <div class="kicker">STEP NAIL-10B / MEMBER</div>
+            <div class="kicker">STEP NAIL-10C / MEMBER</div>
             <h1>DPRO NAIL LINE 会員ページ</h1>
           </div>
         </div>
         <div class="header-actions">
-          <a class="btn secondary" href="https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?v=step-nail-6">新しく予約する</a>
-          <button class="btn accent" type="button" onclick="reloadMember()">予約を再読み込み</button>
+          <a class="btn secondary" href="https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?v=step-nail-10c">新しく予約する</a>
+          <button class="btn accent" id="memberReloadBtn" type="button" onclick="reloadMember(true)">予約を再読み込み</button>
         </div>
       </div>
       <p class="lead">予約確認・変更・キャンセルをお客様側で確認できます。希望デザインや相談内容をサロンへ送るためのLINE文面もコピーできます。</p>
@@ -200,7 +201,7 @@
           </div>
           <div class="actions">
             <button class="btn ok" type="button" onclick="copyConsultText()">相談文面をコピー</button>
-            <a class="btn secondary" href="https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?v=step-nail-6">新しく予約する</a>
+            <a class="btn secondary" href="https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?v=step-nail-10c">新しく予約する</a>
           </div>
           <div id="consultNotice" class="notice hidden" style="margin-top:12px"></div>
         </section>
@@ -303,6 +304,8 @@
     </div>
   </div>
 
+  <div class="toast" id="toast"></div>
+
   <script>
     const STEP_VERSION = "STEP NAIL-10B";
     const API_BASE = "https://dpro-nail-line-api.dpromstk2000.workers.dev";
@@ -327,6 +330,9 @@
     const yen = n => Number(n || 0).toLocaleString("ja-JP") + "円";
     const activeStatuses = ["reserved","confirmed","changed","manual","phone_reserved","shop_reserved","instagram_reserved"];
     const statusLabel = s => ({reserved:"予約中",confirmed:"確定",changed:"変更済み",manual:"手入力",phone_reserved:"電話予約",shop_reserved:"店頭予約",instagram_reserved:"Instagram予約",cancelled:"キャンセル",changed_before:"変更前",completed:"施術完了",no_show:"無断キャンセル"}[s] || s || "-");
+    function nowLabel(){const d=new Date();return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;}
+    function setButtonLoading(buttonId, loadingText){const btn=$(buttonId);if(!btn)return null;const old=btn.textContent;btn.dataset.oldText=old;btn.textContent=loadingText;btn.disabled=true;return()=>{btn.textContent=btn.dataset.oldText||old;btn.disabled=false;};}
+    function showToast(message, isError=false){const t=$("toast");if(!t)return; t.textContent=message;t.className="toast show"+(isError?" err":"");setTimeout(()=>{t.className="toast";},3600);}
 
     function getLineUserId(){
       const key = "DPRO_NAIL_LINE_DEMO_USER_ID";
@@ -504,13 +510,26 @@
       if(!phone){ alert("電話番号を入力してください。"); return; }
       state.phone = phone;
       localStorage.setItem("DPRO_NAIL_LINE_LAST_PHONE", phone);
-      await loadMember({phone});
+      try{
+        await loadMember({phone});
+        showToast(`会員情報を確認しました ${nowLabel()}`);
+      }catch(e){
+        showToast(e.message || "会員情報の確認に失敗しました。", true);
+      }
     }
 
-    async function reloadMember(){
-      const phone = $("phoneSearch").value.trim();
-      if(phone) await loadMember({phone});
-      else await loadMember({line_user_id:state.lineUserId});
+    async function reloadMember(showFeedback=false){
+      const restoreButton = showFeedback ? setButtonLoading("memberReloadBtn", "再読み込み中...") : null;
+      try{
+        const phone = $("phoneSearch").value.trim();
+        if(phone) await loadMember({phone});
+        else await loadMember({line_user_id:state.lineUserId});
+        if(showFeedback) showToast(`予約情報を更新しました ${nowLabel()}`);
+      }catch(e){
+        showToast(e.message || "予約情報の更新に失敗しました。", true);
+      }finally{
+        if(restoreButton) restoreButton();
+      }
     }
 
     function clearDemoUser(){
