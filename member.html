@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!-- STEP NAIL-PHONE-2 phone normalized -->
   <title>DPRO NAIL LINE｜会員ページ</title>
   <meta name="description" content="DPRO NAIL LINE ネイルサロン向け会員ページ・予約確認・変更・キャンセル" />
   <style>
@@ -327,6 +328,29 @@
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c]));
     const qs = obj => new URLSearchParams(Object.entries(obj).filter(([_,v]) => v !== undefined && v !== null && v !== "")).toString();
+    
+    // STEP NAIL-PHONE-2: 電話番号表記ゆれ対策
+    function normalizePhoneNumber(value) {
+      let text = String(value || "").trim();
+      if (!text) return "";
+      text = text
+        .replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))
+        .replace(/[＋]/g, "+")
+        .replace(/[－ー―‐‑‒–—ｰ]/g, "-")
+        .replace(/[（]/g, "(")
+        .replace(/[）]/g, ")");
+      text = text.replace(/\(0\)/g, "");
+      text = text.replace(/[^0-9+]/g, "");
+      if (text.startsWith("+81")) text = "0" + text.slice(3);
+      else if (text.startsWith("0081")) text = "0" + text.slice(4);
+      else if (text.startsWith("81") && text.length >= 11 && !text.startsWith("810")) text = "0" + text.slice(2);
+      return text.replace(/\D/g, "");
+    }
+
+    function phoneForDisplay(value) {
+      return normalizePhoneNumber(value) || String(value || "").trim();
+    }
+
     const yen = n => Number(n || 0).toLocaleString("ja-JP") + "円";
     const activeStatuses = ["reserved","confirmed","changed","manual","phone_reserved","shop_reserved","instagram_reserved"];
     const statusLabel = s => ({reserved:"予約中",confirmed:"確定",changed:"変更済み",manual:"手入力",phone_reserved:"電話予約",shop_reserved:"店頭予約",instagram_reserved:"Instagram予約",cancelled:"キャンセル",changed_before:"変更前",completed:"施術完了",no_show:"無断キャンセル"}[s] || s || "-");
@@ -357,7 +381,7 @@
 
     async function init(){
       state.lineUserId = getLineUserId();
-      $("phoneSearch").value = localStorage.getItem("DPRO_NAIL_LINE_LAST_PHONE") || "";
+      $("phoneSearch").value = normalizePhoneNumber(localStorage.getItem("DPRO_NAIL_LINE_LAST_PHONE") || "");
       buildConsultText();
       try{
         await api(`/api/health`);
@@ -397,8 +421,8 @@
         $("memberNotice").className = "notice ok";
         $("memberNotice").textContent = "会員情報を表示しています。予約確認・変更・キャンセルができます。";
         if(state.customer?.phone){
-          $("phoneSearch").value = state.customer.phone;
-          localStorage.setItem("DPRO_NAIL_LINE_LAST_PHONE", state.customer.phone);
+          $("phoneSearch").value = phoneForDisplay(state.customer.phone);
+          localStorage.setItem("DPRO_NAIL_LINE_LAST_PHONE", normalizePhoneNumber(state.customer.phone));
         }
       }
       renderAll();
@@ -407,7 +431,7 @@
     function renderAll(){
       const active = state.reservations.filter(r => activeStatuses.includes(String(r.status || "")) && String(r.reservation_date || "") >= todayString());
       $("customerNameStat").textContent = state.customer?.customer_name || "未確認";
-      $("customerPhoneStat").textContent = state.customer?.phone || "電話番号検索も可能";
+      $("customerPhoneStat").textContent = phoneForDisplay(state.customer?.phone) || "電話番号検索も可能";
       $("activeCount").textContent = `${active.length}件`;
       $("followupCount").textContent = `${state.followups.filter(f => ["open","pending"].includes(String(f.status || "open"))).length}件`;
       renderCustomer();
@@ -428,7 +452,7 @@
       }
       $("customerBox").innerHTML = summaryRows([
         ["お名前", state.customer.customer_name],
-        ["電話番号", state.customer.phone],
+        ["電話番号", phoneForDisplay(state.customer.phone)],
         ["LINE", state.customer.line_user_id ? "連携済み" : "未連携"],
         ["前回デザイン", state.customer.last_design_note || state.customer.design_preference || "未登録"],
         ["アレルギー等", state.customer.allergy_note || "未登録"]
@@ -506,9 +530,10 @@
     }
 
     async function searchByPhone(){
-      const phone = $("phoneSearch").value.trim();
+      const phone = normalizePhoneNumber($("phoneSearch").value);
       if(!phone){ alert("電話番号を入力してください。"); return; }
       state.phone = phone;
+      $("phoneSearch").value = phone;
       localStorage.setItem("DPRO_NAIL_LINE_LAST_PHONE", phone);
       try{
         await loadMember({phone});
@@ -521,7 +546,7 @@
     async function reloadMember(showFeedback=false){
       const restoreButton = showFeedback ? setButtonLoading("memberReloadBtn", "再読み込み中...") : null;
       try{
-        const phone = $("phoneSearch").value.trim();
+        const phone = normalizePhoneNumber($("phoneSearch").value);
         if(phone) await loadMember({phone});
         else await loadMember({line_user_id:state.lineUserId});
         if(showFeedback) showToast(`予約情報を更新しました ${nowLabel()}`);
@@ -628,7 +653,7 @@
           shop_code:SHOP_CODE,
           reservation_id:r.id,
           line_user_id:r.line_user_id || state.lineUserId,
-          phone:r.phone || state.customer?.phone || $("phoneSearch").value.trim(),
+          phone:normalizePhoneNumber(r.phone || state.customer?.phone || $("phoneSearch").value),
           customer_name:r.customer_name || state.customer?.customer_name || "お客様",
           service_code:r.service_code,
           option_codes:normalizeOptionCodes(r.option_codes),
@@ -676,7 +701,7 @@
           shop_code:SHOP_CODE,
           reservation_id:r.id,
           line_user_id:r.line_user_id || state.lineUserId,
-          phone:r.phone || state.customer?.phone || $("phoneSearch").value.trim(),
+          phone:normalizePhoneNumber(r.phone || state.customer?.phone || $("phoneSearch").value),
           reason:$("cancelReason").value.trim(),
           source:"line"
         }});
