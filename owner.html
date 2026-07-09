@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!-- STEP NAIL-PHONE-2 phone normalized -->
   <title>DPRO NAIL LINE｜オーナー管理画面 STEP NAIL-11A</title>
   <meta name="description" content="DPRO NAIL LINE ネイルサロン向けPC管理画面" />
   <style>
@@ -636,6 +637,29 @@
       return `${yyyy}-${mm}-${dd}`;
     }
 
+    
+    // STEP NAIL-PHONE-2: 電話番号表記ゆれ対策
+    function normalizePhoneNumber(value) {
+      let text = String(value || "").trim();
+      if (!text) return "";
+      text = text
+        .replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))
+        .replace(/[＋]/g, "+")
+        .replace(/[－ー―‐‑‒–—ｰ]/g, "-")
+        .replace(/[（]/g, "(")
+        .replace(/[）]/g, ")");
+      text = text.replace(/\(0\)/g, "");
+      text = text.replace(/[^0-9+]/g, "");
+      if (text.startsWith("+81")) text = "0" + text.slice(3);
+      else if (text.startsWith("0081")) text = "0" + text.slice(4);
+      else if (text.startsWith("81") && text.length >= 11 && !text.startsWith("810")) text = "0" + text.slice(2);
+      return text.replace(/\D/g, "");
+    }
+
+    function phoneForDisplay(value) {
+      return normalizePhoneNumber(value) || String(value || "").trim();
+    }
+
     function yen(n){ return Number(n || 0).toLocaleString("ja-JP") + "円"; }
     function esc(v){ return String(v ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     function sourceLabel(source){
@@ -996,7 +1020,7 @@
     }
 
     async function searchCustomers(){
-      const q = $("customerKeyword").value.trim();
+      const q = phoneForDisplay($("customerKeyword").value.trim());
       const wrap = $("customerResults");
       if(!q){
         wrap.innerHTML = `<div class="empty">キーワードを入れて検索してください。</div>`;
@@ -1014,7 +1038,7 @@
           <div class="mini-row">
             <div>
               <strong>${esc(c.customer_name || "お客様")}</strong>
-              <small>${esc(c.phone || "")}　${c.line_user_id ? "LINE連携" : "LINE未連携"}</small>
+              <small>${esc(phoneForDisplay(c.phone) || "")}　${c.line_user_id ? "LINE連携" : "LINE未連携"}</small>
               ${c.last_design_note ? `<small>前回メモ：${esc(c.last_design_note)}</small>` : ""}
             </div>
             <span class="badge">${esc(c.source || "customer")}</span>
@@ -1133,7 +1157,7 @@
       const payload = {
         source:$("manualSource").value,
         customer_name:$("manualName").value.trim(),
-        phone:$("manualPhone").value.trim(),
+        phone:normalizePhoneNumber($("manualPhone").value),
         service_code:$("manualService").value,
         option_codes:optionCodes,
         has_off:optionCodes.includes("replace_off"),
@@ -1144,6 +1168,7 @@
         design_note:$("manualDesign").value.trim(),
         request_note:$("manualMemo").value.trim(),
       };
+      if (payload.phone) $("manualPhone").value = payload.phone;
       if(!payload.customer_name || !payload.phone || !payload.reservation_date || !payload.start_time){
         return showToast("お客様名・電話番号・日付・時間を入力してください。", true);
       }
