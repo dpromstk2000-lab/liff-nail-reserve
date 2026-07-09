@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!-- STEP NAIL-PHONE-2 phone normalized -->
   <title>DPRO NAIL LINE 店頭iPad画面 STEP NAIL-10C</title>
   <style>
     :root{
@@ -168,6 +169,11 @@
 
     function esc(v){return String(v ?? "").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
     function todayStr(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
+    
+    // STEP NAIL-PHONE-2: 電話番号表記ゆれ対策
+    function normalizePhoneNumber(value){let text=String(value||"").trim();if(!text)return"";text=text.replace(/[０-９]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0xFEE0)).replace(/[＋]/g,"+").replace(/[－ー―‐‑‒–—ｰ]/g,"-").replace(/[（]/g,"(").replace(/[）]/g,")");text=text.replace(/\(0\)/g,"").replace(/[^0-9+]/g,"");if(text.startsWith("+81"))text="0"+text.slice(3);else if(text.startsWith("0081"))text="0"+text.slice(4);else if(text.startsWith("81")&&text.length>=11&&!text.startsWith("810"))text="0"+text.slice(2);return text.replace(/\D/g,"");}
+    function phoneForDisplay(value){return normalizePhoneNumber(value)||String(value||"").trim();}
+
     function yen(n){return Number(n||0).toLocaleString("ja-JP")+"円";}
     function fmtDate(dateStr){if(!dateStr)return"";const d=new Date(dateStr+"T00:00:00");return `${d.getMonth()+1}/${d.getDate()}（${["日","月","火","水","木","金","土"][d.getDay()]}）`;}
     function sourceLabel(s){return {phone:"電話予約",shop:"店頭予約",instagram:"Instagram DM",line:"LINE予約"}[s] || s || "予約";}
@@ -290,8 +296,8 @@
     function selectTime(time){$("manualTime").value=time; [...document.querySelectorAll(".time-btn")].forEach(b=>b.classList.toggle("selected",b.textContent.trim().startsWith(time)));}
     async function submitManualReservation(){
       const optionCodes=selectedOptions(); const staffRequested=$("staffMode").value==="requested";
-      const payload={source:$("manualSource").value,customer_name:$("manualName").value.trim(),phone:$("manualPhone").value.trim(),service_code:$("manualService").value,option_codes:optionCodes,has_off:optionCodes.includes("replace_off"),staff_requested:staffRequested,staff_id:staffRequested?$("manualStaff").value:"",reservation_date:$("manualDate").value,start_time:$("manualTime").value,design_note:$("manualDesign").value.trim(),request_note:$("manualMemo").value.trim()};
-      if(!payload.customer_name||!payload.phone||!payload.reservation_date||!payload.start_time)return showToast("お客様名・電話番号・日付・時間を入力してください。",true);
+      const payload={source:$("manualSource").value,customer_name:$("manualName").value.trim(),phone:normalizePhoneNumber($("manualPhone").value),service_code:$("manualService").value,option_codes:optionCodes,has_off:optionCodes.includes("replace_off"),staff_requested:staffRequested,staff_id:staffRequested?$("manualStaff").value:"",reservation_date:$("manualDate").value,start_time:$("manualTime").value,design_note:$("manualDesign").value.trim(),request_note:$("manualMemo").value.trim()};
+      if(payload.phone)$("manualPhone").value=payload.phone; if(!payload.customer_name||!payload.phone||!payload.reservation_date||!payload.start_time)return showToast("お客様名・電話番号・日付・時間を入力してください。",true);
       try{await apiPost("/api/admin/reservations/manual-create",payload); closeModal("manualModal"); showToast("予約を登録しました。"); ["manualName","manualPhone","manualDesign","manualMemo","manualTime"].forEach(id=>$(id).value=""); await loadDay();}catch(e){showToast(e.message||"予約登録に失敗しました。",true);}
     }
 
