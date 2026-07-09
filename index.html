@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!-- STEP NAIL-PHONE-2 phone normalized -->
   <title>DPRO NAIL LINE｜ネイル予約</title>
   <meta name="description" content="DPRO NAIL LINE ネイルサロン向けLINE予約フォーム" />
   <style>
@@ -625,7 +626,7 @@
 
     function validateInfo(){
       const name = $("customerName").value.trim();
-      const phone = $("phone").value.trim();
+      const phone = normalizePhoneNumber($("phone").value);
       const design = $("designNote").value.trim();
       if(!name) return "お名前を入力してください。";
       if(!phone) return "電話番号を入力してください。";
@@ -638,7 +639,7 @@
       if(err){ alert(err); return; }
       state.customer = {
         customer_name: $("customerName").value.trim(),
-        phone: $("phone").value.trim(),
+        phone: normalizePhoneNumber($("phone").value),
         email: $("email").value.trim(),
         design_note: $("designNote").value.trim(),
         allergy_note: $("allergyNote").value.trim()
@@ -667,7 +668,7 @@
         ["合計時間", `${Number(state.spec?.total_minutes || state.selectedTime?.total_minutes || 0)}分`],
         ["目安料金", yen(state.spec?.total_price || 0)],
         ["お名前", state.customer?.customer_name],
-        ["電話番号", state.customer?.phone],
+        ["電話番号", phoneForDisplay(state.customer?.phone)],
         ["希望デザイン", state.customer?.design_note || "未入力"]
       ]);
     }
@@ -685,7 +686,7 @@
           line_user_id: state.lineUserId,
           line_display_name: "DPRO NAIL DEMO",
           customer_name: state.customer.customer_name,
-          phone: state.customer.phone,
+          phone: normalizePhoneNumber(state.customer.phone),
           email: state.customer.email,
           service_code: state.selectedService.service_code,
           option_codes: state.selectedOptions,
