@@ -1,0 +1,101 @@
+name: STEP NAIL-NEXT-11-R1 Demo Auto Login
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nail-next-11-r1-demo-auto-login
+  cancel-in-progress: false
+
+env:
+  PATCH_GZIP_BASE64: >-
+        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
+        AAA=
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout nail repository
+        uses: actions/checkout@v6
+
+      - name: Restore demo preview patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s' "$PATCH_GZIP_BASE64"             | tr -d '[:space:]'             | base64 --decode             | gzip --decompress             > /tmp/apply_nail_next11_r1.py
+
+      - name: Apply safe product-site auto login
+        shell: bash
+        run: |
+          set -euo pipefail
+          python /tmp/apply_nail_next11_r1.py
+
+      - name: Validate nail preview security and JavaScript
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "STEP NAIL-NEXT-11-R1" owner.html
+          grep -q "STEP NAIL-NEXT-11-R1" owner-ipad.html
+          grep -q 'p.get("demo")==="1"' owner.html
+          grep -q 'p.get("auto")==="1"' owner.html
+          grep -q 'p.get("embed_demo")==="1"' owner.html
+          grep -q 'p.get("shop_code")===SHOP_CODE' owner.html
+          grep -q 'refPath.startsWith("/dpro-line-systems-site/")' owner.html
+          grep -q "window.self!==window.top" owner.html
+          grep -q "async function login(persist=true)" owner-ipad.html
+          grep -q "await login(false)" owner-ipad.html
+
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          for name in ("owner.html", "owner-ipad.html"):
+              html = Path(name).read_text(encoding="utf-8")
+              scripts = re.findall(r"<script[^>]*>(.*?)</script>", html, flags=re.S | re.I)
+              Path("/tmp/" + name + ".js").write_text("\n".join(scripts), encoding="utf-8")
+          PY
+
+          node --check /tmp/owner.html.js
+          node --check /tmp/owner-ipad.html.js
+          echo "NAIL NEXT-11-R1 nail preview validation passed"
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add owner.html owner-ipad.html
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "STEP NAIL-NEXT-11-R1 safe product site demo auto login"
+          git push

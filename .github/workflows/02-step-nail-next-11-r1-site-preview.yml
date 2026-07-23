@@ -1,0 +1,88 @@
+name: STEP NAIL-NEXT-11-R1 Fix Live Preview
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nail-next-11-r1-live-preview
+  cancel-in-progress: false
+
+env:
+  PATCH_GZIP_BASE64: >-
+        H4sIAAAAAAAC/81XW2sbRxR+318xmYdKqrW6FdqielPUWBSBIwnZTgq2I1baWWvw3joz6wvBL1EpoVBaaMBQKLSlhdBLnvKUlv4Z
+        1Sj9Fz0zs5LW0cVp6kD2YXfn7Dnfucw5Z8+4LPRRZIuBR3uI+lHIBGrD0kjeGTEM+RlZipzF/JQL4vNiYFOvMBC+h3MGdVEQCgVT
+        ICeUC57NVQ0EF7MpJ2hLydRPqFggr0TdMA4cQDIUxdJQjNhOV5ATkSVBP3RocGDhWLjm+5Lxo9pWHRjxQIiIV4tFJwJPuDislEol
+        07N7hQMqBnGvQMOiR13XlPpMRjhhR6SIjdbdZr3TbbY6t2ubAKPQ1hAOjwPClFkfHllKJAD9ZrmEjUa7trFEwKSR7SyWMhziIsXU
+        jRg5ouQ4K2+T8BARswBl1UJeEna6WGFP2WRlnGZ8y/ajDxzih1ZZvdqxmLwSv0ecrv42L8MHYdSF6BIFr9gUXVpppdklQS1z2inp
+        8yWfLCxCxz7F/8m3ZaF7AxxkJPLsPulSl9k+6XLW7/ZOu4IKj2RlVuaRes+jmHmJz5C2goDTFggX+qEfUeCdqmCZ7LoG2713c/9t
+        JW3hDKgGbsL7dgTAkpiTpAxWXKDWwrnde3h/LYtzmfwUzfXsA26BZCOfWC3vceTYgjh51IeKErqSpEkFHveCLMN7ZQzgYLFUgfcq
+        GLwAX7Qw1LEWu2GhcnVm94tF7Ga0GzoACN9XzzM8CZlPAEMhVdF99TzL5NJJkVg5LfdVoVZykk+7iTfandZo+OXowU+j4a+ofWv0
+        4JfR8M/R8Au4j5/8MP768/GjP/757sfR8Hw0/G00/GY0/Bk+YS1+uRSxY/NBL7QZ9J68kXud5rwu/VPdF8/Onz88f/7494sn365U
+        STg9CPj/V/j3s4fjp59d7WM/5iL0CePXFGPatp2rN/pSe5p0puvTn/Z3qSpDR6IXCxEG3eXNARoD1INt8j4jJDCTxrAil/b4WloA
+        ynm+R6T7g/Y6jy7ZM+kQi4zU7UIbl/SM5Zk7bSWpuKmhYIG6WWeZ7yr6j4B8CKCHdjqbC9vJPOaZHAfUHrxioMdf/XXx/dPxo8ep
+        nX3VCKftmAR4gW0L4rswi5aGdl7PyshKz64I7Byiiqtvs0PYExi01m+YJtrarrdRs9bYNJv1T7blb7pTRkW02bhTR+1O/U6jfhfV
+        drZbaLP1caMpdW0h07yJpckJlBz3aKB8qU69AgXyUUgMm/0zl6gFnVCTGzu3ttFWY7uOdtobNXgUUaVUebf0XuUdpTV/LTB7gdwe
+        bf0MsTz56xqMfBpTRhzwYVfR0qz4JUaWhHPBoDL5pGaVWcVdoibtPE2bddw0VaeUpqTHX01Jjbd5Y99wQ4Yo5I/cqomD1cmQoD7M
+        7eOS1Jsf+H3KOQzzSZxk6gGDrmJXp4HKv2zayBxaX5reOAiZD5mt2wdMM1BgsPRocIiObQ72++ERcfRBJYWfcvll4FUNrUJXB6XC
+        MQN39LFFt4QXDy95FJBjEIfOA6mVMyJGwRgs8xKlqgrOM07cF4gDHEr6gipe0NIfINnXPCIIAPwLTjh02sQNAAA=
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout product site repository
+        uses: actions/checkout@v6
+
+      - name: Restore product site preview patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s' "$PATCH_GZIP_BASE64"             | tr -d '[:space:]'             | base64 --decode             | gzip --decompress             > /tmp/apply_nail_next11_r1_site.py
+
+      - name: Apply live preview URLs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python /tmp/apply_nail_next11_r1_site.py
+
+      - name: Validate product site preview URLs
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "STEP NAIL-NEXT-11-R1" systems/nail.html
+          grep -q "demo=1&amp;auto=1&amp;embed_demo=1" systems/nail.html
+          grep -q "shop_code=nail_demo" systems/nail.html
+          grep -q "view=dashboard" systems/nail.html
+          grep -q "view=designs" systems/nail.html
+          grep -q "view=customers" systems/nail.html
+          grep -q "view=today" systems/nail.html
+
+          python - <<'PY'
+          from pathlib import Path
+          html = Path("systems/nail.html").read_text(encoding="utf-8")
+          assert html.count("demo=1&amp;auto=1&amp;embed_demo=1") >= 8
+          assert "owner.html?v=nail-next-10" in html
+          assert "owner-ipad.html?v=nail-next-10" in html
+          PY
+
+          echo "NAIL NEXT-11-R1 product site preview validation passed"
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add systems/nail.html
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "STEP NAIL-NEXT-11-R1 fix nail live previews"
+          git push
