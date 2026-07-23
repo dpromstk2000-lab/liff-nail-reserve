@@ -61,6 +61,7 @@
   <meta name="dpro-final-version" content="STEP NAIL-NEXT-10">
 </head>
 <body>
+<!-- STEP NAIL-NEXT-11-R1 / PRODUCT SITE DEMO AUTO LOGIN -->
   <div id="dproFinalVersion" data-version="STEP NAIL-NEXT-10" hidden>STEP NAIL-NEXT-10</div>
   <div id="loginScreen" class="login">
     <div class="login-card">
@@ -260,15 +261,32 @@
     function buildUrl(path,params={}){const u=new URL(API_BASE+path);Object.entries({shop_code:SHOP_CODE,admin_code:state.adminCode,...params}).forEach(([k,v])=>{if(v!==undefined&&v!==null&&v!=="")u.searchParams.set(k,v)});return u.toString()}
     async function apiGet(path,params={}){const r=await fetch(buildUrl(path,params),{cache:"no-store"});const d=await r.json().catch(()=>({}));if(!r.ok||d.ok===false)throw new Error(d.error||d.message||"APIエラー");return d}
     async function apiPost(path,body={}){const r=await fetch(API_BASE+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({shop_code:SHOP_CODE,admin_code:state.adminCode,...body})});const d=await r.json().catch(()=>({}));if(!r.ok||d.ok===false)throw new Error(d.error||d.message||"APIエラー");return d}
+
+function isProductSiteDemoPreview(){
+  const p=new URLSearchParams(location.search);
+  let refPath="";
+  try{refPath=new URL(document.referrer).pathname}catch{}
+  return window.self!==window.top
+    && p.get("demo")==="1"
+    && p.get("auto")==="1"
+    && p.get("embed_demo")==="1"
+    && p.get("shop_code")===SHOP_CODE
+    && refPath.startsWith("/dpro-line-systems-site/");
+}
+function productSitePreviewView(){
+  const view=new URLSearchParams(location.search).get("view")||"today";
+  return ["today","tasks","quick"].includes(view)?view:"today";
+}
+
     function clearAdminCode(){localStorage.removeItem("DPRO_NAIL_ADMIN_CODE");state.adminCode="";$("loginCode").value="1234";$("loginScreen").classList.remove("hidden")}
-    async function login(){
+    async function login(persist=true){
       const code=$("loginCode").value.trim();$("loginMessage").innerHTML="";
       if(!code){$("loginMessage").innerHTML=notice("管理コードを入力してください。","err");return}
       state.adminCode=code;
       try{
         const health=await fetch(API_BASE+"/api/health",{cache:"no-store"}).then(r=>r.json());
         await apiGet("/api/admin/settings");
-        localStorage.setItem("DPRO_NAIL_ADMIN_CODE",code);
+        if(persist)localStorage.setItem("DPRO_NAIL_ADMIN_CODE",code);
         $("loginScreen").classList.add("hidden");
         $("statApi").textContent=health.ok?"OK":"NG";$("statVersion").textContent=health.worker_version||"Worker";
         await reloadAll(false);
@@ -429,9 +447,24 @@
       if(!body.customer_name||!body.phone||!body.reservation_date||!body.start_time){$("manualMessage").innerHTML=notice("お客様名、電話番号、日付、時間を入力してください。","err");return}
       try{await apiPost("/api/admin/reservations/manual-create",body);closeModal("manualModal");await loadDay(false);toast("予約を登録しました。","ok")}catch(e){$("manualMessage").innerHTML=notice(e.message,"err")}
     }
-    document.addEventListener("DOMContentLoaded",()=>{
+    document.addEventListener("DOMContentLoaded",async()=>{
       $("targetDate").value=today();
-      const saved=localStorage.getItem("DPRO_NAIL_ADMIN_CODE");if(saved){$("loginCode").value=saved;login()}
+
+      if(isProductSiteDemoPreview()){
+        $("loginCode").value="1234";
+        await login(false);
+        const view=productSitePreviewView();
+        const btn=document.querySelector(`.tab[data-view="${view}"]`);
+        if(btn)showView(view,btn);
+        document.body.dataset.productSiteDemo="1";
+        return;
+      }
+
+      const saved=localStorage.getItem("DPRO_NAIL_ADMIN_CODE");
+      if(saved){
+        $("loginCode").value=saved;
+        await login();
+      }
     });
   </script>
 </body>

@@ -75,6 +75,7 @@
   <meta name="dpro-final-version" content="STEP NAIL-NEXT-10">
 </head>
 <body>
+<!-- STEP NAIL-NEXT-11-R1 / PRODUCT SITE DEMO AUTO LOGIN -->
   <div id="dproFinalVersion" data-version="STEP NAIL-NEXT-10" hidden>STEP NAIL-NEXT-10</div>
 <div id="unlock" class="unlock">
   <div class="unlock-card">
@@ -344,6 +345,39 @@ async function api(path,{method="GET",body=null,params={},rawBody=null,headers={
   const res=await fetch(url,opts);let data={};try{data=await res.json()}catch{data={ok:false,message:`HTTP ${res.status}`}}
   if(!res.ok||data.ok===false)throw new Error(data.message||data.error||`HTTP ${res.status}`);return data;
 }
+
+function isProductSiteDemoPreview(){
+  const p=new URLSearchParams(location.search);
+  let refPath="";
+  try{refPath=new URL(document.referrer).pathname}catch{}
+  return window.self!==window.top
+    && p.get("demo")==="1"
+    && p.get("auto")==="1"
+    && p.get("embed_demo")==="1"
+    && p.get("shop_code")===SHOP_CODE
+    && refPath.startsWith("/dpro-line-systems-site/");
+}
+function productSitePreviewView(){
+  const view=new URLSearchParams(location.search).get("view")||"dashboard";
+  return TITLES[view]?view:"dashboard";
+}
+async function openProductSiteDemoPreview(){
+  state.adminCode="1234";
+  $("unlockCode").value="1234";
+  try{
+    await api("/api/admin/summary");
+    $("unlock").classList.add("hidden");
+    $("securityCodeView").value="1234";
+    await loadDashboard(true);
+    const view=productSitePreviewView();
+    if(view!=="dashboard")switchView(view);
+    document.body.dataset.productSiteDemo="1";
+  }catch(e){
+    state.adminCode="";
+    $("unlockMessage").innerHTML=notice(e.message,"err");
+  }
+}
+
 async function unlockOwner(){
   const code=$("unlockCode").value.trim();if(!code){$("unlockMessage").innerHTML=notice("管理コードを入力してください。","err");return}
   state.adminCode=code;
@@ -597,7 +631,28 @@ async function runSystemCheck(){$("checkSummary").innerHTML='<span class="loadin
 document.querySelectorAll(".modal-bg").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("show")}));
 document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".modal-bg.show").forEach(x=>x.classList.remove("show"))});
 window.addEventListener("DOMContentLoaded",async()=>{
-  $("dayDate").value=today();$("mDate").value=today();const saved=storageGet(ADMIN_KEY);$("unlockCode").value=saved;if(saved){state.adminCode=saved;try{await api("/api/admin/summary");$("unlock").classList.add("hidden");$("securityCodeView").value=saved;await loadDashboard(true)}catch{storageRemove(ADMIN_KEY);state.adminCode="";}}
+  $("dayDate").value=today();
+  $("mDate").value=today();
+
+  if(isProductSiteDemoPreview()){
+    await openProductSiteDemoPreview();
+    return;
+  }
+
+  const saved=storageGet(ADMIN_KEY);
+  $("unlockCode").value=saved;
+  if(saved){
+    state.adminCode=saved;
+    try{
+      await api("/api/admin/summary");
+      $("unlock").classList.add("hidden");
+      $("securityCodeView").value=saved;
+      await loadDashboard(true);
+    }catch{
+      storageRemove(ADMIN_KEY);
+      state.adminCode="";
+    }
+  }
 });
 </script>
 </body>
