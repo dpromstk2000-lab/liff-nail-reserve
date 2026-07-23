@@ -1,0 +1,164 @@
+name: STEP NAIL-NEXT-9 Apply Follow-up Management
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: step-nail-next-9-followup
+  cancel-in-progress: false
+
+env:
+  PATCH_GZIP_BASE64: >-
+        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
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Restore patch script
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s' "$PATCH_GZIP_BASE64"             | tr -d '[:space:]'             | base64 --decode             | gzip --decompress             > /tmp/apply_nail_next9.py
+
+      - name: Apply NEXT-9 patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python /tmp/apply_nail_next9.py
+
+      - name: Validate owner and system check
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s owner.html
+          test -s system-check.html
+          grep -q "STEP NAIL-NEXT-9" owner.html
+          grep -q 'id="view-followups"' owner.html
+          grep -q "async function loadFollowupQueue" owner.html
+          grep -q "予約済み自動除外済み" owner.html
+          grep -q "/api/admin/customers/detail" owner.html
+          grep -q "/api/admin/followups/update-status" owner.html
+          grep -q "/api/line/log-copy" owner.html
+          grep -q 'marker:"STEP NAIL-NEXT-9",expected:"NEXT-9"' system-check.html
+
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          for name in ("owner.html", "system-check.html"):
+              html = Path(name).read_text(encoding="utf-8")
+              scripts = re.findall(r"<script[^>]*>(.*?)</script>", html, flags=re.S|re.I)
+              Path("/tmp/" + name + ".js").write_text("\n".join(scripts), encoding="utf-8")
+          PY
+
+          node --check /tmp/owner.html.js
+          node --check /tmp/system-check.html.js
+          echo "STEP NAIL-NEXT-9 validation passed"
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add owner.html system-check.html
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "STEP NAIL-NEXT-9 follow-up and LINE message management"
+          git push
