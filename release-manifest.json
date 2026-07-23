@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "system_code": "DPRO_NAIL_LINE_NEXT",
+  "release": "STEP NAIL-NEXT-10",
+  "release_date": "2026-07-23",
+  "status": "ready_for_final_public_check",
+  "shop_code": "nail_demo",
+  "admin_code_demo": "1234",
+  "urls": {
+    "release": "https://dpromstk2000-lab.github.io/liff-nail-reserve/release.html?v=nail-next-10",
+    "customer": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?v=nail-next-10",
+    "member": "https://dpromstk2000-lab.github.io/liff-nail-reserve/member.html?v=nail-next-10",
+    "owner": "https://dpromstk2000-lab.github.io/liff-nail-reserve/owner.html?v=nail-next-10",
+    "owner_ipad": "https://dpromstk2000-lab.github.io/liff-nail-reserve/owner-ipad.html?v=nail-next-10",
+    "system_check": "https://dpromstk2000-lab.github.io/liff-nail-reserve/system-check.html?v=nail-next-10",
+    "worker_health": "https://dpro-nail-line-api.dpromstk2000.workers.dev/api/health"
+  }
+}

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#68473e">
-  <title>DPRO NAIL LINE NEXT｜オーナー管理 STEP NAIL-NEXT-9</title>
+  <title>DPRO NAIL LINE NEXT｜オーナー管理 STEP NAIL-NEXT-10</title>
   <meta name="description" content="DPRO NAIL LINE NEXT ネイルサロン向けオーナーPC管理画面">
   <style>
     :root{
@@ -72,8 +72,10 @@
     @media(max-width:1120px){:root{--sidebar:220px}.kpis{grid-template-columns:repeat(3,1fr)}.split,.chart-layout{grid-template-columns:1fr}.sticky-card{position:static}.design-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:780px){.app{display:block}.sidebar{position:fixed;left:-280px;top:0;width:260px;transition:.2s ease;box-shadow:15px 0 50px rgba(0,0,0,.25)}.sidebar.open{left:0}.main{padding:12px 10px 70px}.mobile-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.menu-toggle{border:1px solid var(--line);background:#fff;border-radius:13px;padding:9px 11px;font-weight:900}.topbar{align-items:flex-start}.top-actions{display:none}.page-title h1{font-size:23px}.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.grid3,.form-grid,.form-grid3,.search-results{grid-template-columns:1fr}.design-grid{grid-template-columns:1fr}.reservation-card{grid-template-columns:76px 1fr}.photo-list{grid-template-columns:repeat(2,1fr)}.panel{padding:15px;border-radius:23px}.section-head{display:block}.section-head>.badge{margin-top:8px}}
   </style>
+  <meta name="dpro-final-version" content="STEP NAIL-NEXT-10">
 </head>
 <body>
+  <div id="dproFinalVersion" data-version="STEP NAIL-NEXT-10" hidden>STEP NAIL-NEXT-10</div>
 <div id="unlock" class="unlock">
   <div class="unlock-card">
     <div class="unlock-brand"><div class="logo">N</div><div><small class="muted">DPRO NEXT / OWNER PC</small><h1>DPRO NAIL LINE NEXT</h1></div></div>
@@ -86,7 +88,7 @@
 
 <div class="app">
   <aside id="sidebar" class="sidebar">
-    <div class="brand"><div class="logo">N</div><div><small>STEP NAIL-NEXT-9</small><strong>DPRO NAIL NEXT</strong></div></div>
+    <div class="brand"><div class="logo">N</div><div><small>STEP NAIL-NEXT-10</small><strong>DPRO NAIL NEXT</strong></div></div>
     <div class="nav-group-label">MAIN</div>
     <nav class="nav">
       <button class="nav-btn active" data-view="dashboard"><span>⌂</span><span>ダッシュボード</span></button>
@@ -112,8 +114,8 @@
     <header class="topbar">
       <div class="page-title"><small>DPRO NEXT / NAIL SALON MANAGEMENT</small><h1 id="pageTitle">ダッシュボード</h1></div>
       <div class="top-actions">
-        <a class="btn secondary" href="index.html?v=nail-next-9" target="_blank" rel="noopener">予約画面</a>
-        <a class="btn secondary" href="owner-ipad.html?v=nail-next-9" target="_blank" rel="noopener">iPad画面</a>
+        <a class="btn secondary" href="index.html?v=nail-next-10" target="_blank" rel="noopener">予約画面</a>
+        <a class="btn secondary" href="owner-ipad.html?v=nail-next-10" target="_blank" rel="noopener">iPad画面</a>
         <button class="btn brand" onclick="refreshCurrent()">更新</button>
       </div>
     </header>
@@ -313,7 +315,7 @@
 <script>
 const API_BASE="https://dpro-nail-line-api.dpromstk2000.workers.dev";
 const SHOP_CODE="nail_demo";
-const VERSION="STEP NAIL-NEXT-9";
+const VERSION="STEP NAIL-NEXT-10";
 const ADMIN_KEY="DPRO_NAIL_OWNER_ADMIN_CODE";
 const TITLES={dashboard:"ダッシュボード",today:"本日の施術",customers:"顧客・カルテ",followups:"再来店フォロー",designs:"デザインカタログ",manual:"電話・店頭予約",settings:"店舗設定",check:"システム確認"};
 const WORKFLOWS=[["reserved","予約"],["arrived","来店"],["preparing","準備"],["in_service","施術中"],["checkout_wait","会計待ち"],["completed","完了"],["no_show","無断キャンセル"]];

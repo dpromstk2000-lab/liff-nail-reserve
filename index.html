@@ -167,8 +167,10 @@
     @media(max-width:680px){.wrap{padding:11px 9px 104px}.hero{padding:20px 16px;border-radius:28px}.topbar{display:block}.version-pill{margin-top:13px}.logo{width:54px;height:54px;border-radius:17px}h1{font-size:25px}.lead{font-size:15px}.panel{padding:16px;border-radius:25px}.section-head{display:block}.section-head .badge{margin-top:10px}.status-bar{grid-template-columns:1fr 1fr}.design-grid,.service-grid,.staff-grid,.option-row,.count-grid,.form-grid{grid-template-columns:1fr}.days,.times{grid-template-columns:repeat(3,1fr)}.repeat-box .row{grid-template-columns:1fr}.repeat-box .btn{width:100%}.actions .btn{flex:1 1 auto}.summary-row{display:block}.summary-row b{display:block;text-align:left;margin-top:5px}.sticky-text b{max-width:70vw}}
     @media(max-width:420px){.status-bar{grid-template-columns:1fr}.design-grid{grid-template-columns:1fr}.days,.times{grid-template-columns:repeat(2,1fr)}.off-grid{grid-template-columns:1fr}.brand-row{align-items:flex-start}}
   </style>
+  <meta name="dpro-final-version" content="STEP NAIL-NEXT-10">
 </head>
 <body>
+  <div id="dproFinalVersion" data-version="STEP NAIL-NEXT-10" hidden>STEP NAIL-NEXT-10</div>
   <div class="wrap">
     <header class="hero">
       <div class="topbar">
@@ -179,7 +181,7 @@
             <h1>DPRO NAIL LINE NEXT</h1>
           </div>
         </div>
-        <span class="version-pill">STEP NAIL-NEXT-4</span>
+        <span class="version-pill">STEP NAIL-NEXT-10</span>
       </div>
       <p class="lead">デザイン写真、メニュー、前回の施術内容から予約できます。必要な項目だけ順番に表示するため、細かな内容も迷わず入力できます。</p>
       <div class="status-bar">
@@ -295,7 +297,7 @@
       </section>
 
       <section class="panel hidden" id="stepComplete">
-        <div class="complete"><div class="complete-mark">✓</div><h2>予約を受け付けました</h2><p>予約内容をサロン管理画面へ反映しました。必要に応じてサロンからLINEでご案内します。</p><div id="completeBox" class="summary"></div><div class="actions" style="justify-content:center"><button class="btn secondary" type="button" onclick="location.reload()">別の予約をする</button><a class="btn" href="member.html?v=nail-next-4">予約を確認する</a></div></div>
+        <div class="complete"><div class="complete-mark">✓</div><h2>予約を受け付けました</h2><p>予約内容をサロン管理画面へ反映しました。必要に応じてサロンからLINEでご案内します。</p><div id="completeBox" class="summary"></div><div class="actions" style="justify-content:center"><button class="btn secondary" type="button" onclick="location.reload()">別の予約をする</button><a class="btn" href="member.html?v=nail-next-10">予約を確認する</a></div></div>
       </section>
     </main>
   </div>
@@ -303,7 +305,7 @@
   <div class="sticky" id="sticky"><div class="sticky-inner"><div class="sticky-text"><b id="stickyTitle">予約内容を選択してください</b><span id="stickySub">選択内容がここに表示されます</span></div><button class="btn secondary" type="button" onclick="resetFlow()">最初から</button></div></div>
 
   <script>
-    const STEP_VERSION = "STEP NAIL-NEXT-4";
+    const STEP_VERSION = "STEP NAIL-NEXT-10";
     const DEFAULT_API_BASE = "https://dpro-nail-line-api.dpromstk2000.workers.dev";
     const API_BASE = new URLSearchParams(location.search).get("api_base") || DEFAULT_API_BASE;
     const SHOP_CODE = new URLSearchParams(location.search).get("shop_code") || "nail_demo";

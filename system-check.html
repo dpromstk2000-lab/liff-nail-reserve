@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#68473e">
-  <title>DPRO NAIL LINE NEXT｜総合検査 STEP NAIL-NEXT-8</title>
+  <title>DPRO NAIL LINE NEXT｜総合検査 STEP NAIL-NEXT-10</title>
   <meta name="description" content="DPRO NAIL LINE NEXTのWorker、Supabase、Storage、予約、カルテ、写真、進捗、公開画面を一括検査する内部用画面">
   <style>
     :root{
@@ -55,14 +55,16 @@
     @media(max-width:800px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.url-list{grid-template-columns:1fr}.count-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:620px){.wrap{padding:10px 10px 82px}.hero{border-radius:25px;padding:16px}.topbar{display:block}.actions{justify-content:flex-start;margin-top:12px}.brand h1{font-size:23px}.stats{grid-template-columns:repeat(2,1fr)}.screen-grid{grid-template-columns:1fr}.check{grid-template-columns:34px 1fr}.check .result{grid-column:2}.overall{align-items:flex-start}.toolbar-left,.toolbar-right{width:100%}.toolbar .btn{flex:1}}
   </style>
+  <meta name="dpro-final-version" content="STEP NAIL-NEXT-10">
 </head>
 <body>
+  <div id="dproFinalVersion" data-version="STEP NAIL-NEXT-10" hidden>STEP NAIL-NEXT-10</div>
   <div class="wrap">
     <header class="hero">
       <div class="topbar">
         <div class="brand">
           <div class="logo">N</div>
-          <div><div class="kicker">STEP NAIL-NEXT-8 / SYSTEM CHECK</div><h1>DPRO NAIL LINE NEXT</h1></div>
+          <div><div class="kicker">STEP NAIL-NEXT-10 / SYSTEM CHECK</div><h1>DPRO NAIL LINE NEXT</h1></div>
         </div>
         <div class="actions">
           <button class="btn brand large" onclick="runAllChecks()">NEXT総合検査</button>
@@ -144,11 +146,18 @@
       <section class="panel">
         <div class="section-head"><div><h2>営業デモ前の目視確認</h2><p>自動検査後、画面操作だけ最終確認します。</p></div><span class="badge">MANUAL CHECK</span></div>
         <div class="checks">
-          <div class="check"><span class="check-icon">1</span><div><h3>予約画面</h3><p>デザインを選び、オフ・追加内容・担当・日時まで進める。</p></div><a class="btn secondary small" target="_blank" href="./index.html?v=nail-next-8">開く</a></div>
-          <div class="check"><span class="check-icon">2</span><div><h3>PC管理画面</h3><p>管理コード1234で左メニュー、顧客、カルテ、デザインを確認する。</p></div><a class="btn secondary small" target="_blank" href="./owner.html?v=nail-next-8">開く</a></div>
-          <div class="check"><span class="check-icon">3</span><div><h3>店頭iPad画面</h3><p>来店、施術中、会計待ち、カルテ、写真、次回予約を確認する。</p></div><a class="btn secondary small" target="_blank" href="./owner-ipad.html?v=nail-next-8">開く</a></div>
-          <div class="check"><span class="check-icon">4</span><div><h3>会員ページ</h3><p>施術履歴、次回来店目安、前回と同じ予約を確認する。</p></div><a class="btn secondary small" target="_blank" href="./member.html?v=nail-next-8">開く</a></div>
+          <div class="check"><span class="check-icon">1</span><div><h3>予約画面</h3><p>デザインを選び、オフ・追加内容・担当・日時まで進める。</p></div><a class="btn secondary small" target="_blank" href="./index.html?v=nail-next-10">開く</a></div>
+          <div class="check"><span class="check-icon">2</span><div><h3>PC管理画面</h3><p>管理コード1234で左メニュー、顧客、カルテ、デザインを確認する。</p></div><a class="btn secondary small" target="_blank" href="./owner.html?v=nail-next-10">開く</a></div>
+          <div class="check"><span class="check-icon">3</span><div><h3>店頭iPad画面</h3><p>来店、施術中、会計待ち、カルテ、写真、次回予約を確認する。</p></div><a class="btn secondary small" target="_blank" href="./owner-ipad.html?v=nail-next-10">開く</a></div>
+          <div class="check"><span class="check-icon">4</span><div><h3>会員ページ</h3><p>施術履歴、次回来店目安、前回と同じ予約を確認する。</p></div><a class="btn secondary small" target="_blank" href="./member.html?v=nail-next-10">開く</a></div>
         </div>
+      </section>
+
+      <section id="finalRelease" class="panel full">
+        <div class="section-head"><div><h2>販売用完成判定</h2><p>自動検査がALL OKになり、予約・カルテ・写真・次回予約・再来店フォローの実機確認が完了すると販売用完成です。</p></div><span class="badge ok">STEP NAIL-NEXT-10</span></div>
+        <div class="count-grid"><div class="count-card"><b>5</b><span>主要利用画面</span></div><div class="count-card"><b>47</b><span>APIルート</span></div><div class="count-card"><b>5</b><span>NEXT追加テーブル</span></div><div class="count-card"><b>1</b><span>private Storage</span></div></div>
+        <div class="notice ok">自動検査：Worker・DB・Storage・公開6画面。実機確認：予約1件、カルテ1件、写真1枚、次回予約1件、再来店フォロー1件。</div>
+        <a class="btn secondary" target="_blank" href="./release.html?v=nail-next-10">完成版確認ページを開く</a>
       </section>
 
       <section id="logPanel" class="panel full">
@@ -167,11 +176,12 @@
     const PAGE_BASE="https://dpromstk2000-lab.github.io/liff-nail-reserve/";
     const EXPECTED_WORKER="NAIL-NEXT-3-WORKER-API-COMPLETE-20260722";
     const SCREENS=[
-      {key:"customer",label:"予約画面",file:"index.html",marker:"STEP NAIL-NEXT-4",expected:"NEXT-4"},
-      {key:"owner",label:"PC管理画面",file:"owner.html",marker:"STEP NAIL-NEXT-9",expected:"NEXT-9"},
-      {key:"ipad",label:"店頭iPad",file:"owner-ipad.html",marker:"STEP NAIL-NEXT-6",expected:"NEXT-6"},
-      {key:"member",label:"会員ページ",file:"member.html",marker:"STEP NAIL-NEXT-7",expected:"NEXT-7"},
-      {key:"check",label:"総合検査",file:"system-check.html",marker:"STEP NAIL-NEXT-8",expected:"NEXT-8"}
+      {key:"customer",label:"予約画面",file:"index.html",marker:"STEP NAIL-NEXT-10",expected:"FINAL"},
+      {key:"owner",label:"PC管理画面",file:"owner.html",marker:"STEP NAIL-NEXT-10",expected:"FINAL"},
+      {key:"ipad",label:"店頭iPad",file:"owner-ipad.html",marker:"STEP NAIL-NEXT-10",expected:"FINAL"},
+      {key:"member",label:"会員ページ",file:"member.html",marker:"STEP NAIL-NEXT-10",expected:"FINAL"},
+      {key:"check",label:"総合検査",file:"system-check.html",marker:"STEP NAIL-NEXT-10",expected:"FINAL"},
+      {key:"release",label:"完成版確認",file:"release.html",marker:"STEP NAIL-NEXT-10",expected:"FINAL"}
     ];
     const state={backend:null,screens:[],extra:[],result:null,running:false};
     const $=id=>document.getElementById(id);
@@ -189,15 +199,15 @@
       $("overallTitle").textContent=title;$("overallText").textContent=text;$("overallBadge").className="badge "+(mode==="good"?"ok":mode==="bad"?"danger":mode==="running"?"warn":"");$("overallBadge").textContent=mode==="good"?"ALL OK":mode==="bad"?"CHECK REQUIRED":mode==="running"?"RUNNING":"WAITING";
     }
     function renderScreenPlaceholders(){
-      $("screenGrid").innerHTML=SCREENS.map(s=>`<article class="screen-card" id="screen-${s.key}"><h3>${esc(s.label)}</h3><p>${esc(s.file)} ／ 期待：${esc(s.expected)}</p><div class="state"><span class="badge">未検査</span></div><a class="btn secondary small" target="_blank" rel="noopener" href="${PAGE_BASE+s.file}?v=nail-next-8">画面を開く</a></article>`).join("");
+      $("screenGrid").innerHTML=SCREENS.map(s=>`<article class="screen-card" id="screen-${s.key}"><h3>${esc(s.label)}</h3><p>${esc(s.file)} ／ 期待：${esc(s.expected)}</p><div class="state"><span class="badge">未検査</span></div><a class="btn secondary small" target="_blank" rel="noopener" href="${PAGE_BASE+s.file}?v=nail-next-10">画面を開く</a></article>`).join("");
     }
     function renderUrls(){
       const urls=[
-        ["予約画面",PAGE_BASE+"index.html?v=nail-next-8"],
-        ["PC管理画面",PAGE_BASE+"owner.html?v=nail-next-8"],
-        ["店頭iPad",PAGE_BASE+"owner-ipad.html?v=nail-next-8"],
-        ["会員ページ",PAGE_BASE+"member.html?v=nail-next-8"],
-        ["総合検査",PAGE_BASE+"system-check.html?v=nail-next-8"],
+        ["予約画面",PAGE_BASE+"index.html?v=nail-next-10"],
+        ["PC管理画面",PAGE_BASE+"owner.html?v=nail-next-10"],
+        ["店頭iPad",PAGE_BASE+"owner-ipad.html?v=nail-next-10"],
+        ["会員ページ",PAGE_BASE+"member.html?v=nail-next-10"],
+        ["総合検査",PAGE_BASE+"system-check.html?v=nail-next-10"],
         ["Worker Health",API_BASE+"/api/health"],
         ["Worker総合検査",API_BASE+"/api/admin/system-check?admin_code=1234"]
       ];
