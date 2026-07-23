@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#68473e">
-  <title>DPRO NAIL LINE NEXT｜オーナー管理 STEP NAIL-NEXT-5</title>
+  <title>DPRO NAIL LINE NEXT｜オーナー管理 STEP NAIL-NEXT-9</title>
   <meta name="description" content="DPRO NAIL LINE NEXT ネイルサロン向けオーナーPC管理画面">
   <style>
     :root{
@@ -67,6 +67,7 @@
     .settings-nav{display:flex;gap:7px;overflow:auto;margin-bottom:13px}.settings-box{display:none}.settings-box.active{display:block}.setting-card{border:1px solid var(--line);background:#fff;border-radius:18px;padding:13px;margin-bottom:9px}
     .modal-bg{position:fixed;inset:0;background:rgba(35,28,25,.48);z-index:80;display:none;align-items:flex-start;justify-content:center;padding:25px 10px;overflow:auto}.modal-bg.show{display:flex}.modal{width:min(860px,100%);background:#fff;border-radius:25px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.25);border:1px solid rgba(140,101,88,.18)}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line);background:#fff8f4}.modal-head h2{margin:0;font-size:20px}.modal-body{padding:17px 18px}.modal-foot{padding:13px 18px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;background:#fffaf7}
     .unlock{position:fixed;inset:0;z-index:100;background:linear-gradient(145deg,#3a2e29,#6a4b40);display:grid;place-items:center;padding:18px}.unlock-card{width:min(480px,100%);background:#fff;border-radius:29px;padding:25px;box-shadow:0 30px 90px rgba(0,0,0,.32)}.unlock-brand{display:flex;gap:12px;align-items:center;margin-bottom:18px}.unlock-brand .logo{width:57px;height:57px}.unlock-card h1{font-size:24px;margin:0}.unlock-card p{color:var(--muted);font-size:13px;line-height:1.65}.unlock-card input{font-size:20px;letter-spacing:.16em;text-align:center}
+    .followup-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin:12px 0}.followup-kpi{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:var(--shadow-soft)}.followup-kpi small{display:block;color:var(--muted);font-size:10px;font-weight:850}.followup-kpi b{display:block;font-size:22px;margin-top:5px}.followup-list{display:grid;gap:10px}.followup-card{background:#fff;border:1px solid var(--line);border-radius:21px;padding:14px;box-shadow:var(--shadow-soft)}.followup-card.excluded{background:#f5f1ee;opacity:.78}.followup-editor{margin-top:10px}.followup-editor textarea{width:100%;min-height:118px;border:1px solid var(--line);border-radius:15px;padding:11px 12px;line-height:1.65;resize:vertical;background:#fff;color:var(--ink)}.followup-editor textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(140,101,88,.13);outline:0}.followup-reason{margin-top:8px;border-radius:14px;padding:9px 10px;background:#edf7f1;border:1px solid #cfe3d7;color:var(--ok);font-size:12px;line-height:1.55}.followup-reason.excluded{background:#edf4f7;border-color:#d0e0e7;color:var(--info)}.followup-excluded{margin-top:10px;border:1px solid var(--line);border-radius:16px;background:#f8f4f1;padding:11px 12px}.followup-excluded summary{cursor:pointer;font-weight:900;font-size:12px}.followup-excluded-list{display:grid;gap:6px;margin-top:9px}.followup-excluded-row{display:flex;justify-content:space-between;gap:10px;border-top:1px dashed var(--line);padding-top:7px;font-size:11px;color:var(--muted)}
     .toast{position:fixed;right:18px;bottom:18px;z-index:120;min-width:260px;max-width:430px;border-radius:16px;padding:12px 14px;background:#2f2926;color:#fff;box-shadow:0 16px 42px rgba(0,0,0,.23);display:none;font-size:13px;line-height:1.55}.toast.show{display:block}.toast.ok{background:var(--ok)}.toast.err{background:var(--danger)}
     @media(max-width:1120px){:root{--sidebar:220px}.kpis{grid-template-columns:repeat(3,1fr)}.split,.chart-layout{grid-template-columns:1fr}.sticky-card{position:static}.design-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:780px){.app{display:block}.sidebar{position:fixed;left:-280px;top:0;width:260px;transition:.2s ease;box-shadow:15px 0 50px rgba(0,0,0,.25)}.sidebar.open{left:0}.main{padding:12px 10px 70px}.mobile-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.menu-toggle{border:1px solid var(--line);background:#fff;border-radius:13px;padding:9px 11px;font-weight:900}.topbar{align-items:flex-start}.top-actions{display:none}.page-title h1{font-size:23px}.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.grid3,.form-grid,.form-grid3,.search-results{grid-template-columns:1fr}.design-grid{grid-template-columns:1fr}.reservation-card{grid-template-columns:76px 1fr}.photo-list{grid-template-columns:repeat(2,1fr)}.panel{padding:15px;border-radius:23px}.section-head{display:block}.section-head>.badge{margin-top:8px}}
@@ -85,12 +86,13 @@
 
 <div class="app">
   <aside id="sidebar" class="sidebar">
-    <div class="brand"><div class="logo">N</div><div><small>STEP NAIL-NEXT-5</small><strong>DPRO NAIL NEXT</strong></div></div>
+    <div class="brand"><div class="logo">N</div><div><small>STEP NAIL-NEXT-9</small><strong>DPRO NAIL NEXT</strong></div></div>
     <div class="nav-group-label">MAIN</div>
     <nav class="nav">
       <button class="nav-btn active" data-view="dashboard"><span>⌂</span><span>ダッシュボード</span></button>
       <button class="nav-btn" data-view="today"><span>◷</span><span>本日の施術</span></button>
       <button class="nav-btn" data-view="customers"><span>♙</span><span>顧客・カルテ</span></button>
+      <button class="nav-btn" data-view="followups"><span>✉</span><span>再来店フォロー</span></button>
       <button class="nav-btn" data-view="designs"><span>◇</span><span>デザインカタログ</span></button>
       <button class="nav-btn" data-view="manual"><span>＋</span><span>電話・店頭予約</span></button>
     </nav>
@@ -110,8 +112,8 @@
     <header class="topbar">
       <div class="page-title"><small>DPRO NEXT / NAIL SALON MANAGEMENT</small><h1 id="pageTitle">ダッシュボード</h1></div>
       <div class="top-actions">
-        <a class="btn secondary" href="index.html?v=nail-next-5" target="_blank" rel="noopener">予約画面</a>
-        <a class="btn secondary" href="owner-ipad.html?v=nail-next-5" target="_blank" rel="noopener">iPad画面</a>
+        <a class="btn secondary" href="index.html?v=nail-next-9" target="_blank" rel="noopener">予約画面</a>
+        <a class="btn secondary" href="owner-ipad.html?v=nail-next-9" target="_blank" rel="noopener">iPad画面</a>
         <button class="btn brand" onclick="refreshCurrent()">更新</button>
       </div>
     </header>
@@ -175,6 +177,42 @@
           <div class="field full"><label>要望・メモ</label><textarea id="mNote" placeholder="デザインや注意事項"></textarea></div>
         </div>
         <div class="card-actions"><button class="btn brand" onclick="createManualReservation()">予約を登録</button><button class="btn secondary" onclick="resetManualForm()">入力をクリア</button></div>
+      </div>
+    </section>
+
+    <section id="view-followups" class="view">
+      <div class="panel">
+        <div class="section-head">
+          <div><h2>再来店フォロー・LINE文面</h2><p>次回来店目安とキャンセル後の再予約案内をまとめ、未来の有効予約がある顧客は自動で除外します。</p></div>
+          <span id="followupStatusBadge" class="badge info">必要時だけ詳細確認</span>
+        </div>
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <select id="followupFilter" class="input" style="width:auto" onchange="renderFollowupQueue()">
+              <option value="all">すべて</option>
+              <option value="next_visit">次回来店</option>
+              <option value="cancel_rebook">キャンセル後</option>
+              <option value="line_message">LINE文面</option>
+            </select>
+            <input id="followupQuery" class="input" style="min-width:240px" placeholder="顧客名・電話番号・文面検索" oninput="renderFollowupQueue()">
+          </div>
+          <div class="toolbar-right">
+            <button class="btn secondary small" onclick="loadFollowupQueue(true)">予約状況を再確認</button>
+          </div>
+        </div>
+        <div id="followupNotice" class="notice info">この画面を開いた時だけ、候補顧客の未来予約を確認します。通常画面の速度には影響しません。</div>
+        <div id="followupKpis" class="followup-kpis">
+          <div class="followup-kpi"><small>対象</small><b>-</b></div>
+          <div class="followup-kpi"><small>次回来店</small><b>-</b></div>
+          <div class="followup-kpi"><small>キャンセル後</small><b>-</b></div>
+          <div class="followup-kpi"><small>LINE文面</small><b>-</b></div>
+          <div class="followup-kpi"><small>予約済み除外</small><b>-</b></div>
+        </div>
+        <div id="followupList" class="followup-list"><div class="empty">再来店フォローを読み込んでください。</div></div>
+        <details id="followupExcludedBox" class="followup-excluded hidden">
+          <summary>予約済みのため自動除外した顧客 <span id="followupExcludedCount">0件</span></summary>
+          <div id="followupExcludedList" class="followup-excluded-list"></div>
+        </details>
       </div>
     </section>
 
@@ -275,11 +313,11 @@
 <script>
 const API_BASE="https://dpro-nail-line-api.dpromstk2000.workers.dev";
 const SHOP_CODE="nail_demo";
-const VERSION="STEP NAIL-NEXT-5";
+const VERSION="STEP NAIL-NEXT-9";
 const ADMIN_KEY="DPRO_NAIL_OWNER_ADMIN_CODE";
-const TITLES={dashboard:"ダッシュボード",today:"本日の施術",customers:"顧客・カルテ",designs:"デザインカタログ",manual:"電話・店頭予約",settings:"店舗設定",check:"システム確認"};
+const TITLES={dashboard:"ダッシュボード",today:"本日の施術",customers:"顧客・カルテ",followups:"再来店フォロー",designs:"デザインカタログ",manual:"電話・店頭予約",settings:"店舗設定",check:"システム確認"};
 const WORKFLOWS=[["reserved","予約"],["arrived","来店"],["preparing","準備"],["in_service","施術中"],["checkout_wait","会計待ち"],["completed","完了"],["no_show","無断キャンセル"]];
-const state={adminCode:"",currentView:"dashboard",summary:null,day:null,settings:null,services:[],options:[],staff:[],designs:[],selectedCustomer:null,customerDetail:null,activeDesign:null,activeTreatment:null,resourcesLoaded:false,designsLoaded:false};
+const state={adminCode:"",currentView:"dashboard",summary:null,day:null,settings:null,services:[],options:[],staff:[],designs:[],selectedCustomer:null,customerDetail:null,activeDesign:null,activeTreatment:null,resourcesLoaded:false,designsLoaded:false,followupQueue:[],followupExcludedItems:[],followupLoaded:false};
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 const arr=v=>Array.isArray(v)?v:(v?String(v).split(",").map(x=>x.trim()).filter(Boolean):[]);
@@ -316,7 +354,7 @@ function closeSidebar(){$("sidebar").classList.remove("open")}
 function switchView(name){
   state.currentView=name;document.querySelectorAll(".view").forEach(x=>x.classList.toggle("active",x.id===`view-${name}`));
   document.querySelectorAll(".nav-btn").forEach(x=>x.classList.toggle("active",x.dataset.view===name));$("pageTitle").textContent=TITLES[name]||name;closeSidebar();
-  if(name==="dashboard")loadDashboard();if(name==="today")loadDay();if(name==="customers"&&!$("customerResults").innerHTML)searchCustomers();
+  if(name==="dashboard")loadDashboard();if(name==="today")loadDay();if(name==="customers"&&!$("customerResults").innerHTML)searchCustomers();if(name==="followups")loadFollowupQueue();
   if(name==="designs")loadDesigns();if(name==="manual")ensureResources().then(fillManualOptions);if(name==="settings")loadSettingsView();if(name==="check"&&!$("checkItems").innerHTML)runSystemCheck();
 }
 document.querySelectorAll(".nav-btn").forEach(btn=>btn.addEventListener("click",()=>switchView(btn.dataset.view)));
@@ -324,7 +362,7 @@ document.querySelectorAll(".tab-btn[data-setting]").forEach(btn=>btn.addEventLis
   document.querySelectorAll(".tab-btn[data-setting]").forEach(x=>x.classList.toggle("active",x===btn));
   document.querySelectorAll(".settings-box").forEach(x=>x.classList.toggle("active",x.id===`setting-${btn.dataset.setting}`));
 }));
-function refreshCurrent(){({dashboard:()=>loadDashboard(true),today:()=>loadDay(true),customers:()=>searchCustomers(),designs:()=>loadDesigns(true),manual:()=>ensureResources(true).then(fillManualOptions),settings:()=>loadSettingsView(true),check:()=>runSystemCheck()}[state.currentView]||(()=>{}))();}
+function refreshCurrent(){({dashboard:()=>loadDashboard(true),today:()=>loadDay(true),customers:()=>searchCustomers(),followups:()=>loadFollowupQueue(true),designs:()=>loadDesigns(true),manual:()=>ensureResources(true).then(fillManualOptions),settings:()=>loadSettingsView(true),check:()=>runSystemCheck()}[state.currentView]||(()=>{}))();}
 async function loadDashboard(force=false){
   if(state.summary&&state.day&&!force){renderDashboard();return}
   $("dashboardNotice").innerHTML='<span class="loading"><span class="spinner"></span>読み込み中</span>';
@@ -340,8 +378,158 @@ function renderDashboard(){
 }
 function renderReservationMini(rows){if(!rows.length)return '<div class="empty">本日の予約はありません。</div>';return `<div class="cards">${rows.slice(0,8).map(r=>`<div class="reservation-card"><div class="timebox"><b>${esc(fmtTime(r.start_time))}</b><small>${esc(fmtTime(r.end_time))}まで</small></div><div><div class="card-head"><div><h3>${esc(r.customer_name||"お客様")}</h3><div class="sub">${esc(r.service_name||r.service_code||"メニュー")}</div></div><span class="badge ${r.workflow_status==="completed"?"ok":"info"}">${esc(workflowLabel(r.workflow_status))}</span></div><div class="meta"><span class="pill">${esc(r.staff_name||"指名なし")}</span><span class="pill">${esc(handLabel(r.hand_foot))}</span></div></div></div>`).join("")}</div>`}
 function renderTasks(tasks){if(!tasks.length)return '<div class="empty">対応が必要なタスクはありません。</div>';return `<div class="cards">${tasks.map(t=>`<div class="task-card"><div class="task-icon">${t.message_id?"✉":"↻"}</div><div><div class="card-head"><div><h3>${esc(t.title||"対応タスク")}</h3><div class="sub">${esc(t.customer_name||"")}</div></div><span class="badge warn">${esc(t.priority||"通常")}</span></div>${t.memo||t.message_body?`<div class="memo">${esc(t.memo||t.message_body)}</div>`:""}<div class="card-actions">${t.message_body?`<button class="btn small" onclick="copyTask('${pack(t)}')">文面コピー</button>`:""}${t.followup_id?`<button class="btn secondary small" onclick="handleFollowup('${esc(t.followup_id)}')">対応済み</button>`:""}</div></div></div>`).join("")}</div>`}
-async function copyTask(json){const t=unpack(json);await navigator.clipboard.writeText(t.message_body||t.memo||"");try{await api("/api/line/log-copy",{method:"POST",body:{message_id:t.message_id||"",followup_id:t.followup_id||"",mark_followup_handled:Boolean(t.followup_id),source_screen:"owner_next5"}});await loadDashboard(true)}catch{}toast("LINE文面をコピーしました。","ok")}
+async function copyTask(json){const t=unpack(json);await navigator.clipboard.writeText(t.message_body||t.memo||"");try{await api("/api/line/log-copy",{method:"POST",body:{message_id:t.message_id||"",followup_id:t.followup_id||"",mark_followup_handled:Boolean(t.followup_id),source_screen:"owner_next9"}});await loadDashboard(true)}catch{}toast("LINE文面をコピーしました。","ok")}
 async function handleFollowup(id){try{await api("/api/admin/followups/update-status",{method:"POST",body:{followup_id:id,status:"handled",handled_note:"オーナーPCで対応済み"}});await loadDashboard(true);toast("対応済みにしました。","ok")}catch(e){toast(e.message,"err")}}
+
+const FOLLOW_ACTIVE_STATUSES=["reserved","confirmed","changed","manual","phone_reserved","shop_reserved","instagram_reserved"];
+function followupType(task){
+  const text=[task.followup_type,task.title,task.memo,task.message_body].filter(Boolean).join(" ").toLowerCase();
+  if(text.includes("キャンセル")||text.includes("再予約")||text.includes("cancel"))return "cancel_rebook";
+  if(text.includes("付け替え")||text.includes("次回")||text.includes("来店目安")||text.includes("follow"))return "next_visit";
+  return "line_message";
+}
+function followupTypeLabel(type){return type==="next_visit"?"次回来店":type==="cancel_rebook"?"キャンセル後":"LINE文面"}
+function followupTypeIcon(type){return type==="next_visit"?"↻":type==="cancel_rebook"?"↪":"✉"}
+function followupPhone(task,detail){return normalizePhone(task.phone||task.customer_phone||detail?.customer?.phone||"")}
+function hasFutureActiveReservation(detail){
+  const rows=detail?.reservations||[];
+  return rows.find(r=>FOLLOW_ACTIVE_STATUSES.includes(String(r.status||""))&&String(r.reservation_date||"")>=today())||null;
+}
+function latestTreatmentFromDetail(detail){return (detail?.treatment_records||[])[0]||null}
+function defaultFollowupMessage(task,detail,type){
+  const customer=detail?.customer||{};
+  const name=task.customer_name||customer.customer_name||"お客様";
+  const treatment=latestTreatmentFromDetail(detail);
+  const nextDate=treatment?.next_visit_date?fmtDate(treatment.next_visit_date):"";
+  const recommendation=treatment?.next_recommendation||"";
+  if(type==="cancel_rebook"){
+    return `${name}様\n先日はご予約のキャンセル連絡をいただき、ありがとうございました。\n改めてご都合の良い日時がございましたら、LINEからいつでもご予約いただけます。\nご希望日が決まりましたら、お気軽にご連絡ください。`;
+  }
+  if(type==="next_visit"){
+    const guide=nextDate?`次回の付け替え目安は${nextDate}頃です。`:"前回施術から、次回の付け替え時期が近づいております。";
+    const rec=recommendation?`\n次回おすすめ：${recommendation}`:"";
+    return `${name}様\nいつもご来店ありがとうございます。\n${guide}${rec}\nご都合の良い日時がございましたら、LINEからご予約ください。`;
+  }
+  return task.message_body||task.memo||`${name}様\nいつもありがとうございます。\nご確認いただきたいご案内がございます。`;
+}
+async function followupMapLimit(rows,limit,worker){
+  const result=new Array(rows.length);let cursor=0;
+  async function run(){
+    while(cursor<rows.length){const index=cursor++;result[index]=await worker(rows[index],index)}
+  }
+  await Promise.all(Array.from({length:Math.min(limit,rows.length)},run));
+  return result;
+}
+async function resolveFollowupDetail(task){
+  let customerId=task.customer_id||task.customer?.id||"";
+  if(!customerId){
+    const query=normalizePhone(task.phone||task.customer_phone||"")||task.customer_name||"";
+    if(query){
+      try{
+        const found=await api("/api/admin/customers/search",{params:{q:query}});
+        const candidates=found.customers||[];
+        const phone=normalizePhone(task.phone||task.customer_phone||"");
+        const customer=(phone?candidates.find(c=>normalizePhone(c.phone)===phone):null)||(candidates.length===1?candidates[0]:null);
+        customerId=customer?.id||"";
+      }catch{}
+    }
+  }
+  if(!customerId)return {customerId:"",detail:null};
+  try{return {customerId,detail:await api("/api/admin/customers/detail",{params:{customer_id:customerId}})}}catch{return {customerId,detail:null}}
+}
+async function loadFollowupQueue(force=false){
+  if(state.followupLoaded&&!force){renderFollowupQueue();return}
+  $("followupStatusBadge").className="badge warn";$("followupStatusBadge").textContent="予約状況確認中";
+  $("followupNotice").className="notice info";$("followupNotice").textContent="候補顧客の未来予約を確認しています。";
+  $("followupList").innerHTML='<span class="loading"><span class="spinner"></span>フォロー候補を確認中</span>';
+  try{
+    const day=await api("/api/admin/day",{params:{date:today()}});
+    const raw=(day.today_tasks||[]).filter(t=>t.followup_id||t.message_id||t.message_body||t.memo).slice(0,30);
+    const checked=await followupMapLimit(raw,3,async task=>{
+      const type=followupType(task);
+      const resolved=await resolveFollowupDetail(task);
+      const future=type==="line_message"?null:hasFutureActiveReservation(resolved.detail);
+      const message=task.message_body||task.memo||defaultFollowupMessage(task,resolved.detail,type);
+      return {...task,_type:type,_customerId:resolved.customerId,_detail:resolved.detail,_futureReservation:future,_message:message};
+    });
+    state.followupExcludedItems=checked.filter(x=>Boolean(x._futureReservation));
+    state.followupQueue=checked.filter(x=>!x._futureReservation);
+    state.followupLoaded=true;
+    renderFollowupQueue();
+    $("followupStatusBadge").className="badge ok";$("followupStatusBadge").textContent="予約済み自動除外済み";
+    $("followupNotice").className="notice ok";$("followupNotice").textContent=`${state.followupQueue.length}件を表示し、予約済み${state.followupExcludedItems.length}件を自動除外しました。`;
+  }catch(e){
+    $("followupStatusBadge").className="badge warn";$("followupStatusBadge").textContent="取得エラー";
+    $("followupNotice").className="notice err";$("followupNotice").textContent=e.message;
+    $("followupList").innerHTML=notice(e.message,"err");
+  }
+}
+function renderFollowupKpis(){
+  const next=state.followupQueue.filter(x=>x._type==="next_visit").length;
+  const cancel=state.followupQueue.filter(x=>x._type==="cancel_rebook").length;
+  const line=state.followupQueue.filter(x=>x._type==="line_message").length;
+  const values=[["対象",state.followupQueue.length],["次回来店",next],["キャンセル後",cancel],["LINE文面",line],["予約済み除外",state.followupExcludedItems.length]];
+  $("followupKpis").innerHTML=values.map(([label,value])=>`<div class="followup-kpi"><small>${label}</small><b>${value}</b></div>`).join("");
+  $("followupExcludedCount").textContent=`${state.followupExcludedItems.length}件`;
+  $("followupExcludedBox").classList.toggle("hidden",!state.followupExcludedItems.length);
+  $("followupExcludedList").innerHTML=state.followupExcludedItems.map(x=>`<div class="followup-excluded-row"><span>${esc(x.customer_name||x._detail?.customer?.customer_name||"お客様")}</span><span>${fmtDate(x._futureReservation?.reservation_date)} ${fmtTime(x._futureReservation?.start_time)}予約済み</span></div>`).join("");
+}
+function renderFollowupQueue(){
+  renderFollowupKpis();
+  const filter=$("followupFilter")?.value||"all";
+  const query=($("followupQuery")?.value||"").trim().toLowerCase();
+  const rows=state.followupQueue.map((item,index)=>({item,index})).filter(({item})=>{
+    if(filter!=="all"&&item._type!==filter)return false;
+    if(!query)return true;
+    return [item.customer_name,item.phone,item.customer_phone,item.title,item._message].filter(Boolean).join(" ").toLowerCase().includes(query);
+  });
+  if(!rows.length){$("followupList").innerHTML='<div class="empty">条件に合うフォロー対象はありません。</div>';return}
+  $("followupList").innerHTML=rows.map(({item,index})=>{
+    const detail=item._detail||{},customer=detail.customer||{},treatment=latestTreatmentFromDetail(detail);
+    const next=treatment?.next_visit_date?fmtDate(treatment.next_visit_date):"未設定";
+    const phone=followupPhone(item,detail);
+    return `<article class="followup-card">
+      <div class="card-head">
+        <div><h3>${esc(item.customer_name||customer.customer_name||"お客様")}</h3><div class="sub">${esc(phone||"電話番号未登録")} ／ ${esc(item.title||followupTypeLabel(item._type))}</div></div>
+        <span class="badge ${item._type==="cancel_rebook"?"warn":item._type==="next_visit"?"ok":"info"}">${followupTypeIcon(item._type)} ${followupTypeLabel(item._type)}</span>
+      </div>
+      <div class="meta"><span class="pill">次回来店目安 ${esc(next)}</span>${treatment?.next_recommendation?`<span class="pill">${esc(treatment.next_recommendation)}</span>`:""}${item.priority?`<span class="pill">${esc(item.priority)}</span>`:""}</div>
+      <div class="followup-reason">未来の有効予約なし：送信候補として表示しています。</div>
+      <div class="followup-editor"><textarea id="followup-message-${index}">${esc(item._message)}</textarea></div>
+      <div class="card-actions">
+        <button class="btn small" onclick="copyFollowupMessage(${index})">文面をコピー</button>
+        <button class="btn secondary small" onclick="resetFollowupMessage(${index})">標準文面に戻す</button>
+        ${item.followup_id?`<button class="btn ok small" onclick="handleFollowupNext9(${index})">対応済み</button>`:""}
+        ${item._customerId?`<button class="btn secondary small" onclick="openCustomerById('${esc(item._customerId)}')">顧客詳細</button>`:""}
+      </div>
+    </article>`;
+  }).join("");
+}
+function resetFollowupMessage(index){
+  const item=state.followupQueue[index];if(!item)return;
+  const text=defaultFollowupMessage(item,item._detail,item._type);
+  item._message=text;const area=$(`followup-message-${index}`);if(area)area.value=text;
+  toast("標準文面へ戻しました。");
+}
+async function copyFollowupMessage(index){
+  const item=state.followupQueue[index];if(!item)return;
+  const area=$(`followup-message-${index}`);const text=area?.value.trim()||item._message||"";
+  if(!text){toast("コピーする文面がありません。","err");return}
+  try{
+    await navigator.clipboard.writeText(text);
+    try{await api("/api/line/log-copy",{method:"POST",body:{message_id:item.message_id||"",followup_id:item.followup_id||"",mark_followup_handled:false,source_screen:"owner_next9_followup",message_body:text}})}catch{}
+    item._message=text;toast("LINE文面をコピーしました。","ok");
+  }catch(e){toast("文面のコピーに失敗しました。","err")}
+}
+async function handleFollowupNext9(index){
+  const item=state.followupQueue[index];if(!item?.followup_id)return;
+  try{
+    await api("/api/admin/followups/update-status",{method:"POST",body:{followup_id:item.followup_id,status:"handled",handled_note:"NEXT-9再来店フォロー画面で対応済み"}});
+    state.followupQueue.splice(index,1);renderFollowupQueue();state.summary=null;state.day=null;
+    toast("対応済みにしました。","ok");
+  }catch(e){toast(e.message,"err")}
+}
+
 async function loadDay(force=false){
   const date=$("dayDate").value||today();$("dayDate").value=date;if(state.day&&state.day.date===date&&!force){renderDay();return}
   $("todayReservations").innerHTML='<span class="loading"><span class="spinner"></span>予約を読み込み中</span>';
@@ -350,7 +538,7 @@ async function loadDay(force=false){
 function renderDay(){const rows=state.day?.today_reservations||[];const counts=state.day?.workflow_counts||{};$("workflowSummary").innerHTML=WORKFLOWS.map(([k,l])=>`<span class="pill">${l} ${counts[k]||0}</span>`).join("");
   if(!rows.length){$("todayReservations").innerHTML='<div class="empty">この日の予約はありません。</div>';return}
   $("todayReservations").innerHTML=`<div class="cards">${rows.map(r=>`<div class="reservation-card"><div class="timebox"><b>${esc(fmtTime(r.start_time))}</b><small>${esc(fmtTime(r.end_time))}まで</small></div><div><div class="card-head"><div><h3>${esc(r.customer_name||"お客様")}</h3><div class="sub">${esc(r.service_name||"メニュー")} ／ ${esc(r.staff_name||"指名なし")}</div></div><span class="badge ${r.workflow_status==="completed"?"ok":"info"}">${esc(workflowLabel(r.workflow_status))}</span></div><div class="meta"><span class="pill">${esc(handLabel(r.hand_foot))}</span><span class="pill">${esc(r.off_source||"off未設定")}</span><span class="pill">${esc(r.phone||"")}</span></div>${r.design_note||r.request_note?`<div class="memo">${esc(r.design_note||r.request_note)}</div>`:""}<div class="workflow-actions">${WORKFLOWS.map(([k,l])=>`<button class="${(r.workflow_status||"reserved")===k?"current":""}" onclick="updateWorkflow('${esc(r.id)}','${k}')">${l}</button>`).join("")}</div><div class="card-actions"><button class="btn brand small" onclick="openChartForReservation('${pack(r)}')">カルテ</button>${r.customer_id?`<button class="btn secondary small" onclick="openCustomerById('${esc(r.customer_id)}')">顧客詳細</button>`:""}</div></div></div>`).join("")}</div>`}
-async function updateWorkflow(id,status){try{await api("/api/admin/reservations/workflow",{method:"POST",body:{reservation_id:id,workflow_status:status,note:"owner.html NEXT-5"}});await loadDay(true);state.summary=null;toast(`${workflowLabel(status)}へ更新しました。`,"ok")}catch(e){toast(e.message,"err")}}
+async function updateWorkflow(id,status){try{await api("/api/admin/reservations/workflow",{method:"POST",body:{reservation_id:id,workflow_status:status,note:"owner.html NEXT-9"}});await loadDay(true);state.summary=null;toast(`${workflowLabel(status)}へ更新しました。`,"ok")}catch(e){toast(e.message,"err")}}
 function workflowLabel(v){return Object.fromEntries(WORKFLOWS)[v||"reserved"]||v||"予約"}
 function handLabel(v){return v==="foot"?"フット":v==="both"?"両方":"ハンド"}
 async function searchCustomers(){
