@@ -1,0 +1,125 @@
+name: STEP NAIL-NEXT-10 Apply Final Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: step-nail-next-10-final-release
+  cancel-in-progress: false
+
+env:
+  PATCH_GZIP_BASE64: >-
+        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
+        ifz5oaceAAA=
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Restore final release patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s' "$PATCH_GZIP_BASE64" | tr -d '[:space:]' | base64 --decode | gzip --decompress > /tmp/apply_nail_next10.py
+
+      - name: Apply STEP NAIL-NEXT-10
+        shell: bash
+        run: |
+          set -euo pipefail
+          python /tmp/apply_nail_next10.py
+
+      - name: Validate final release
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in index.html owner.html owner-ipad.html member.html system-check.html release.html; do
+            test -s "$file"
+            grep -q "STEP NAIL-NEXT-10" "$file"
+            grep -q 'name="dpro-final-version"' "$file"
+          done
+          test -s release-manifest.json
+          grep -q '"release": "STEP NAIL-NEXT-10"' release-manifest.json
+          grep -q 'key:"release",label:"完成版確認"' system-check.html
+          grep -q 'id="finalRelease"' system-check.html
+          grep -q 'expected:"FINAL"' system-check.html
+
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          for name in ("index.html","owner.html","owner-ipad.html","member.html","system-check.html","release.html"):
+              html=Path(name).read_text(encoding="utf-8")
+              scripts=re.findall(r"<script[^>]*>(.*?)</script>",html,flags=re.S|re.I)
+              Path("/tmp/"+name+".js").write_text("\n".join(scripts),encoding="utf-8")
+          m=json.loads(Path("release-manifest.json").read_text(encoding="utf-8"))
+          assert m["release"]=="STEP NAIL-NEXT-10"
+          PY
+
+          node --check /tmp/index.html.js
+          node --check /tmp/owner.html.js
+          node --check /tmp/owner-ipad.html.js
+          node --check /tmp/member.html.js
+          node --check /tmp/system-check.html.js
+          node --check /tmp/release.html.js
+          echo "STEP NAIL-NEXT-10 final release validation passed"
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html owner.html owner-ipad.html member.html system-check.html release.html release-manifest.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "STEP NAIL-NEXT-10 final release integration"
+          git push
