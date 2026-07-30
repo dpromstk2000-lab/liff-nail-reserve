@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#68473e">
-  <title>DPRO NAIL LINE NEXT｜オーナー管理 STEP NAIL-NEXT-10</title>
+  <title>DPRO ネイルサロン LINE｜公開操作デモ・オーナー管理</title>
   <meta name="description" content="DPRO NAIL LINE NEXT ネイルサロン向けオーナーPC管理画面">
   <style>
     :root{
@@ -71,10 +71,82 @@
     .toast{position:fixed;right:18px;bottom:18px;z-index:120;min-width:260px;max-width:430px;border-radius:16px;padding:12px 14px;background:#2f2926;color:#fff;box-shadow:0 16px 42px rgba(0,0,0,.23);display:none;font-size:13px;line-height:1.55}.toast.show{display:block}.toast.ok{background:var(--ok)}.toast.err{background:var(--danger)}
     @media(max-width:1120px){:root{--sidebar:220px}.kpis{grid-template-columns:repeat(3,1fr)}.split,.chart-layout{grid-template-columns:1fr}.sticky-card{position:static}.design-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:780px){.app{display:block}.sidebar{position:fixed;left:-280px;top:0;width:260px;transition:.2s ease;box-shadow:15px 0 50px rgba(0,0,0,.25)}.sidebar.open{left:0}.main{padding:12px 10px 70px}.mobile-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.menu-toggle{border:1px solid var(--line);background:#fff;border-radius:13px;padding:9px 11px;font-weight:900}.topbar{align-items:flex-start}.top-actions{display:none}.page-title h1{font-size:23px}.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.grid3,.form-grid,.form-grid3,.search-results{grid-template-columns:1fr}.design-grid{grid-template-columns:1fr}.reservation-card{grid-template-columns:76px 1fr}.photo-list{grid-template-columns:repeat(2,1fr)}.panel{padding:15px;border-radius:23px}.section-head{display:block}.section-head>.badge{margin-top:8px}}
-  </style>
+  
+/* DPRO-SYSTEMS-11 NAIL OPERATION DEMO */
+.nail-operation-demo-banner{
+  width:min(1480px,calc(100% - 24px));
+  margin:14px auto 0;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  color:#553a31;
+  border:1px solid #dfc8bd;
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 92% 0,rgba(169,129,67,.13),transparent 31%),
+    linear-gradient(135deg,#fff,#f8eee9);
+  box-shadow:0 11px 28px rgba(67,45,36,.09);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif;
+}
+.nail-operation-demo-copy{min-width:0;display:flex;flex-direction:column}
+.nail-operation-demo-copy small{color:#8c6558;font-size:9px;font-weight:1000;letter-spacing:.14em}
+.nail-operation-demo-copy strong{margin-top:3px;font-size:15px;line-height:1.45}
+.nail-operation-demo-copy span{margin-top:3px;color:#776d68;font-size:10px;font-weight:760;line-height:1.6}
+.nail-operation-demo-actions{flex:0 0 auto;display:flex;gap:7px;flex-wrap:wrap}
+.nail-operation-demo-actions a{
+  min-height:38px;display:inline-flex;align-items:center;justify-content:center;padding:7px 12px;
+  color:#fff!important;border:0!important;border-radius:999px;background:#68473e!important;
+  text-decoration:none!important;font-size:9px;font-weight:950;box-shadow:0 7px 17px rgba(67,45,36,.17)
+}
+.nail-operation-demo-actions a:last-child{color:#68473e!important;border:1px solid #dfc8bd!important;background:#f7ece6!important;box-shadow:none}
+
+/* 内部STEP表記は保持したまま、公開画面上だけ名称を変更 */
+body.nail-operation-customer .version-pill,
+body.nail-operation-member .hero .kicker,
+body.nail-operation-ipad .login-card .kicker,
+body.nail-operation-ipad .hero .kicker,
+body.nail-operation-owner .sidebar .brand small{font-size:0!important}
+body.nail-operation-customer .version-pill::after,
+body.nail-operation-member .hero .kicker::after,
+body.nail-operation-ipad .login-card .kicker::after,
+body.nail-operation-ipad .hero .kicker::after,
+body.nail-operation-owner .sidebar .brand small::after{
+  content:"PUBLIC OPERATION DEMO";
+  font-size:11px;
+  letter-spacing:.10em
+}
+
+/* 内部確認機能は残し、公開画面から見える入口だけを非表示 */
+body.nail-operation-owner .nav-btn[data-view="check"],
+body.nail-operation-owner #view-check{display:none!important}
+
+@media(max-width:700px){
+  .nail-operation-demo-banner{align-items:flex-start;flex-direction:column}
+  .nail-operation-demo-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
+}
+@media(max-width:410px){.nail-operation-demo-actions{grid-template-columns:1fr}}
+@media print{.nail-operation-demo-banner{display:none!important}}
+</style>
   <meta name="dpro-final-version" content="STEP NAIL-NEXT-10">
+
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="canonical" href="https://dpro-shop.com/systems/nail">
 </head>
-<body>
+<body class="nail-operation-demo-page nail-operation-owner">
+<section class="nail-operation-demo-banner" aria-label="公開操作デモの案内">
+  <div class="nail-operation-demo-copy">
+    <small>PUBLIC OPERATION DEMO</small>
+    <strong>これはDPRO ネイルサロン LINEの公開操作デモです</strong>
+    <span>実在する氏名・電話番号・施術情報・写真は使用しないでください。店舗側デモ管理コードは1234です。</span>
+  </div>
+  <div class="nail-operation-demo-actions">
+    <a href="demo-guide.html">公開デモ画面一覧</a>
+    <a href="https://dpro-shop.com/systems/nail">公式の機能説明</a>
+  </div>
+</section>
+
 <!-- STEP NAIL-NEXT-11-R1 / PRODUCT SITE DEMO AUTO LOGIN -->
   <div id="dproFinalVersion" data-version="STEP NAIL-NEXT-10" hidden>STEP NAIL-NEXT-10</div>
 <div id="unlock" class="unlock">

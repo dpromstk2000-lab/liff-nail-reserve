@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#68473e">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="canonical" href="https://dpro-shop.com/systems/nail">
+<title>DPRO ネイルサロン LINE｜公開操作デモ・画面一覧</title>
+<style>
+:root{
+  --bg:#f6efeb;--card:#fff;--ink:#302926;--muted:#776d68;--line:#e5d8d0;
+  --brand:#8c6558;--deep:#68473e;--brand2:#c99b87;--soft:#fff8f4;
+  --ok:#47745f;--gold:#a98143;--shadow:0 16px 46px rgba(67,45,36,.10)
+}
+*{box-sizing:border-box}
+html{background:var(--bg);scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif;
+  background:
+    radial-gradient(circle at 7% 0,rgba(201,155,135,.22),transparent 29%),
+    radial-gradient(circle at 95% 8%,rgba(169,129,67,.12),transparent 25%),
+    linear-gradient(180deg,#fffaf7 0%,var(--bg) 48%,#f2e7e1 100%);
+  line-height:1.65
+}
+a{color:inherit}
+.page{width:min(1140px,calc(100% - 24px));margin:0 auto;padding:20px 0 48px}
+.hero{
+  position:relative;overflow:hidden;padding:34px;border-radius:28px;color:#fff;
+  background:
+    radial-gradient(circle at 88% 12%,rgba(201,155,135,.28),transparent 31%),
+    radial-gradient(circle at 15% 100%,rgba(169,129,67,.20),transparent 37%),
+    linear-gradient(135deg,#3f2a24,#68473e 63%,#9b6f61);
+  box-shadow:0 23px 58px rgba(67,45,36,.23)
+}
+.hero:after{content:"";position:absolute;right:-95px;bottom:-150px;width:290px;height:290px;border-radius:50%;background:rgba(255,255,255,.07)}
+.kicker{position:relative;z-index:1;font-size:11px;font-weight:1000;letter-spacing:.14em;opacity:.9}
+.hero h1{position:relative;z-index:1;margin:10px 0 0;font-size:clamp(28px,5vw,49px);line-height:1.24}
+.hero p{position:relative;z-index:1;max-width:830px;margin:13px 0 0;font-size:14px;opacity:.93}
+.hero-actions{position:relative;z-index:1;display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
+.button{min-height:45px;display:inline-flex;align-items:center;justify-content:center;padding:9px 15px;border-radius:999px;text-decoration:none;font-size:12px;font-weight:950}
+.button-light{color:var(--deep);background:#fff}.button-ghost{color:#fff;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.09)}
+.notice{margin-top:15px;padding:15px 17px;border:1px solid #e5cda3;border-radius:15px;background:#fff5e5;color:#725013;font-size:12px;font-weight:760}
+.demo-info{margin-top:16px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.demo-info>div{padding:14px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.96);box-shadow:var(--shadow)}
+.demo-info small{display:block;color:var(--brand);font-size:9px;font-weight:1000;letter-spacing:.08em}
+.demo-info strong{display:block;margin-top:4px;font-size:14px}
+.section-head{margin:32px 0 15px}
+.section-head small{color:var(--brand);font-size:10px;font-weight:1000;letter-spacing:.12em}
+.section-head h2{margin:5px 0 0;font-size:clamp(23px,4vw,34px)}
+.section-head p{max-width:840px;margin:7px 0 0;color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.card{min-width:0;padding:20px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.98);box-shadow:var(--shadow)}
+.card-number{color:var(--brand);font-size:10px;font-weight:1000;letter-spacing:.1em}
+.card h3{margin:7px 0 0;font-size:21px;line-height:1.4}
+.card p{margin:8px 0 0;color:var(--muted);font-size:12px}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.pills span{padding:5px 8px;border-radius:999px;background:#f7ece6;color:var(--deep);font-size:9px;font-weight:900}
+.card-note{margin-top:13px;padding:11px;border-radius:12px;background:#fbf5f1;color:#675a54;font-size:11px}
+.card-note b{color:var(--deep)}
+.card-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:15px}
+.open,.official{min-height:44px;display:flex;align-items:center;justify-content:center;padding:9px 13px;border-radius:12px;text-decoration:none;font-size:10px;font-weight:950}
+.open{color:#fff;background:linear-gradient(135deg,var(--deep),var(--brand2))}
+.official{color:var(--deep);border:1px solid var(--line);background:#f7ece6}
+.flow{margin-top:14px;padding:19px;border:1px solid var(--line);border-radius:19px;background:#fff;box-shadow:var(--shadow)}
+.flow-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.flow-step{padding:12px;border-radius:12px;background:#f8f1ed}.flow-step b{display:block;color:var(--brand);font-size:10px}.flow-step strong{display:block;margin-top:4px;font-size:11px}
+.footer{margin-top:26px;color:#82736c;font-size:10px;text-align:center}
+@media(max-width:760px){.hero{padding:25px 20px}.demo-info,.grid,.flow-grid{grid-template-columns:1fr}}
+@media(max-width:420px){.page{width:min(100% - 16px,1140px)}.card-actions{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="page">
+<section class="hero">
+  <div class="kicker">PUBLIC OPERATION DEMO</div>
+  <h1>DPRO ネイルサロン LINE<br>公開操作デモ・画面一覧</h1>
+  <p>写真付きデザイン予約、会員ページ、店頭iPad、オーナー管理を、架空情報とデモ環境で実際に確認できます。</p>
+  <div class="hero-actions">
+    <a class="button button-light" href="https://dpro-shop.com/systems/nail">公式の機能・料金説明を見る</a>
+    <a class="button button-ghost" href="index.html">LINE予約から始める</a>
+  </div>
+</section>
+
+<div class="notice">
+  公開デモでは、実在する氏名・電話番号・メールアドレス・アレルギー情報・爪の状態・施術写真を入力しないでください。予約・カルテ・写真の操作には、必ず架空の内容を使用してください。
+</div>
+
+<section class="demo-info" aria-label="デモ利用情報">
+  <div><small>CUSTOMER FLOW</small><strong>架空情報で予約後、同じ電話番号で会員ページを確認</strong></div>
+  <div><small>ADMIN CODE</small><strong>店舗側デモ管理コード：1234</strong></div>
+  <div><small>OFFICIAL PAGE</small><strong>機能・料金・導入効果は公式紹介ページ</strong></div>
+</section>
+
+<div class="section-head">
+  <small>CHOOSE A SCREEN</small>
+  <h2>確認する画面を選択</h2>
+  <p>最初に01で架空の予約を作成し、同じ架空の電話番号で02を確認します。店舗側画面は管理コード1234で開きます。</p>
+</div>
+
+<section class="grid">
+  <article class="card">
+    <div class="card-number">01 / LINE BOOKING</div>
+    <h3>お客様用<br>デザイン・メニュー予約</h3>
+    <p>写真付きデザイン、メニュー、前回と同じ内容から選び、ハンド／フット、オフ、長さ出し、補強、担当者、日時を指定します。</p>
+    <div class="pills"><span>写真付きデザイン</span><span>前回と同じ</span><span>30分枠</span></div>
+    <div class="card-note"><b>最初にここから：</b>氏名と電話番号は必ず架空の内容を使用してください。</div>
+    <div class="card-actions"><a class="open" href="index.html">LINE予約を開く</a><a class="official" href="https://dpro-shop.com/systems/nail#flow">説明</a></div>
+  </article>
+
+  <article class="card">
+    <div class="card-number">02 / MEMBER PAGE</div>
+    <h3>お客様用<br>会員ページ・再予約</h3>
+    <p>予約確認、変更・キャンセル、施術履歴、次回来店目安、前回と同じ内容での再予約を確認します。</p>
+    <div class="pills"><span>予約確認</span><span>施術履歴</span><span>次回来店</span></div>
+    <div class="card-note"><b>確認方法：</b>01の予約で入力した架空の電話番号を使用してください。</div>
+    <div class="card-actions"><a class="open" href="member.html">会員ページを開く</a><a class="official" href="https://dpro-shop.com/systems/nail#roles">説明</a></div>
+  </article>
+
+  <article class="card">
+    <div class="card-number">03 / SALON IPAD</div>
+    <h3>店頭iPad<br>来店・施術・カルテ</h3>
+    <p>本日の予約、来店、施術開始、爪の状態、カラー・ジェル、施術前後写真、会計、次回予約を操作します。</p>
+    <div class="pills"><span>受付進捗</span><span>施術カルテ</span><span>写真・次回予約</span></div>
+    <div class="card-note"><b>デモ管理コード：</b>1234。実在する写真はアップロードしないでください。</div>
+    <div class="card-actions"><a class="open" href="owner-ipad.html">店頭iPadを開く</a><a class="official" href="https://dpro-shop.com/systems/nail#demo">説明</a></div>
+  </article>
+
+  <article class="card">
+    <div class="card-number">04 / OWNER PC</div>
+    <h3>オーナー管理PC<br>予約・顧客・デザイン</h3>
+    <p>今日の状況、顧客・カルテ、デザインカタログ、電話・店頭・Instagram予約、再来店フォロー、店舗設定を確認します。</p>
+    <div class="pills"><span>顧客・カルテ</span><span>デザイン公開</span><span>再来店フォロー</span></div>
+    <div class="card-note"><b>デモ管理コード：</b>1234。公開デモの設定変更は、確認後に元へ戻してください。</div>
+    <div class="card-actions"><a class="open" href="owner.html">オーナー画面を開く</a><a class="official" href="https://dpro-shop.com/systems/nail#features">説明</a></div>
+  </article>
+</section>
+
+<div class="section-head">
+  <small>RECOMMENDED JOURNEY</small>
+  <h2>おすすめの確認順</h2>
+</div>
+<section class="flow">
+  <div class="flow-grid">
+    <div class="flow-step"><b>01</b><strong>架空情報でデザイン予約</strong></div>
+    <div class="flow-step"><b>02</b><strong>会員ページで予約確認</strong></div>
+    <div class="flow-step"><b>03</b><strong>iPadで施術・カルテ入力</strong></div>
+    <div class="flow-step"><b>04</b><strong>PCで顧客・デザイン・フォロー確認</strong></div>
+  </div>
+</section>
+
+<div class="footer">DPRO ネイルサロン LINE｜PUBLIC OPERATION DEMO</div>
+</main>
+</body>
+</html>
