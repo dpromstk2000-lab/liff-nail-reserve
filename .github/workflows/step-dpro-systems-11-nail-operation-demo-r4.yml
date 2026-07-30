@@ -1,0 +1,192 @@
+name: STEP DPRO-SYSTEMS-11 Nail Salon Operation Demo R4
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/step-dpro-systems-11-nail-operation-demo-r4.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create and clarify nail salon public operation demo
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64
+          import re
+
+          official_url = "https://dpro-shop.com/systems/nail"
+          guide = base64.b64decode("PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9ImphIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9InV0Zi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEsdmlld3BvcnQtZml0PWNvdmVyIj4KPG1ldGEgbmFtZT0idGhlbWUtY29sb3IiIGNvbnRlbnQ9IiM2ODQ3M2UiPgo8bWV0YSBuYW1lPSJyb2JvdHMiIGNvbnRlbnQ9Im5vaW5kZXgsbm9mb2xsb3csbm9hcmNoaXZlIj4KPGxpbmsgcmVsPSJjYW5vbmljYWwiIGhyZWY9Imh0dHBzOi8vZHByby1zaG9wLmNvbS9zeXN0ZW1zL25haWwiPgo8dGl0bGU+RFBSTyDjg43jgqTjg6vjgrXjg63jg7MgTElORe+9nOWFrOmWi+aTjeS9nOODh+ODouODu+eUu+mdouS4gOimpzwvdGl0bGU+CjxzdHlsZT4KOnJvb3R7CiAgLS1iZzojZjZlZmViOy0tY2FyZDojZmZmOy0taW5rOiMzMDI5MjY7LS1tdXRlZDojNzc2ZDY4Oy0tbGluZTojZTVkOGQwOwogIC0tYnJhbmQ6IzhjNjU1ODstLWRlZXA6IzY4NDczZTstLWJyYW5kMjojYzk5Yjg3Oy0tc29mdDojZmZmOGY0OwogIC0tb2s6IzQ3NzQ1ZjstLWdvbGQ6I2E5ODE0MzstLXNoYWRvdzowIDE2cHggNDZweCByZ2JhKDY3LDQ1LDM2LC4xMCkKfQoqe2JveC1zaXppbmc6Ym9yZGVyLWJveH0KaHRtbHtiYWNrZ3JvdW5kOnZhcigtLWJnKTtzY3JvbGwtYmVoYXZpb3I6c21vb3RofQpib2R5ewogIG1hcmdpbjowO21pbi1oZWlnaHQ6MTAwdmg7Y29sb3I6dmFyKC0taW5rKTsKICBmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLEJsaW5rTWFjU3lzdGVtRm9udCwiU2Vnb2UgVUkiLCJOb3RvIFNhbnMgSlAiLCJZdSBHb3RoaWMgVUkiLE1laXJ5byxzYW5zLXNlcmlmOwogIGJhY2tncm91bmQ6CiAgICByYWRpYWwtZ3JhZGllbnQoY2lyY2xlIGF0IDclIDAscmdiYSgyMDEsMTU1LDEzNSwuMjIpLHRyYW5zcGFyZW50IDI5JSksCiAgICByYWRpYWwtZ3JhZGllbnQoY2lyY2xlIGF0IDk1JSA4JSxyZ2JhKDE2OSwxMjksNjcsLjEyKSx0cmFuc3BhcmVudCAyNSUpLAogICAgbGluZWFyLWdyYWRpZW50KDE4MGRlZywjZmZmYWY3IDAlLHZhcigtLWJnKSA0OCUsI2YyZTdlMSAxMDAlKTsKICBsaW5lLWhlaWdodDoxLjY1Cn0KYXtjb2xvcjppbmhlcml0fQoucGFnZXt3aWR0aDptaW4oMTE0MHB4LGNhbGMoMTAwJSAtIDI0cHgpKTttYXJnaW46MCBhdXRvO3BhZGRpbmc6MjBweCAwIDQ4cHh9Ci5oZXJvewogIHBvc2l0aW9uOnJlbGF0aXZlO292ZXJmbG93OmhpZGRlbjtwYWRkaW5nOjM0cHg7Ym9yZGVyLXJhZGl1czoyOHB4O2NvbG9yOiNmZmY7CiAgYmFja2dyb3VuZDoKICAgIHJhZGlhbC1ncmFkaWVudChjaXJjbGUgYXQgODglIDEyJSxyZ2JhKDIwMSwxNTUsMTM1LC4yOCksdHJhbnNwYXJlbnQgMzElKSwKICAgIHJhZGlhbC1ncmFkaWVudChjaXJjbGUgYXQgMTUlIDEwMCUscmdiYSgxNjksMTI5LDY3LC4yMCksdHJhbnNwYXJlbnQgMzclKSwKICAgIGxpbmVhci1ncmFkaWVudCgxMzVkZWcsIzNmMmEyNCwjNjg0NzNlIDYzJSwjOWI2ZjYxKTsKICBib3gtc2hhZG93OjAgMjNweCA1OHB4IHJnYmEoNjcsNDUsMzYsLjIzKQp9Ci5oZXJvOmFmdGVye2NvbnRlbnQ6IiI7cG9zaXRpb246YWJzb2x1dGU7cmlnaHQ6LTk1cHg7Ym90dG9tOi0xNTBweDt3aWR0aDoyOTBweDtoZWlnaHQ6MjkwcHg7Ym9yZGVyLXJhZGl1czo1MCU7YmFja2dyb3VuZDpyZ2JhKDI1NSwyNTUsMjU1LC4wNyl9Ci5raWNrZXJ7cG9zaXRpb246cmVsYXRpdmU7ei1pbmRleDoxO2ZvbnQtc2l6ZToxMXB4O2ZvbnQtd2VpZ2h0OjEwMDA7bGV0dGVyLXNwYWNpbmc6LjE0ZW07b3BhY2l0eTouOX0KLmhlcm8gaDF7cG9zaXRpb246cmVsYXRpdmU7ei1pbmRleDoxO21hcmdpbjoxMHB4IDAgMDtmb250LXNpemU6Y2xhbXAoMjhweCw1dncsNDlweCk7bGluZS1oZWlnaHQ6MS4yNH0KLmhlcm8gcHtwb3NpdGlvbjpyZWxhdGl2ZTt6LWluZGV4OjE7bWF4LXdpZHRoOjgzMHB4O21hcmdpbjoxM3B4IDAgMDtmb250LXNpemU6MTRweDtvcGFjaXR5Oi45M30KLmhlcm8tYWN0aW9uc3twb3NpdGlvbjpyZWxhdGl2ZTt6LWluZGV4OjE7ZGlzcGxheTpmbGV4O2dhcDo5cHg7ZmxleC13cmFwOndyYXA7bWFyZ2luLXRvcDoyMHB4fQouYnV0dG9ue21pbi1oZWlnaHQ6NDVweDtkaXNwbGF5OmlubGluZS1mbGV4O2FsaWduLWl0ZW1zOmNlbnRlcjtqdXN0aWZ5LWNvbnRlbnQ6Y2VudGVyO3BhZGRpbmc6OXB4IDE1cHg7Ym9yZGVyLXJhZGl1czo5OTlweDt0ZXh0LWRlY29yYXRpb246bm9uZTtmb250LXNpemU6MTJweDtmb250LXdlaWdodDo5NTB9Ci5idXR0b24tbGlnaHR7Y29sb3I6dmFyKC0tZGVlcCk7YmFja2dyb3VuZDojZmZmfS5idXR0b24tZ2hvc3R7Y29sb3I6I2ZmZjtib3JkZXI6MXB4IHNvbGlkIHJnYmEoMjU1LDI1NSwyNTUsLjM1KTtiYWNrZ3JvdW5kOnJnYmEoMjU1LDI1NSwyNTUsLjA5KX0KLm5vdGljZXttYXJnaW4tdG9wOjE1cHg7cGFkZGluZzoxNXB4IDE3cHg7Ym9yZGVyOjFweCBzb2xpZCAjZTVjZGEzO2JvcmRlci1yYWRpdXM6MTVweDtiYWNrZ3JvdW5kOiNmZmY1ZTU7Y29sb3I6IzcyNTAxMztmb250LXNpemU6MTJweDtmb250LXdlaWdodDo3NjB9Ci5kZW1vLWluZm97bWFyZ2luLXRvcDoxNnB4O2Rpc3BsYXk6Z3JpZDtncmlkLXRlbXBsYXRlLWNvbHVtbnM6cmVwZWF0KDMsbWlubWF4KDAsMWZyKSk7Z2FwOjEwcHh9Ci5kZW1vLWluZm8+ZGl2e3BhZGRpbmc6MTRweDtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWxpbmUpO2JvcmRlci1yYWRpdXM6MTVweDtiYWNrZ3JvdW5kOnJnYmEoMjU1LDI1NSwyNTUsLjk2KTtib3gtc2hhZG93OnZhcigtLXNoYWRvdyl9Ci5kZW1vLWluZm8gc21hbGx7ZGlzcGxheTpibG9jaztjb2xvcjp2YXIoLS1icmFuZCk7Zm9udC1zaXplOjlweDtmb250LXdlaWdodDoxMDAwO2xldHRlci1zcGFjaW5nOi4wOGVtfQouZGVtby1pbmZvIHN0cm9uZ3tkaXNwbGF5OmJsb2NrO21hcmdpbi10b3A6NHB4O2ZvbnQtc2l6ZToxNHB4fQouc2VjdGlvbi1oZWFke21hcmdpbjozMnB4IDAgMTVweH0KLnNlY3Rpb24taGVhZCBzbWFsbHtjb2xvcjp2YXIoLS1icmFuZCk7Zm9udC1zaXplOjEwcHg7Zm9udC13ZWlnaHQ6MTAwMDtsZXR0ZXItc3BhY2luZzouMTJlbX0KLnNlY3Rpb24taGVhZCBoMnttYXJnaW46NXB4IDAgMDtmb250LXNpemU6Y2xhbXAoMjNweCw0dncsMzRweCl9Ci5zZWN0aW9uLWhlYWQgcHttYXgtd2lkdGg6ODQwcHg7bWFyZ2luOjdweCAwIDA7Y29sb3I6dmFyKC0tbXV0ZWQpO2ZvbnQtc2l6ZToxM3B4fQouZ3JpZHtkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOnJlcGVhdCgyLG1pbm1heCgwLDFmcikpO2dhcDoxM3B4fQouY2FyZHttaW4td2lkdGg6MDtwYWRkaW5nOjIwcHg7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1saW5lKTtib3JkZXItcmFkaXVzOjIwcHg7YmFja2dyb3VuZDpyZ2JhKDI1NSwyNTUsMjU1LC45OCk7Ym94LXNoYWRvdzp2YXIoLS1zaGFkb3cpfQouY2FyZC1udW1iZXJ7Y29sb3I6dmFyKC0tYnJhbmQpO2ZvbnQtc2l6ZToxMHB4O2ZvbnQtd2VpZ2h0OjEwMDA7bGV0dGVyLXNwYWNpbmc6LjFlbX0KLmNhcmQgaDN7bWFyZ2luOjdweCAwIDA7Zm9udC1zaXplOjIxcHg7bGluZS1oZWlnaHQ6MS40fQouY2FyZCBwe21hcmdpbjo4cHggMCAwO2NvbG9yOnZhcigtLW11dGVkKTtmb250LXNpemU6MTJweH0KLnBpbGxze2Rpc3BsYXk6ZmxleDtnYXA6NnB4O2ZsZXgtd3JhcDp3cmFwO21hcmdpbi10b3A6MTJweH0KLnBpbGxzIHNwYW57cGFkZGluZzo1cHggOHB4O2JvcmRlci1yYWRpdXM6OTk5cHg7YmFja2dyb3VuZDojZjdlY2U2O2NvbG9yOnZhcigtLWRlZXApO2ZvbnQtc2l6ZTo5cHg7Zm9udC13ZWlnaHQ6OTAwfQouY2FyZC1ub3Rle21hcmdpbi10b3A6MTNweDtwYWRkaW5nOjExcHg7Ym9yZGVyLXJhZGl1czoxMnB4O2JhY2tncm91bmQ6I2ZiZjVmMTtjb2xvcjojNjc1YTU0O2ZvbnQtc2l6ZToxMXB4fQouY2FyZC1ub3RlIGJ7Y29sb3I6dmFyKC0tZGVlcCl9Ci5jYXJkLWFjdGlvbnN7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnIgYXV0bztnYXA6OHB4O21hcmdpbi10b3A6MTVweH0KLm9wZW4sLm9mZmljaWFse21pbi1oZWlnaHQ6NDRweDtkaXNwbGF5OmZsZXg7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXI7cGFkZGluZzo5cHggMTNweDtib3JkZXItcmFkaXVzOjEycHg7dGV4dC1kZWNvcmF0aW9uOm5vbmU7Zm9udC1zaXplOjEwcHg7Zm9udC13ZWlnaHQ6OTUwfQoub3Blbntjb2xvcjojZmZmO2JhY2tncm91bmQ6bGluZWFyLWdyYWRpZW50KDEzNWRlZyx2YXIoLS1kZWVwKSx2YXIoLS1icmFuZDIpKX0KLm9mZmljaWFse2NvbG9yOnZhcigtLWRlZXApO2JvcmRlcjoxcHggc29saWQgdmFyKC0tbGluZSk7YmFja2dyb3VuZDojZjdlY2U2fQouZmxvd3ttYXJnaW4tdG9wOjE0cHg7cGFkZGluZzoxOXB4O2JvcmRlcjoxcHggc29saWQgdmFyKC0tbGluZSk7Ym9yZGVyLXJhZGl1czoxOXB4O2JhY2tncm91bmQ6I2ZmZjtib3gtc2hhZG93OnZhcigtLXNoYWRvdyl9Ci5mbG93LWdyaWR7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczpyZXBlYXQoNCxtaW5tYXgoMCwxZnIpKTtnYXA6OHB4fQouZmxvdy1zdGVwe3BhZGRpbmc6MTJweDtib3JkZXItcmFkaXVzOjEycHg7YmFja2dyb3VuZDojZjhmMWVkfS5mbG93LXN0ZXAgYntkaXNwbGF5OmJsb2NrO2NvbG9yOnZhcigtLWJyYW5kKTtmb250LXNpemU6MTBweH0uZmxvdy1zdGVwIHN0cm9uZ3tkaXNwbGF5OmJsb2NrO21hcmdpbi10b3A6NHB4O2ZvbnQtc2l6ZToxMXB4fQouZm9vdGVye21hcmdpbi10b3A6MjZweDtjb2xvcjojODI3MzZjO2ZvbnQtc2l6ZToxMHB4O3RleHQtYWxpZ246Y2VudGVyfQpAbWVkaWEobWF4LXdpZHRoOjc2MHB4KXsuaGVyb3twYWRkaW5nOjI1cHggMjBweH0uZGVtby1pbmZvLC5ncmlkLC5mbG93LWdyaWR7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmcn19CkBtZWRpYShtYXgtd2lkdGg6NDIwcHgpey5wYWdle3dpZHRoOm1pbigxMDAlIC0gMTZweCwxMTQwcHgpfS5jYXJkLWFjdGlvbnN7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmcn19Cjwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+CjxtYWluIGNsYXNzPSJwYWdlIj4KPHNlY3Rpb24gY2xhc3M9Imhlcm8iPgogIDxkaXYgY2xhc3M9ImtpY2tlciI+UFVCTElDIE9QRVJBVElPTiBERU1PPC9kaXY+CiAgPGgxPkRQUk8g44ON44Kk44Or44K144Ot44OzIExJTkU8YnI+5YWs6ZaL5pON5L2c44OH44Oi44O755S76Z2i5LiA6KanPC9oMT4KICA8cD7lhpnnnJ/ku5jjgY3jg4fjgrbjgqTjg7PkuojntITjgIHkvJrlk6Hjg5rjg7zjgrjjgIHlupfpoK1pUGFk44CB44Kq44O844OK44O8566h55CG44KS44CB5p6256m65oOF5aCx44Go44OH44Oi55Kw5aKD44Gn5a6f6Zqb44Gr56K66KqN44Gn44GN44G+44GZ44CCPC9wPgogIDxkaXYgY2xhc3M9Imhlcm8tYWN0aW9ucyI+CiAgICA8YSBjbGFzcz0iYnV0dG9uIGJ1dHRvbi1saWdodCIgaHJlZj0iaHR0cHM6Ly9kcHJvLXNob3AuY29tL3N5c3RlbXMvbmFpbCI+5YWs5byP44Gu5qmf6IO944O75paZ6YeR6Kqs5piO44KS6KaL44KLPC9hPgogICAgPGEgY2xhc3M9ImJ1dHRvbiBidXR0b24tZ2hvc3QiIGhyZWY9ImluZGV4Lmh0bWwiPkxJTkXkuojntITjgYvjgonlp4vjgoHjgos8L2E+CiAgPC9kaXY+Cjwvc2VjdGlvbj4KCjxkaXYgY2xhc3M9Im5vdGljZSI+CiAg5YWs6ZaL44OH44Oi44Gn44Gv44CB5a6f5Zyo44GZ44KL5rCP5ZCN44O76Zu76Kmx55Wq5Y+344O744Oh44O844Or44Ki44OJ44Os44K544O744Ki44Os44Or44Ku44O85oOF5aCx44O754iq44Gu54q25oWL44O75pa96KGT5YaZ55yf44KS5YWl5Yqb44GX44Gq44GE44Gn44GP44Gg44GV44GE44CC5LqI57SE44O744Kr44Or44OG44O75YaZ55yf44Gu5pON5L2c44Gr44Gv44CB5b+F44Ga5p6256m644Gu5YaF5a6544KS5L2/55So44GX44Gm44GP44Gg44GV44GE44CCCjwvZGl2PgoKPHNlY3Rpb24gY2xhc3M9ImRlbW8taW5mbyIgYXJpYS1sYWJlbD0i44OH44Oi5Yip55So5oOF5aCxIj4KICA8ZGl2PjxzbWFsbD5DVVNUT01FUiBGTE9XPC9zbWFsbD48c3Ryb25nPuaetuepuuaDheWgseOBp+S6iOe0hOW+jOOAgeWQjOOBmOmbu+ipseeVquWPt+OBp+S8muWToeODmuODvOOCuOOCkueiuuiqjTwvc3Ryb25nPjwvZGl2PgogIDxkaXY+PHNtYWxsPkFETUlOIENPREU8L3NtYWxsPjxzdHJvbmc+5bqX6IiX5YG044OH44Oi566h55CG44Kz44O844OJ77yaMTIzNDwvc3Ryb25nPjwvZGl2PgogIDxkaXY+PHNtYWxsPk9GRklDSUFMIFBBR0U8L3NtYWxsPjxzdHJvbmc+5qmf6IO944O75paZ6YeR44O75bCO5YWl5Yq55p6c44Gv5YWs5byP57S55LuL44Oa44O844K4PC9zdHJvbmc+PC9kaXY+Cjwvc2VjdGlvbj4KCjxkaXYgY2xhc3M9InNlY3Rpb24taGVhZCI+CiAgPHNtYWxsPkNIT09TRSBBIFNDUkVFTjwvc21hbGw+CiAgPGgyPueiuuiqjeOBmeOCi+eUu+mdouOCkumBuOaKnjwvaDI+CiAgPHA+5pyA5Yid44GrMDHjgafmnrbnqbrjga7kuojntITjgpLkvZzmiJDjgZfjgIHlkIzjgZjmnrbnqbrjga7pm7voqbHnlarlj7fjgacwMuOCkueiuuiqjeOBl+OBvuOBmeOAguW6l+iIl+WBtOeUu+mdouOBr+euoeeQhuOCs+ODvOODiTEyMzTjgafplovjgY3jgb7jgZnjgII8L3A+CjwvZGl2PgoKPHNlY3Rpb24gY2xhc3M9ImdyaWQiPgogIDxhcnRpY2xlIGNsYXNzPSJjYXJkIj4KICAgIDxkaXYgY2xhc3M9ImNhcmQtbnVtYmVyIj4wMSAvIExJTkUgQk9PS0lORzwvZGl2PgogICAgPGgzPuOBiuWuouanmOeUqDxicj7jg4fjgrbjgqTjg7Pjg7vjg6Hjg4vjg6Xjg7zkuojntIQ8L2gzPgogICAgPHA+5YaZ55yf5LuY44GN44OH44K244Kk44Oz44CB44Oh44OL44Ol44O844CB5YmN5Zue44Go5ZCM44GY5YaF5a6544GL44KJ6YG444Gz44CB44OP44Oz44OJ77yP44OV44OD44OI44CB44Kq44OV44CB6ZW344GV5Ye644GX44CB6KOc5by344CB5ouF5b2T6ICF44CB5pel5pmC44KS5oyH5a6a44GX44G+44GZ44CCPC9wPgogICAgPGRpdiBjbGFzcz0icGlsbHMiPjxzcGFuPuWGmeecn+S7mOOBjeODh+OCtuOCpOODszwvc3Bhbj48c3Bhbj7liY3lm57jgajlkIzjgZg8L3NwYW4+PHNwYW4+MzDliIbmnqA8L3NwYW4+PC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJjYXJkLW5vdGUiPjxiPuacgOWIneOBq+OBk+OBk+OBi+OCie+8mjwvYj7msI/lkI3jgajpm7voqbHnlarlj7fjga/lv4XjgZrmnrbnqbrjga7lhoXlrrnjgpLkvb/nlKjjgZfjgabjgY/jgaDjgZXjgYTjgII8L2Rpdj4KICAgIDxkaXYgY2xhc3M9ImNhcmQtYWN0aW9ucyI+PGEgY2xhc3M9Im9wZW4iIGhyZWY9ImluZGV4Lmh0bWwiPkxJTkXkuojntITjgpLplovjgY88L2E+PGEgY2xhc3M9Im9mZmljaWFsIiBocmVmPSJodHRwczovL2Rwcm8tc2hvcC5jb20vc3lzdGVtcy9uYWlsI2Zsb3ciPuiqrOaYjjwvYT48L2Rpdj4KICA8L2FydGljbGU+CgogIDxhcnRpY2xlIGNsYXNzPSJjYXJkIj4KICAgIDxkaXYgY2xhc3M9ImNhcmQtbnVtYmVyIj4wMiAvIE1FTUJFUiBQQUdFPC9kaXY+CiAgICA8aDM+44GK5a6i5qeY55SoPGJyPuS8muWToeODmuODvOOCuOODu+WGjeS6iOe0hDwvaDM+CiAgICA8cD7kuojntITnorroqo3jgIHlpInmm7Tjg7vjgq3jg6Pjg7Pjgrvjg6vjgIHmlr3ooZPlsaXmrbTjgIHmrKHlm57mnaXlupfnm67lronjgIHliY3lm57jgajlkIzjgZjlhoXlrrnjgafjga7lho3kuojntITjgpLnorroqo3jgZfjgb7jgZnjgII8L3A+CiAgICA8ZGl2IGNsYXNzPSJwaWxscyI+PHNwYW4+5LqI57SE56K66KqNPC9zcGFuPjxzcGFuPuaWveihk+WxpeattDwvc3Bhbj48c3Bhbj7mrKHlm57mnaXlupc8L3NwYW4+PC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJjYXJkLW5vdGUiPjxiPueiuuiqjeaWueazle+8mjwvYj4wMeOBruS6iOe0hOOBp+WFpeWKm+OBl+OBn+aetuepuuOBrumbu+ipseeVquWPt+OCkuS9v+eUqOOBl+OBpuOBj+OBoOOBleOBhOOAgjwvZGl2PgogICAgPGRpdiBjbGFzcz0iY2FyZC1hY3Rpb25zIj48YSBjbGFzcz0ib3BlbiIgaHJlZj0ibWVtYmVyLmh0bWwiPuS8muWToeODmuODvOOCuOOCkumWi+OBjzwvYT48YSBjbGFzcz0ib2ZmaWNpYWwiIGhyZWY9Imh0dHBzOi8vZHByby1zaG9wLmNvbS9zeXN0ZW1zL25haWwjcm9sZXMiPuiqrOaYjjwvYT48L2Rpdj4KICA8L2FydGljbGU+CgogIDxhcnRpY2xlIGNsYXNzPSJjYXJkIj4KICAgIDxkaXYgY2xhc3M9ImNhcmQtbnVtYmVyIj4wMyAvIFNBTE9OIElQQUQ8L2Rpdj4KICAgIDxoMz7lupfpoK1pUGFkPGJyPuadpeW6l+ODu+aWveihk+ODu+OCq+ODq+ODhjwvaDM+CiAgICA8cD7mnKzml6Xjga7kuojntITjgIHmnaXlupfjgIHmlr3ooZPplovlp4vjgIHniKrjga7nirbmhYvjgIHjgqvjg6njg7zjg7vjgrjjgqfjg6vjgIHmlr3ooZPliY3lvozlhpnnnJ/jgIHkvJroqIjjgIHmrKHlm57kuojntITjgpLmk43kvZzjgZfjgb7jgZnjgII8L3A+CiAgICA8ZGl2IGNsYXNzPSJwaWxscyI+PHNwYW4+5Y+X5LuY6YCy5o2XPC9zcGFuPjxzcGFuPuaWveihk+OCq+ODq+ODhjwvc3Bhbj48c3Bhbj7lhpnnnJ/jg7vmrKHlm57kuojntIQ8L3NwYW4+PC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJjYXJkLW5vdGUiPjxiPuODh+ODoueuoeeQhuOCs+ODvOODie+8mjwvYj4xMjM044CC5a6f5Zyo44GZ44KL5YaZ55yf44Gv44Ki44OD44OX44Ot44O844OJ44GX44Gq44GE44Gn44GP44Gg44GV44GE44CCPC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJjYXJkLWFjdGlvbnMiPjxhIGNsYXNzPSJvcGVuIiBocmVmPSJvd25lci1pcGFkLmh0bWwiPuW6l+mgrWlQYWTjgpLplovjgY88L2E+PGEgY2xhc3M9Im9mZmljaWFsIiBocmVmPSJodHRwczovL2Rwcm8tc2hvcC5jb20vc3lzdGVtcy9uYWlsI2RlbW8iPuiqrOaYjjwvYT48L2Rpdj4KICA8L2FydGljbGU+CgogIDxhcnRpY2xlIGNsYXNzPSJjYXJkIj4KICAgIDxkaXYgY2xhc3M9ImNhcmQtbnVtYmVyIj4wNCAvIE9XTkVSIFBDPC9kaXY+CiAgICA8aDM+44Kq44O844OK44O8566h55CGUEM8YnI+5LqI57SE44O76aGn5a6i44O744OH44K244Kk44OzPC9oMz4KICAgIDxwPuS7iuaXpeOBrueKtuazgeOAgemhp+WuouODu+OCq+ODq+ODhuOAgeODh+OCtuOCpOODs+OCq+OCv+ODreOCsOOAgembu+ipseODu+W6l+mgreODu0luc3RhZ3JhbeS6iOe0hOOAgeWGjeadpeW6l+ODleOCqeODreODvOOAgeW6l+iIl+ioreWumuOCkueiuuiqjeOBl+OBvuOBmeOAgjwvcD4KICAgIDxkaXYgY2xhc3M9InBpbGxzIj48c3Bhbj7poaflrqLjg7vjgqvjg6vjg4Y8L3NwYW4+PHNwYW4+44OH44K244Kk44Oz5YWs6ZaLPC9zcGFuPjxzcGFuPuWGjeadpeW6l+ODleOCqeODreODvDwvc3Bhbj48L2Rpdj4KICAgIDxkaXYgY2xhc3M9ImNhcmQtbm90ZSI+PGI+44OH44Oi566h55CG44Kz44O844OJ77yaPC9iPjEyMzTjgILlhazplovjg4fjg6Ljga7oqK3lrprlpInmm7Tjga/jgIHnorroqo3lvozjgavlhYPjgbjmiLvjgZfjgabjgY/jgaDjgZXjgYTjgII8L2Rpdj4KICAgIDxkaXYgY2xhc3M9ImNhcmQtYWN0aW9ucyI+PGEgY2xhc3M9Im9wZW4iIGhyZWY9Im93bmVyLmh0bWwiPuOCquODvOODiuODvOeUu+mdouOCkumWi+OBjzwvYT48YSBjbGFzcz0ib2ZmaWNpYWwiIGhyZWY9Imh0dHBzOi8vZHByby1zaG9wLmNvbS9zeXN0ZW1zL25haWwjZmVhdHVyZXMiPuiqrOaYjjwvYT48L2Rpdj4KICA8L2FydGljbGU+Cjwvc2VjdGlvbj4KCjxkaXYgY2xhc3M9InNlY3Rpb24taGVhZCI+CiAgPHNtYWxsPlJFQ09NTUVOREVEIEpPVVJORVk8L3NtYWxsPgogIDxoMj7jgYrjgZnjgZnjgoHjga7norroqo3poIY8L2gyPgo8L2Rpdj4KPHNlY3Rpb24gY2xhc3M9ImZsb3ciPgogIDxkaXYgY2xhc3M9ImZsb3ctZ3JpZCI+CiAgICA8ZGl2IGNsYXNzPSJmbG93LXN0ZXAiPjxiPjAxPC9iPjxzdHJvbmc+5p6256m65oOF5aCx44Gn44OH44K244Kk44Oz5LqI57SEPC9zdHJvbmc+PC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJmbG93LXN0ZXAiPjxiPjAyPC9iPjxzdHJvbmc+5Lya5ZOh44Oa44O844K444Gn5LqI57SE56K66KqNPC9zdHJvbmc+PC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJmbG93LXN0ZXAiPjxiPjAzPC9iPjxzdHJvbmc+aVBhZOOBp+aWveihk+ODu+OCq+ODq+ODhuWFpeWKmzwvc3Ryb25nPjwvZGl2PgogICAgPGRpdiBjbGFzcz0iZmxvdy1zdGVwIj48Yj4wNDwvYj48c3Ryb25nPlBD44Gn6aGn5a6i44O744OH44K244Kk44Oz44O744OV44Kp44Ot44O856K66KqNPC9zdHJvbmc+PC9kaXY+CiAgPC9kaXY+Cjwvc2VjdGlvbj4KCjxkaXYgY2xhc3M9ImZvb3RlciI+RFBSTyDjg43jgqTjg6vjgrXjg63jg7MgTElORe+9nFBVQkxJQyBPUEVSQVRJT04gREVNTzwvZGl2Pgo8L21haW4+CjwvYm9keT4KPC9odG1sPg==").decode("utf-8")
+          banner = base64.b64decode("PHNlY3Rpb24gY2xhc3M9Im5haWwtb3BlcmF0aW9uLWRlbW8tYmFubmVyIiBhcmlhLWxhYmVsPSLlhazplovmk43kvZzjg4fjg6Ljga7moYjlhoUiPgogIDxkaXYgY2xhc3M9Im5haWwtb3BlcmF0aW9uLWRlbW8tY29weSI+CiAgICA8c21hbGw+UFVCTElDIE9QRVJBVElPTiBERU1PPC9zbWFsbD4KICAgIDxzdHJvbmc+44GT44KM44GvRFBSTyDjg43jgqTjg6vjgrXjg63jg7MgTElOReOBruWFrOmWi+aTjeS9nOODh+ODouOBp+OBmTwvc3Ryb25nPgogICAgPHNwYW4+5a6f5Zyo44GZ44KL5rCP5ZCN44O76Zu76Kmx55Wq5Y+344O75pa96KGT5oOF5aCx44O75YaZ55yf44Gv5L2/55So44GX44Gq44GE44Gn44GP44Gg44GV44GE44CC5bqX6IiX5YG044OH44Oi566h55CG44Kz44O844OJ44GvMTIzNOOBp+OBmeOAgjwvc3Bhbj4KICA8L2Rpdj4KICA8ZGl2IGNsYXNzPSJuYWlsLW9wZXJhdGlvbi1kZW1vLWFjdGlvbnMiPgogICAgPGEgaHJlZj0iZGVtby1ndWlkZS5odG1sIj7lhazplovjg4fjg6LnlLvpnaLkuIDopqc8L2E+CiAgICA8YSBocmVmPSJodHRwczovL2Rwcm8tc2hvcC5jb20vc3lzdGVtcy9uYWlsIj7lhazlvI/jga7mqZ/og73oqqzmmI48L2E+CiAgPC9kaXY+Cjwvc2VjdGlvbj4=").decode("utf-8")
+          shared_css = base64.b64decode("Ci8qIERQUk8tU1lTVEVNUy0xMSBOQUlMIE9QRVJBVElPTiBERU1PICovCi5uYWlsLW9wZXJhdGlvbi1kZW1vLWJhbm5lcnsKICB3aWR0aDptaW4oMTQ4MHB4LGNhbGMoMTAwJSAtIDI0cHgpKTsKICBtYXJnaW46MTRweCBhdXRvIDA7CiAgcGFkZGluZzoxNHB4IDE2cHg7CiAgZGlzcGxheTpmbGV4OwogIGFsaWduLWl0ZW1zOmNlbnRlcjsKICBqdXN0aWZ5LWNvbnRlbnQ6c3BhY2UtYmV0d2VlbjsKICBnYXA6MTZweDsKICBjb2xvcjojNTUzYTMxOwogIGJvcmRlcjoxcHggc29saWQgI2RmYzhiZDsKICBib3JkZXItcmFkaXVzOjE2cHg7CiAgYmFja2dyb3VuZDoKICAgIHJhZGlhbC1ncmFkaWVudChjaXJjbGUgYXQgOTIlIDAscmdiYSgxNjksMTI5LDY3LC4xMyksdHJhbnNwYXJlbnQgMzElKSwKICAgIGxpbmVhci1ncmFkaWVudCgxMzVkZWcsI2ZmZiwjZjhlZWU5KTsKICBib3gtc2hhZG93OjAgMTFweCAyOHB4IHJnYmEoNjcsNDUsMzYsLjA5KTsKICBmb250LWZhbWlseTotYXBwbGUtc3lzdGVtLEJsaW5rTWFjU3lzdGVtRm9udCwiU2Vnb2UgVUkiLCJOb3RvIFNhbnMgSlAiLCJZdSBHb3RoaWMgVUkiLE1laXJ5byxzYW5zLXNlcmlmOwp9Ci5uYWlsLW9wZXJhdGlvbi1kZW1vLWNvcHl7bWluLXdpZHRoOjA7ZGlzcGxheTpmbGV4O2ZsZXgtZGlyZWN0aW9uOmNvbHVtbn0KLm5haWwtb3BlcmF0aW9uLWRlbW8tY29weSBzbWFsbHtjb2xvcjojOGM2NTU4O2ZvbnQtc2l6ZTo5cHg7Zm9udC13ZWlnaHQ6MTAwMDtsZXR0ZXItc3BhY2luZzouMTRlbX0KLm5haWwtb3BlcmF0aW9uLWRlbW8tY29weSBzdHJvbmd7bWFyZ2luLXRvcDozcHg7Zm9udC1zaXplOjE1cHg7bGluZS1oZWlnaHQ6MS40NX0KLm5haWwtb3BlcmF0aW9uLWRlbW8tY29weSBzcGFue21hcmdpbi10b3A6M3B4O2NvbG9yOiM3NzZkNjg7Zm9udC1zaXplOjEwcHg7Zm9udC13ZWlnaHQ6NzYwO2xpbmUtaGVpZ2h0OjEuNn0KLm5haWwtb3BlcmF0aW9uLWRlbW8tYWN0aW9uc3tmbGV4OjAgMCBhdXRvO2Rpc3BsYXk6ZmxleDtnYXA6N3B4O2ZsZXgtd3JhcDp3cmFwfQoubmFpbC1vcGVyYXRpb24tZGVtby1hY3Rpb25zIGF7CiAgbWluLWhlaWdodDozOHB4O2Rpc3BsYXk6aW5saW5lLWZsZXg7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXI7cGFkZGluZzo3cHggMTJweDsKICBjb2xvcjojZmZmIWltcG9ydGFudDtib3JkZXI6MCFpbXBvcnRhbnQ7Ym9yZGVyLXJhZGl1czo5OTlweDtiYWNrZ3JvdW5kOiM2ODQ3M2UhaW1wb3J0YW50OwogIHRleHQtZGVjb3JhdGlvbjpub25lIWltcG9ydGFudDtmb250LXNpemU6OXB4O2ZvbnQtd2VpZ2h0Ojk1MDtib3gtc2hhZG93OjAgN3B4IDE3cHggcmdiYSg2Nyw0NSwzNiwuMTcpCn0KLm5haWwtb3BlcmF0aW9uLWRlbW8tYWN0aW9ucyBhOmxhc3QtY2hpbGR7Y29sb3I6IzY4NDczZSFpbXBvcnRhbnQ7Ym9yZGVyOjFweCBzb2xpZCAjZGZjOGJkIWltcG9ydGFudDtiYWNrZ3JvdW5kOiNmN2VjZTYhaW1wb3J0YW50O2JveC1zaGFkb3c6bm9uZX0KCi8qIOWGhemDqFNURVDooajoqJjjga/kv53mjIHjgZfjgZ/jgb7jgb7jgIHlhazplovnlLvpnaLkuIrjgaDjgZHlkI3np7DjgpLlpInmm7QgKi8KYm9keS5uYWlsLW9wZXJhdGlvbi1jdXN0b21lciAudmVyc2lvbi1waWxsLApib2R5Lm5haWwtb3BlcmF0aW9uLW1lbWJlciAuaGVybyAua2lja2VyLApib2R5Lm5haWwtb3BlcmF0aW9uLWlwYWQgLmxvZ2luLWNhcmQgLmtpY2tlciwKYm9keS5uYWlsLW9wZXJhdGlvbi1pcGFkIC5oZXJvIC5raWNrZXIsCmJvZHkubmFpbC1vcGVyYXRpb24tb3duZXIgLnNpZGViYXIgLmJyYW5kIHNtYWxse2ZvbnQtc2l6ZTowIWltcG9ydGFudH0KYm9keS5uYWlsLW9wZXJhdGlvbi1jdXN0b21lciAudmVyc2lvbi1waWxsOjphZnRlciwKYm9keS5uYWlsLW9wZXJhdGlvbi1tZW1iZXIgLmhlcm8gLmtpY2tlcjo6YWZ0ZXIsCmJvZHkubmFpbC1vcGVyYXRpb24taXBhZCAubG9naW4tY2FyZCAua2lja2VyOjphZnRlciwKYm9keS5uYWlsLW9wZXJhdGlvbi1pcGFkIC5oZXJvIC5raWNrZXI6OmFmdGVyLApib2R5Lm5haWwtb3BlcmF0aW9uLW93bmVyIC5zaWRlYmFyIC5icmFuZCBzbWFsbDo6YWZ0ZXJ7CiAgY29udGVudDoiUFVCTElDIE9QRVJBVElPTiBERU1PIjsKICBmb250LXNpemU6MTFweDsKICBsZXR0ZXItc3BhY2luZzouMTBlbQp9CgovKiDlhoXpg6jnorroqo3mqZ/og73jga/mrovjgZfjgIHlhazplovnlLvpnaLjgYvjgonopovjgYjjgovlhaXlj6PjgaDjgZHjgpLpnZ7ooajnpLogKi8KYm9keS5uYWlsLW9wZXJhdGlvbi1vd25lciAubmF2LWJ0bltkYXRhLXZpZXc9ImNoZWNrIl0sCmJvZHkubmFpbC1vcGVyYXRpb24tb3duZXIgI3ZpZXctY2hlY2t7ZGlzcGxheTpub25lIWltcG9ydGFudH0KCkBtZWRpYShtYXgtd2lkdGg6NzAwcHgpewogIC5uYWlsLW9wZXJhdGlvbi1kZW1vLWJhbm5lcnthbGlnbi1pdGVtczpmbGV4LXN0YXJ0O2ZsZXgtZGlyZWN0aW9uOmNvbHVtbn0KICAubmFpbC1vcGVyYXRpb24tZGVtby1hY3Rpb25ze3dpZHRoOjEwMCU7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnIgMWZyfQp9CkBtZWRpYShtYXgtd2lkdGg6NDEwcHgpey5uYWlsLW9wZXJhdGlvbi1kZW1vLWFjdGlvbnN7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmcn19CkBtZWRpYSBwcmludHsubmFpbC1vcGVyYXRpb24tZGVtby1iYW5uZXJ7ZGlzcGxheTpub25lIWltcG9ydGFudH19Cg==").decode("utf-8")
+          css_marker = "/* DPRO-SYSTEMS-11 NAIL OPERATION DEMO */"
+
+          screen_files = [
+              "index.html",
+              "member.html",
+              "owner-ipad.html",
+              "owner.html",
+          ]
+
+          body_classes = {
+              "index.html": "nail-operation-customer",
+              "member.html": "nail-operation-member",
+              "owner-ipad.html": "nail-operation-ipad",
+              "owner.html": "nail-operation-owner",
+          }
+
+          titles = {
+              "index.html": "DPRO ネイルサロン LINE｜公開操作デモ・LINE予約",
+              "member.html": "DPRO ネイルサロン LINE｜公開操作デモ・会員ページ",
+              "owner-ipad.html": "DPRO ネイルサロン LINE｜公開操作デモ・店頭iPad",
+              "owner.html": "DPRO ネイルサロン LINE｜公開操作デモ・オーナー管理",
+          }
+
+          for filename in screen_files:
+              if not Path(filename).exists():
+                  raise SystemExit(f"ERROR: required public screen not found: {filename}")
+
+          # 内部バージョン情報を変更前後で比較するため保存
+          version_pattern = re.compile(
+              r'<meta\s+name=["\']dpro-final-version["\'][^>]*>'
+              r'|<div\s+id=["\']dproFinalVersion["\'][^>]*>.*?</div>'
+              r'|\b(?:const|let|var)\s+[A-Z0-9_]*VERSION[A-Z0-9_]*\s*=\s*[^;]+;',
+              flags=re.I | re.S,
+          )
+          versions_before = {
+              filename: version_pattern.findall(Path(filename).read_text(encoding="utf-8"))
+              for filename in screen_files
+          }
+
+          Path("demo-guide.html").write_text(guide, encoding="utf-8")
+
+          def set_title(text, filename):
+              match = re.search(r"<title>.*?</title>", text, flags=re.I | re.S)
+              if not match:
+                  raise SystemExit(f"ERROR: title tag not found: {filename}")
+              return text[:match.start()] + f"<title>{titles[filename]}</title>" + text[match.end():]
+
+          def add_demo_meta(text, filename):
+              if 'name="robots" content="noindex,nofollow,noarchive"' not in text:
+                  close = re.search(r"</head>", text, flags=re.I)
+                  if not close:
+                      raise SystemExit(f"ERROR: head closing tag not found: {filename}")
+                  meta = (
+                      '\n<meta name="robots" content="noindex,nofollow,noarchive">'
+                      f'\n<link rel="canonical" href="{official_url}">\n'
+                  )
+                  text = text[:close.start()] + meta + text[close.start():]
+              elif f'href="{official_url}"' not in text:
+                  close = re.search(r"</head>", text, flags=re.I)
+                  if not close:
+                      raise SystemExit(f"ERROR: head closing tag not found: {filename}")
+                  text = text[:close.start()] + f'\n<link rel="canonical" href="{official_url}">\n' + text[close.start():]
+              return text
+
+          def add_body_classes(text, filename):
+              match = re.search(r"<body([^>]*)>", text, flags=re.I)
+              if not match:
+                  raise SystemExit(f"ERROR: body tag not found: {filename}")
+              required = ["nail-operation-demo-page", body_classes[filename]]
+              attrs = match.group(1)
+              class_match = re.search(r'class="([^"]*)"', attrs)
+              if class_match:
+                  classes = class_match.group(1).split()
+                  for name in required:
+                      if name not in classes:
+                          classes.append(name)
+                  attrs = (
+                      attrs[:class_match.start()] +
+                      'class="' + " ".join(classes) + '"' +
+                      attrs[class_match.end():]
+                  )
+              else:
+                  attrs += ' class="' + " ".join(required) + '"'
+              return text[:match.start()] + "<body" + attrs + ">" + text[match.end():]
+
+          def add_css(text, filename):
+              if css_marker in text:
+                  return text
+              close = re.search(r"</style>", text, flags=re.I)
+              if not close:
+                  raise SystemExit(f"ERROR: style closing tag not found: {filename}")
+              return text[:close.start()] + "\n" + shared_css.strip() + "\n" + text[close.start():]
+
+          banner_open_tag = '<section class="nail-operation-demo-banner"'
+
+          def add_banner(text, filename):
+              # CSS文字列や正規表現ではなく、実際に挿入するHTML開始タグを確認
+              if banner_open_tag in text:
+                  return text
+              body = re.search(r"<body[^>]*>", text, flags=re.I)
+              if not body:
+                  raise SystemExit(f"ERROR: body tag not found for banner: {filename}")
+              updated = text[:body.end()] + "\n" + banner + "\n" + text[body.end():]
+              if banner_open_tag not in updated:
+                  raise SystemExit(f"ERROR: public demo banner insertion failed: {filename}")
+              return updated
+
+          for filename in screen_files:
+              text = Path(filename).read_text(encoding="utf-8")
+              text = set_title(text, filename)
+              text = add_demo_meta(text, filename)
+              text = add_body_classes(text, filename)
+              text = add_css(text, filename)
+              text = add_banner(text, filename)
+              Path(filename).write_text(text, encoding="utf-8")
+
+          guide_text = Path("demo-guide.html").read_text(encoding="utf-8")
+          assert "公開操作デモ・画面一覧" in guide_text
+          assert "店舗側デモ管理コード：1234" in guide_text
+          assert guide_text.count('class="card"') == 4
+          assert "system-check" not in guide_text
+          assert "システム確認" not in guide_text
+          for target in screen_files:
+              assert f'href="{target}' in guide_text
+
+          for filename in screen_files:
+              content = Path(filename).read_text(encoding="utf-8")
+              assert titles[filename] in content, filename
+              assert 'name="robots" content="noindex,nofollow,noarchive"' in content, filename
+              assert f'<link rel="canonical" href="{official_url}">' in content, filename
+              assert "nail-operation-demo-page" in content, filename
+              assert body_classes[filename] in content, filename
+              assert banner_open_tag in content, filename
+              assert css_marker in content, filename
+              assert "demo-guide.html" in content, filename
+              assert official_url in content, filename
+
+          owner = Path("owner.html").read_text(encoding="utf-8")
+          assert '.nav-btn[data-view="check"]' in owner
+          assert '#view-check' in owner
+          assert "display:none!important" in owner
+
+          # 内部バージョン情報、内部確認ファイル、共通設定は変更しない
+          versions_after = {
+              filename: version_pattern.findall(Path(filename).read_text(encoding="utf-8"))
+              for filename in screen_files
+          }
+          assert versions_after == versions_before, "内部バージョン情報が変更されています"
+          # このリポジトリは独立したconfig.jsを使用しない構成。
+          # 内部検査画面が残っていることだけを確認し、内部ファイル自体は変更しない。
+          assert Path("system-check.html").exists(), "system-check.html is missing"
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "dpro-systems-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add demo-guide.html index.html member.html owner-ipad.html owner.html
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+            exit 0
+          fi
+          git commit -m "STEP DPRO-SYSTEMS-11 clarify nail salon operation demo R4"
+          git push
