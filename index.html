@@ -228,6 +228,7 @@ body.nail-operation-owner #view-check{display:none!important}
 
 <meta name="robots" content="noindex,nofollow,noarchive">
 <link rel="canonical" href="https://dpro-shop.com/systems/nail">
+  <meta name="dpro-product-ready-version" content="NAIL-PR1-20260822">
 </head>
 <body class="nail-operation-demo-page nail-operation-customer">
 <section class="nail-operation-demo-banner" aria-label="公開操作デモの案内">
@@ -376,7 +377,8 @@ body.nail-operation-owner #view-check{display:none!important}
 
   <div class="sticky" id="sticky"><div class="sticky-inner"><div class="sticky-text"><b id="stickyTitle">予約内容を選択してください</b><span id="stickySub">選択内容がここに表示されます</span></div><button class="btn secondary" type="button" onclick="resetFlow()">最初から</button></div></div>
 
-  <script>
+  <script src="nail-pr1-security.js?v=NAIL-PR1-20260822"></script>
+<script>
     const STEP_VERSION = "STEP NAIL-NEXT-10";
     const DEFAULT_API_BASE = "https://dpro-nail-line-api.dpromstk2000.workers.dev";
     const API_BASE = new URLSearchParams(location.search).get("api_base") || DEFAULT_API_BASE;

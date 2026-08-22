@@ -56,6 +56,7 @@
     @media(max-width:620px){.wrap{padding:10px 10px 82px}.hero{border-radius:25px;padding:16px}.topbar{display:block}.actions{justify-content:flex-start;margin-top:12px}.brand h1{font-size:23px}.stats{grid-template-columns:repeat(2,1fr)}.screen-grid{grid-template-columns:1fr}.check{grid-template-columns:34px 1fr}.check .result{grid-column:2}.overall{align-items:flex-start}.toolbar-left,.toolbar-right{width:100%}.toolbar .btn{flex:1}}
   </style>
   <meta name="dpro-final-version" content="STEP NAIL-NEXT-10">
+  <meta name="dpro-product-ready-version" content="NAIL-PR1-20260822">
 </head>
 <body>
   <div id="dproFinalVersion" data-version="STEP NAIL-NEXT-10" hidden>STEP NAIL-NEXT-10</div>
@@ -169,12 +170,13 @@
 
   <div id="toast" class="toast"></div>
 
-  <script>
+  <script src="nail-pr1-security.js?v=NAIL-PR1-20260822"></script>
+<script>
     "use strict";
     const API_BASE="https://dpro-nail-line-api.dpromstk2000.workers.dev";
     const SHOP_CODE="nail_demo";
     const PAGE_BASE="https://dpromstk2000-lab.github.io/liff-nail-reserve/";
-    const EXPECTED_WORKER="NAIL-NEXT-3-WORKER-API-COMPLETE-20260722";
+    const EXPECTED_WORKER="NAIL-PR1-SECURITY-BOUNDARY-20260822";
     const SCREENS=[
       {key:"customer",label:"予約画面",file:"index.html",marker:"STEP NAIL-NEXT-10",expected:"FINAL"},
       {key:"owner",label:"PC管理画面",file:"owner.html",marker:"STEP NAIL-NEXT-10",expected:"FINAL"},

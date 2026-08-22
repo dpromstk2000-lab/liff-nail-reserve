@@ -1,6 +1,7 @@
 {
   "ok": true,
-  "system_code": "DPRO_NAIL_LINE_NEXT",
+  "system_code": "NAIL",
+  "legacy_internal_release_identifier": "DPRO_NAIL_LINE_NEXT",
   "release": "STEP NAIL-NEXT-10",
   "release_date": "2026-07-23",
   "status": "ready_for_final_public_check",
