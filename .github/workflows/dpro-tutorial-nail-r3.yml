@@ -151,6 +151,7 @@ jobs:
       - name: PRE-WRITE LIVE baseline 1440 1024 390 320
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.path }}
+          NODE_PATH: ${{ github.workspace }}/node_modules
         run: node /tmp/nail-live-qa.cjs pre /tmp/R3_PRE_LIVE_QA.json
 
       - name: Re-fetch newest main and verify forward-only
@@ -217,6 +218,7 @@ jobs:
       - name: POST-WRITE LIVE QA STANDARD V1.1
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.path }}
+          NODE_PATH: ${{ github.workspace }}/node_modules
         run: node /tmp/nail-live-qa.cjs post /tmp/R3_POST_LIVE_QA.json
 
       - name: Write R3 QA evidence to main
