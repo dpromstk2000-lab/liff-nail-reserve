@@ -153,7 +153,7 @@ jobs:
             'detail_pdf': f'{base}/{detail}.pdf',
           }
           for key,url in urls.items():
-            img=qrcode.make(url,box_size=10,border=3)
+            img=qrcode.make(url,box_size=12,border=4)
             img.save(qrdir/f'{key}.png')
           (root/'R5_EXPECTED_QR_URLS.json').write_text(json.dumps(urls,ensure_ascii=False,indent=2),encoding='utf-8')
 
@@ -165,7 +165,7 @@ jobs:
           def step(n): return map_[n-1]
 
           css='''
-          @page{size:A4 portrait;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:"Noto Sans CJK JP","Noto Sans JP",sans-serif;color:#302926;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}body{font-size:10pt}.page{width:210mm;height:297mm;padding:12mm 13mm;position:relative;overflow:hidden;page-break-after:always;background:linear-gradient(180deg,#fffaf7,#f7efeb 60%,#f3e6df)}.page:last-child{page-break-after:auto}.eyebrow{font-size:7.5pt;font-weight:800;letter-spacing:.12em;color:#8c6558}.title{font-size:24pt;line-height:1.22;margin:3mm 0 2mm;font-weight:900}.subtitle{font-size:10pt;color:#6f625d;line-height:1.65}.hero{border-radius:7mm;padding:8mm;color:#fff;background:linear-gradient(135deg,#3f2a24,#68473e 62%,#9b6f61);box-shadow:0 4mm 10mm rgba(60,38,30,.15)}.badge{display:inline-block;padding:1.5mm 3mm;border-radius:999px;background:#fff;color:#68473e;font-weight:900;font-size:8pt}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:5mm}.card{background:#fff;border:0.4mm solid #e4d4cc;border-radius:5mm;padding:5mm;box-shadow:0 3mm 8mm rgba(67,45,36,.08)}.card h2{font-size:14pt;line-height:1.35;margin:1.5mm 0}.card p{font-size:9pt;line-height:1.55;color:#625853;margin:0}.step{font-size:7.5pt;font-weight:900;color:#8c6558;letter-spacing:.08em}.shot{width:100%;height:104mm;object-fit:contain;background:#fff;border:0.35mm solid #dbcac1;border-radius:4mm}.shot.small{height:73mm}.shot.tiny{height:61mm}.qrbox{display:flex;gap:5mm;align-items:center;padding:4mm;background:#fff;border:0.35mm solid #e0d0c8;border-radius:4mm}.qrbox img{width:28mm;height:28mm}.qrbox b{display:block;font-size:10pt}.qrbox span{display:block;font-size:7.3pt;line-height:1.35;color:#655a55;word-break:break-all;margin-top:1mm}.list10{display:grid;grid-template-columns:1fr 1fr;gap:2mm 4mm;margin-top:4mm}.listitem{font-size:8.2pt;padding:2.2mm 2.8mm;border-radius:3mm;background:#fff;border:0.25mm solid #eadbd4}.notice{margin-top:4mm;padding:3.5mm 4mm;border-radius:3mm;background:#fff5e5;border:0.3mm solid #e3c79a;font-size:8.3pt;color:#725013}.footer{position:absolute;left:13mm;right:13mm;bottom:6mm;display:flex;justify-content:space-between;font-size:7pt;color:#8a7a73}.route{font-size:7.2pt;color:#7d6e67;word-break:break-all}.sectiontitle{font-size:18pt;font-weight:900;margin:2mm 0 4mm}.pair{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.pair .card{min-height:44mm}.twoShots{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.twoShots .shot{height:82mm}.miniQr{position:absolute;right:13mm;bottom:13mm;display:flex;align-items:center;gap:2mm;font-size:7pt;color:#6e625d}.miniQr img{width:19mm;height:19mm}.safe{font-weight:800;color:#47745f}
+          @page{size:A4 portrait;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:"Noto Sans CJK JP","Noto Sans JP",sans-serif;color:#302926;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}body{font-size:10pt}.page{width:210mm;height:297mm;padding:12mm 13mm;position:relative;overflow:hidden;page-break-after:always;background:linear-gradient(180deg,#fffaf7,#f7efeb 60%,#f3e6df)}.page:last-child{page-break-after:auto}.eyebrow{font-size:7.5pt;font-weight:800;letter-spacing:.12em;color:#8c6558}.title{font-size:24pt;line-height:1.22;margin:3mm 0 2mm;font-weight:900}.subtitle{font-size:10pt;color:#6f625d;line-height:1.65}.hero{border-radius:7mm;padding:8mm;color:#fff;background:linear-gradient(135deg,#3f2a24,#68473e 62%,#9b6f61);box-shadow:0 4mm 10mm rgba(60,38,30,.15)}.badge{display:inline-block;padding:1.5mm 3mm;border-radius:999px;background:#fff;color:#68473e;font-weight:900;font-size:8pt}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:5mm}.card{background:#fff;border:0.4mm solid #e4d4cc;border-radius:5mm;padding:5mm;box-shadow:0 3mm 8mm rgba(67,45,36,.08)}.card h2{font-size:14pt;line-height:1.35;margin:1.5mm 0}.card p{font-size:9pt;line-height:1.55;color:#625853;margin:0}.step{font-size:7.5pt;font-weight:900;color:#8c6558;letter-spacing:.08em}.shot{width:100%;height:104mm;object-fit:contain;background:#fff;border:0.35mm solid #dbcac1;border-radius:4mm}.shot.small{height:73mm}.shot.tiny{height:61mm}.qrbox{display:flex;gap:5mm;align-items:center;padding:4mm;background:#fff;border:0.35mm solid #e0d0c8;border-radius:4mm}.qrbox img{width:31mm;height:31mm}.qrbox b{display:block;font-size:10pt}.qrbox span{display:block;font-size:7.3pt;line-height:1.35;color:#655a55;word-break:break-all;margin-top:1mm}.list10{display:grid;grid-template-columns:1fr 1fr;gap:2mm 4mm;margin-top:4mm}.listitem{font-size:8.2pt;padding:2.2mm 2.8mm;border-radius:3mm;background:#fff;border:0.25mm solid #eadbd4}.notice{margin-top:4mm;padding:3.5mm 4mm;border-radius:3mm;background:#fff5e5;border:0.3mm solid #e3c79a;font-size:8.3pt;color:#725013}.footer{position:absolute;left:13mm;right:13mm;bottom:6mm;display:flex;justify-content:space-between;font-size:7pt;color:#8a7a73}.route{font-size:7.2pt;color:#7d6e67;word-break:break-all}.sectiontitle{font-size:18pt;font-weight:900;margin:2mm 0 4mm}.pair{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.pair .card{min-height:44mm}.twoShots{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.twoShots .shot{height:82mm}.miniQr{position:absolute;right:13mm;bottom:13mm;display:flex;align-items:center;gap:2mm;font-size:7pt;color:#6e625d}.miniQr img{width:25mm;height:25mm}.safe{font-weight:800;color:#47745f}
           '''
           def footer(page,total): return f'<div class="footer"><span>DPRO NAIL Tutorial / STANDARD V1.1 / business mutation 0</span><span>{page}/{total}</span></div>'
 
@@ -214,8 +214,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/nail-r5/renders/quick /tmp/nail-r5/renders/detail
-          pdftoppm -png -r 170 "/tmp/nail-r5/manuals/$QUICK_BASE.pdf" "/tmp/nail-r5/renders/quick/page"
-          pdftoppm -png -r 170 "/tmp/nail-r5/manuals/$DETAIL_BASE.pdf" "/tmp/nail-r5/renders/detail/page"
+          pdftoppm -png -r 300 "/tmp/nail-r5/manuals/$QUICK_BASE.pdf" "/tmp/nail-r5/renders/quick/page"
+          pdftoppm -png -r 300 "/tmp/nail-r5/manuals/$DETAIL_BASE.pdf" "/tmp/nail-r5/renders/detail/page"
           test "$(find /tmp/nail-r5/renders/quick -name 'page-*.png' | wc -l)" -eq 1
           test "$(find /tmp/nail-r5/renders/detail -name 'page-*.png' | wc -l)" -eq 6
           cp /tmp/nail-r5/renders/quick/page-1.png "/tmp/nail-r5/manuals/$QUICK_BASE.png"
@@ -235,28 +235,48 @@ jobs:
           import cv2, json, os
           from pathlib import Path
           expected=json.loads(Path('/tmp/nail-r5/R5_EXPECTED_QR_URLS.json').read_text(encoding='utf-8'))
-          # PDFs intentionally contain guide/start QR only. Manual-file URLs are published link targets, not embedded QRs.
+          # Decode QR codes from the FINAL rendered PDF pages, not from source QR PNGs.
           required={expected['guide'],expected['start']}
-          pages=list(Path('/tmp/nail-r5/renders').glob('**/page-*.png'))
+          pages=sorted(Path('/tmp/nail-r5/renders').glob('**/page-*.png'))
           decoded=[]
           det=cv2.QRCodeDetector()
-          for p in pages:
-            img=cv2.imread(str(p))
+
+          def decode_region(img):
             vals=[]
             try:
               ok, info, pts, _ = det.detectAndDecodeMulti(img)
               if ok and info: vals.extend([x for x in info if x])
             except Exception:
               pass
-            if not vals:
-              try:
-                val,pts,_=det.detectAndDecode(img)
-                if val: vals.append(val)
-              except Exception:
-                pass
-            decoded.append({'page':str(p),'values':sorted(set(vals))})
+            try:
+              val,pts,_=det.detectAndDecode(img)
+              if val: vals.append(val)
+            except Exception:
+              pass
+            return vals
+
+          for p in pages:
+            img=cv2.imread(str(p))
+            if img is None:
+              decoded.append({'page':str(p),'values':[],'regions_scanned':0})
+              continue
+            h,w=img.shape[:2]
+            regions=[img]
+            # Scan overlapping halves and a 3x3 grid so multiple QRs on one page are independently decoded.
+            regions += [img[:, :int(w*.62)], img[:, int(w*.38):], img[:int(h*.62), :], img[int(h*.38):, :]]
+            for ry in range(3):
+              for rx in range(3):
+                y0=max(0,int(h*(ry/3)-h*.04)); y1=min(h,int(h*((ry+1)/3)+h*.04))
+                x0=max(0,int(w*(rx/3)-w*.04)); x1=min(w,int(w*((rx+1)/3)+w*.04))
+                regions.append(img[y0:y1,x0:x1])
+            vals=[]
+            for region in regions:
+              if region.size:
+                vals.extend(decode_region(region))
+            vals=sorted(set(vals))
+            decoded.append({'page':str(p),'values':vals,'regions_scanned':len(regions)})
           found={v for x in decoded for v in x['values']}
-          result={'pass':required.issubset(found),'required':sorted(required),'found':sorted(found),'pages':decoded}
+          result={'pass':required.issubset(found),'required':sorted(required),'found':sorted(found),'pages':decoded,'render_dpi':300}
           Path('/tmp/nail-r5/R5_QR_QA.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
           if not result['pass']:
             raise SystemExit('QR QA failed: '+json.dumps(result,ensure_ascii=False))
@@ -303,6 +323,7 @@ jobs:
           test "$(git hash-object nail-pr1-security.js)" = "$(cat /tmp/R5_SECURITY_BEFORE.txt)"
 
       - name: Upload R5 visual-QA artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: NAIL-R5-MANUALS-AND-QA-RENDERS
@@ -314,7 +335,7 @@ jobs:
             /tmp/nail-r5/R5_QR_QA.json
             /tmp/nail-r5/R5_EXPECTED_QR_URLS.json
             /tmp/nail-r5/R5_QA_SUMMARY.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
 
       - name: Publish R5 manual assets and evidence to main
