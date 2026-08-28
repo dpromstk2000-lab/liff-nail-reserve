@@ -1,0 +1,561 @@
+{
+  "system": "NAIL",
+  "stage": "R4",
+  "standard": "V1.1",
+  "base": "https://dpromstk2000-lab.github.io/liff-nail-reserve",
+  "time": "2026-08-28T01:09:02.008Z",
+  "pass": true,
+  "failures": [],
+  "viewports": [
+    {
+      "viewport": "1440x900",
+      "gotoError": "",
+      "consoleMessages": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 ()"
+        }
+      ],
+      "pageErrors": [],
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "mapCount": 10,
+      "cardCount": 10,
+      "steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "titles": [
+        "ネイルサロン業務を4画面で確認",
+        "デモでは架空情報だけを使用",
+        "予約内容の選び方",
+        "オフ・長さ出し・補強",
+        "担当ネイリスト",
+        "日付と30分単位の時間枠",
+        "お客様情報と最終確認",
+        "会員ページで予約と履歴を確認",
+        "店頭iPadで来店からカルテまで",
+        "オーナー管理で全体を確認"
+      ],
+      "mapTitles": [
+        "ネイルサロン業務を4画面で確認",
+        "デモでは架空情報だけを使用",
+        "予約内容の選び方",
+        "オフ・長さ出し・補強",
+        "担当ネイリスト",
+        "日付と30分単位の時間枠",
+        "お客様情報と最終確認",
+        "会員ページで予約と履歴を確認",
+        "店頭iPadで来店からカルテまで",
+        "オーナー管理で全体を確認"
+      ],
+      "routes": [
+        "demo-guide.html",
+        "demo-guide.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "member.html",
+        "owner-ipad.html",
+        "owner.html"
+      ],
+      "mapRoutes": [
+        "demo-guide.html",
+        "demo-guide.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "member.html",
+        "owner-ipad.html",
+        "owner.html"
+      ],
+      "routeChecks": [
+        {
+          "step": 1,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=1"
+        },
+        {
+          "step": 2,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=2"
+        },
+        {
+          "step": 3,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=3"
+        },
+        {
+          "step": 4,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=4"
+        },
+        {
+          "step": 5,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=5"
+        },
+        {
+          "step": 6,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=6"
+        },
+        {
+          "step": 7,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=7"
+        },
+        {
+          "step": 8,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/member.html?tutorial=nail&step=8"
+        },
+        {
+          "step": 9,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/owner-ipad.html?tutorial=nail&step=9"
+        },
+        {
+          "step": 10,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/owner.html?tutorial=nail&step=10"
+        }
+      ],
+      "focusTag": "A",
+      "focusStep": "1",
+      "focusOutline": "solid/3px",
+      "overflow": false
+    },
+    {
+      "viewport": "1024x768",
+      "gotoError": "",
+      "consoleMessages": [],
+      "pageErrors": [],
+      "scrollWidth": 1024,
+      "clientWidth": 1024,
+      "mapCount": 10,
+      "cardCount": 10,
+      "steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "titles": [
+        "ネイルサロン業務を4画面で確認",
+        "デモでは架空情報だけを使用",
+        "予約内容の選び方",
+        "オフ・長さ出し・補強",
+        "担当ネイリスト",
+        "日付と30分単位の時間枠",
+        "お客様情報と最終確認",
+        "会員ページで予約と履歴を確認",
+        "店頭iPadで来店からカルテまで",
+        "オーナー管理で全体を確認"
+      ],
+      "mapTitles": [
+        "ネイルサロン業務を4画面で確認",
+        "デモでは架空情報だけを使用",
+        "予約内容の選び方",
+        "オフ・長さ出し・補強",
+        "担当ネイリスト",
+        "日付と30分単位の時間枠",
+        "お客様情報と最終確認",
+        "会員ページで予約と履歴を確認",
+        "店頭iPadで来店からカルテまで",
+        "オーナー管理で全体を確認"
+      ],
+      "routes": [
+        "demo-guide.html",
+        "demo-guide.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "member.html",
+        "owner-ipad.html",
+        "owner.html"
+      ],
+      "mapRoutes": [
+        "demo-guide.html",
+        "demo-guide.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "member.html",
+        "owner-ipad.html",
+        "owner.html"
+      ],
+      "routeChecks": [
+        {
+          "step": 1,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=1"
+        },
+        {
+          "step": 2,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=2"
+        },
+        {
+          "step": 3,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=3"
+        },
+        {
+          "step": 4,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=4"
+        },
+        {
+          "step": 5,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=5"
+        },
+        {
+          "step": 6,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=6"
+        },
+        {
+          "step": 7,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=7"
+        },
+        {
+          "step": 8,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/member.html?tutorial=nail&step=8"
+        },
+        {
+          "step": 9,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/owner-ipad.html?tutorial=nail&step=9"
+        },
+        {
+          "step": 10,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/owner.html?tutorial=nail&step=10"
+        }
+      ],
+      "focusTag": "A",
+      "focusStep": "1",
+      "focusOutline": "solid/3px",
+      "overflow": false
+    },
+    {
+      "viewport": "390x844",
+      "gotoError": "",
+      "consoleMessages": [],
+      "pageErrors": [],
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "mapCount": 10,
+      "cardCount": 10,
+      "steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "titles": [
+        "ネイルサロン業務を4画面で確認",
+        "デモでは架空情報だけを使用",
+        "予約内容の選び方",
+        "オフ・長さ出し・補強",
+        "担当ネイリスト",
+        "日付と30分単位の時間枠",
+        "お客様情報と最終確認",
+        "会員ページで予約と履歴を確認",
+        "店頭iPadで来店からカルテまで",
+        "オーナー管理で全体を確認"
+      ],
+      "mapTitles": [
+        "ネイルサロン業務を4画面で確認",
+        "デモでは架空情報だけを使用",
+        "予約内容の選び方",
+        "オフ・長さ出し・補強",
+        "担当ネイリスト",
+        "日付と30分単位の時間枠",
+        "お客様情報と最終確認",
+        "会員ページで予約と履歴を確認",
+        "店頭iPadで来店からカルテまで",
+        "オーナー管理で全体を確認"
+      ],
+      "routes": [
+        "demo-guide.html",
+        "demo-guide.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "member.html",
+        "owner-ipad.html",
+        "owner.html"
+      ],
+      "mapRoutes": [
+        "demo-guide.html",
+        "demo-guide.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "member.html",
+        "owner-ipad.html",
+        "owner.html"
+      ],
+      "routeChecks": [
+        {
+          "step": 1,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=1"
+        },
+        {
+          "step": 2,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=2"
+        },
+        {
+          "step": 3,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=3"
+        },
+        {
+          "step": 4,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=4"
+        },
+        {
+          "step": 5,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=5"
+        },
+        {
+          "step": 6,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=6"
+        },
+        {
+          "step": 7,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=7"
+        },
+        {
+          "step": 8,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/member.html?tutorial=nail&step=8"
+        },
+        {
+          "step": 9,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/owner-ipad.html?tutorial=nail&step=9"
+        },
+        {
+          "step": 10,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/owner.html?tutorial=nail&step=10"
+        }
+      ],
+      "focusTag": "A",
+      "focusStep": "1",
+      "focusOutline": "solid/3px",
+      "overflow": false
+    },
+    {
+      "viewport": "320x740",
+      "gotoError": "",
+      "consoleMessages": [],
+      "pageErrors": [],
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "mapCount": 10,
+      "cardCount": 10,
+      "steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "titles": [
+        "ネイルサロン業務を4画面で確認",
+        "デモでは架空情報だけを使用",
+        "予約内容の選び方",
+        "オフ・長さ出し・補強",
+        "担当ネイリスト",
+        "日付と30分単位の時間枠",
+        "お客様情報と最終確認",
+        "会員ページで予約と履歴を確認",
+        "店頭iPadで来店からカルテまで",
+        "オーナー管理で全体を確認"
+      ],
+      "mapTitles": [
+        "ネイルサロン業務を4画面で確認",
+        "デモでは架空情報だけを使用",
+        "予約内容の選び方",
+        "オフ・長さ出し・補強",
+        "担当ネイリスト",
+        "日付と30分単位の時間枠",
+        "お客様情報と最終確認",
+        "会員ページで予約と履歴を確認",
+        "店頭iPadで来店からカルテまで",
+        "オーナー管理で全体を確認"
+      ],
+      "routes": [
+        "demo-guide.html",
+        "demo-guide.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "member.html",
+        "owner-ipad.html",
+        "owner.html"
+      ],
+      "mapRoutes": [
+        "demo-guide.html",
+        "demo-guide.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "member.html",
+        "owner-ipad.html",
+        "owner.html"
+      ],
+      "routeChecks": [
+        {
+          "step": 1,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=1"
+        },
+        {
+          "step": 2,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=2"
+        },
+        {
+          "step": 3,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=3"
+        },
+        {
+          "step": 4,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=4"
+        },
+        {
+          "step": 5,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=5"
+        },
+        {
+          "step": 6,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=6"
+        },
+        {
+          "step": 7,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?tutorial=nail&step=7"
+        },
+        {
+          "step": 8,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/member.html?tutorial=nail&step=8"
+        },
+        {
+          "step": 9,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/owner-ipad.html?tutorial=nail&step=9"
+        },
+        {
+          "step": 10,
+          "status": 200,
+          "ok": true,
+          "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/owner.html?tutorial=nail&step=10"
+        }
+      ],
+      "focusTag": "A",
+      "focusStep": "1",
+      "focusOutline": "solid/3px",
+      "overflow": false
+    }
+  ],
+  "businessMutationRequests": []
+}

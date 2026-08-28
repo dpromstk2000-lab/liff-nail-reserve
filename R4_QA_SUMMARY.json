@@ -1,0 +1,24 @@
+{
+  "system": "NAIL",
+  "stage": "R4",
+  "standard": "V1.1",
+  "guide_center": "guide-center.html",
+  "first10_count": 10,
+  "single_source": "dpro-tutorial-nail.js:DPRO_NAIL_TUTORIAL_MAP",
+  "r3_gate_pass": true,
+  "r4_live_qa_pass": true,
+  "tested_viewports": [
+    "1440x900",
+    "1024x768",
+    "390x844",
+    "320x740"
+  ],
+  "overflow_390": false,
+  "overflow_320": false,
+  "business_mutation": 0,
+  "security_boundary_unchanged": true,
+  "start_head": "bfa270151629edd4b6c027c0e46e1ed52398fc35",
+  "start_tree": "0a2416f788efc538533f78df2fe6933597f3bc95",
+  "implementation_sha": "89c865b332a25424d3d9b34fca6f0a771108db26",
+  "generated_at": "2026-08-28T01:09:13.737718+00:00"
+}

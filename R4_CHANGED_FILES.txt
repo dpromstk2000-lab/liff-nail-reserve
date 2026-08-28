@@ -1,0 +1,11 @@
+R4 IMPLEMENTATION CHANGED FILES
+guide-center.html
+demo-guide.html
+
+R4 DELIVERY / QA INFRASTRUCTURE
+.github/workflows/dpro-tutorial-nail-r4.yml
+
+R4 QA EVIDENCE
+R4_LIVE_QA.json
+R4_QA_SUMMARY.json
+R4_CHANGED_FILES.txt
