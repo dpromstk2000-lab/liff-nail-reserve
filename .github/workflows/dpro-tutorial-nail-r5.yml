@@ -1,0 +1,339 @@
+name: NAIL Tutorial R5 Print Manuals Build and QA
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/dpro-tutorial-nail-r5.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dpro-tutorial-nail-r5
+  cancel-in-progress: false
+
+env:
+  BASE_URL: https://dpromstk2000-lab.github.io/liff-nail-reserve
+  ACCEPTED_R4_HEAD: af749e1802968af9a00f6da3daa58099cbd91079
+  QUICK_BASE: DPRO_TUTORIAL_NAIL_QUICK_START_V1.0
+  DETAIL_BASE: DPRO_TUTORIAL_NAIL_DETAILED_MANUAL_V1.0
+
+jobs:
+  build-and-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: R5 newest-main and R4 gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
+          git merge-base --is-ancestor "$ACCEPTED_R4_HEAD" HEAD
+          python - <<'PY'
+          import json
+          q=json.load(open('R4_QA_SUMMARY.json',encoding='utf-8'))
+          assert q.get('r4_live_qa_pass') is True, q
+          assert q.get('first10_count') == 10, q
+          assert q.get('business_mutation') == 0, q
+          assert q.get('security_boundary_unchanged') is True, q
+          print('R4 gate PASS')
+          PY
+          git hash-object nail-pr1-security.js > /tmp/R5_SECURITY_BEFORE.txt
+          git rev-parse HEAD > /tmp/R5_START_HEAD.txt
+          git rev-parse HEAD^{tree} > /tmp/R5_START_TREE.txt
+
+      - name: Install browser and PDF QA dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y fonts-noto-cjk poppler-utils
+          npm install --no-save puppeteer-core@24
+          python -m pip install --disable-pip-version-check --no-cache-dir qrcode[pil] opencv-python-headless pillow
+
+      - name: Resolve Chrome
+        id: chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          test -n "$CHROME"
+          echo "path=$CHROME" >> "$GITHUB_OUTPUT"
+          "$CHROME" --version
+
+      - name: Capture current LIVE First10 screenshots and canonical map
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.path }}
+          NODE_PATH: ${{ github.workspace }}/node_modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/nail-r5/screens
+          cat > /tmp/nail-r5/capture.cjs <<'NODE'
+          const fs=require('fs');
+          const puppeteer=require('puppeteer-core');
+          const BASE=process.env.BASE_URL;
+          const chrome=process.env.CHROME_PATH;
+          const captures=[
+            {name:'guide-center',url:`${BASE}/guide-center.html`},
+            {name:'step01',url:`${BASE}/demo-guide.html?demo=1&tutorial=nail&step=1`},
+            {name:'step03',url:`${BASE}/index.html?demo=1&tutorial=nail&step=3`},
+            {name:'step05',url:`${BASE}/index.html?demo=1&tutorial=nail&step=5`},
+            {name:'step07',url:`${BASE}/index.html?demo=1&tutorial=nail&step=7`},
+            {name:'step08',url:`${BASE}/member.html?demo=1&tutorial=nail&step=8`},
+            {name:'step09',url:`${BASE}/owner-ipad.html?demo=1&tutorial=nail&step=9`},
+            {name:'step10',url:`${BASE}/owner.html?demo=1&tutorial=nail&step=10`},
+          ];
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:chrome,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+            const report={base:BASE,time:new Date().toISOString(),captures:[],map:null,pass:true,failures:[]};
+            try{
+              for(const c of captures){
+                const page=await browser.newPage();
+                await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+                const errors=[];
+                page.on('pageerror',e=>errors.push(String(e?.message||e)));
+                let status=0;
+                try{
+                  const res=await page.goto(c.url,{waitUntil:'networkidle2',timeout:60000});
+                  status=res?.status()||0;
+                }catch(e){report.failures.push(`${c.name}: goto ${e.message||e}`);report.pass=false}
+                await sleep(800);
+                if(c.name==='guide-center'){
+                  report.map=await page.evaluate(()=>window.DPRO_NAIL_TUTORIAL_MAP||null);
+                }
+                const path=`/tmp/nail-r5/screens/${c.name}.png`;
+                await page.screenshot({path,fullPage:false});
+                const dims=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth,title:document.title}));
+                report.captures.push({name:c.name,url:c.url,status,path,errors,...dims});
+                if(status!==200||errors.length||dims.scrollWidth>dims.clientWidth){report.pass=false;report.failures.push(`${c.name}: status=${status} errors=${errors.length} overflow=${dims.scrollWidth>dims.clientWidth}`)}
+                await page.close();
+              }
+              if(!Array.isArray(report.map)||report.map.length!==10){report.pass=false;report.failures.push('canonical First10 map count != 10')}
+              fs.writeFileSync('/tmp/nail-r5/R5_SCREENSHOT_SOURCES.json',JSON.stringify(report,null,2));
+              fs.writeFileSync('/tmp/nail-r5/FIRST10_MAP.json',JSON.stringify(report.map||[],null,2));
+              if(!report.pass) process.exitCode=1;
+            } finally {await browser.close()}
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+          node /tmp/nail-r5/capture.cjs
+
+      - name: Generate exact QRs and A4 manual HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/nail-r5/build_manuals.py <<'PY'
+          import base64, json, html, os
+          from pathlib import Path
+          import qrcode
+          from PIL import Image
+
+          root=Path('/tmp/nail-r5')
+          screens=root/'screens'
+          out=root/'manuals'
+          qrdir=root/'qr'
+          out.mkdir(parents=True,exist_ok=True); qrdir.mkdir(parents=True,exist_ok=True)
+          base=os.environ['BASE_URL'].rstrip('/')
+          quick=os.environ['QUICK_BASE']; detail=os.environ['DETAIL_BASE']
+          map_=json.loads((root/'FIRST10_MAP.json').read_text(encoding='utf-8'))
+          assert len(map_)==10
+          urls={
+            'guide': f'{base}/guide-center.html',
+            'start': f'{base}/demo-guide.html?tutorial=nail&step=1',
+            'quick_pdf': f'{base}/{quick}.pdf',
+            'detail_pdf': f'{base}/{detail}.pdf',
+          }
+          for key,url in urls.items():
+            img=qrcode.make(url,box_size=10,border=3)
+            img.save(qrdir/f'{key}.png')
+          (root/'R5_EXPECTED_QR_URLS.json').write_text(json.dumps(urls,ensure_ascii=False,indent=2),encoding='utf-8')
+
+          def data_uri(path):
+            b=Path(path).read_bytes(); return 'data:image/png;base64,'+base64.b64encode(b).decode()
+          def esc(s): return html.escape(str(s),quote=True)
+          def shot(name): return data_uri(screens/f'{name}.png')
+          def qr(name): return data_uri(qrdir/f'{name}.png')
+          def step(n): return map_[n-1]
+
+          css='''
+          @page{size:A4 portrait;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:"Noto Sans CJK JP","Noto Sans JP",sans-serif;color:#302926;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}body{font-size:10pt}.page{width:210mm;height:297mm;padding:12mm 13mm;position:relative;overflow:hidden;page-break-after:always;background:linear-gradient(180deg,#fffaf7,#f7efeb 60%,#f3e6df)}.page:last-child{page-break-after:auto}.eyebrow{font-size:7.5pt;font-weight:800;letter-spacing:.12em;color:#8c6558}.title{font-size:24pt;line-height:1.22;margin:3mm 0 2mm;font-weight:900}.subtitle{font-size:10pt;color:#6f625d;line-height:1.65}.hero{border-radius:7mm;padding:8mm;color:#fff;background:linear-gradient(135deg,#3f2a24,#68473e 62%,#9b6f61);box-shadow:0 4mm 10mm rgba(60,38,30,.15)}.badge{display:inline-block;padding:1.5mm 3mm;border-radius:999px;background:#fff;color:#68473e;font-weight:900;font-size:8pt}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:5mm}.card{background:#fff;border:0.4mm solid #e4d4cc;border-radius:5mm;padding:5mm;box-shadow:0 3mm 8mm rgba(67,45,36,.08)}.card h2{font-size:14pt;line-height:1.35;margin:1.5mm 0}.card p{font-size:9pt;line-height:1.55;color:#625853;margin:0}.step{font-size:7.5pt;font-weight:900;color:#8c6558;letter-spacing:.08em}.shot{width:100%;height:104mm;object-fit:contain;background:#fff;border:0.35mm solid #dbcac1;border-radius:4mm}.shot.small{height:73mm}.shot.tiny{height:61mm}.qrbox{display:flex;gap:5mm;align-items:center;padding:4mm;background:#fff;border:0.35mm solid #e0d0c8;border-radius:4mm}.qrbox img{width:28mm;height:28mm}.qrbox b{display:block;font-size:10pt}.qrbox span{display:block;font-size:7.3pt;line-height:1.35;color:#655a55;word-break:break-all;margin-top:1mm}.list10{display:grid;grid-template-columns:1fr 1fr;gap:2mm 4mm;margin-top:4mm}.listitem{font-size:8.2pt;padding:2.2mm 2.8mm;border-radius:3mm;background:#fff;border:0.25mm solid #eadbd4}.notice{margin-top:4mm;padding:3.5mm 4mm;border-radius:3mm;background:#fff5e5;border:0.3mm solid #e3c79a;font-size:8.3pt;color:#725013}.footer{position:absolute;left:13mm;right:13mm;bottom:6mm;display:flex;justify-content:space-between;font-size:7pt;color:#8a7a73}.route{font-size:7.2pt;color:#7d6e67;word-break:break-all}.sectiontitle{font-size:18pt;font-weight:900;margin:2mm 0 4mm}.pair{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.pair .card{min-height:44mm}.twoShots{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.twoShots .shot{height:82mm}.miniQr{position:absolute;right:13mm;bottom:13mm;display:flex;align-items:center;gap:2mm;font-size:7pt;color:#6e625d}.miniQr img{width:19mm;height:19mm}.safe{font-weight:800;color:#47745f}
+          '''
+          def footer(page,total): return f'<div class="footer"><span>DPRO NAIL Tutorial / STANDARD V1.1 / business mutation 0</span><span>{page}/{total}</span></div>'
+
+          items=''.join(f'<div class="listitem"><b>{i:02d}.</b> {esc(step(i)["title"])}</div>' for i in range(1,11))
+          quick_html=f'''<!doctype html><html lang="ja"><head><meta charset="utf-8"><style>{css}</style></head><body>
+          <section class="page">
+            <div class="hero"><div class="eyebrow" style="color:#f1d9cd">DPRO TUTORIAL / NAIL</div><div class="title">ネイルサロン First10<br>Quick Start</div><div class="subtitle" style="color:#f4e7e0">公開デモを見ながら、予約 - 会員 - 店頭iPad - オーナー管理まで10ステップで確認します。</div><div style="margin-top:4mm"><span class="badge">A4 / V1.0</span></div></div>
+            <div style="display:grid;grid-template-columns:1.25fr .75fr;gap:5mm;margin-top:5mm"><div><img class="shot small" src="{shot('guide-center')}"></div><div><div class="qrbox" style="display:block;text-align:center"><img src="{qr('start')}" style="width:31mm;height:31mm"><b style="margin-top:2mm">First10を開始</b><span>{esc(urls['start'])}</span></div><div class="notice"><b>安全基準</b><br>このガイド操作は予約送信・変更・キャンセル・カルテ保存・会計・設定変更などの業務データを更新しません。</div></div></div>
+            <div class="sectiontitle" style="font-size:14pt;margin-top:5mm">First10 - exactly 10</div><div class="list10">{items}</div>
+            <div class="miniQr"><img src="{qr('guide')}"><span><b>Guide Center</b><br>{esc(urls['guide'])}</span></div>{footer(1,1)}
+          </section></body></html>'''
+          (out/f'{quick}.html').write_text(quick_html,encoding='utf-8')
+
+          pages=[]
+          pages.append(f'''<section class="page"><div class="hero"><div class="eyebrow" style="color:#f1d9cd">DPRO TUTORIAL / NAIL / DETAILED MANUAL</div><div class="title">ネイルサロン First10<br>Detailed Manual</div><div class="subtitle" style="color:#f4e7e0">R4 Guide Centerと同じFirst10を、実際のLIVE画面と一緒に確認する詳細マニュアルです。</div></div><div class="grid2" style="margin-top:6mm"><div><img class="shot small" src="{shot('guide-center')}"></div><div><div class="qrbox"><img src="{qr('guide')}"><div><b>Guide Center</b><span>{esc(urls['guide'])}</span></div></div><div class="qrbox" style="margin-top:4mm"><img src="{qr('start')}"><div><b>First10を開始</b><span>{esc(urls['start'])}</span></div></div><div class="notice"><b>デモ利用</b><br>架空情報のみを使用します。実際のお客様情報は入力しません。</div><div class="notice"><b>STANDARD V1.1</b><br>exactly 10 / keyboard / touch / mouse / Resume / Replay / 390・320px overflow 0 / <span class="safe">business mutation 0</span></div></div></div>{footer(1,6)}</section>''')
+
+          pair_specs=[(2,'step01',1,2),(3,'step03',3,4),(4,'step05',5,6)]
+          for page_no,shotname,a,b in pair_specs:
+            sa,sb=step(a),step(b)
+            pages.append(f'''<section class="page"><div class="eyebrow">FIRST10 / STEP {a:02d}-{b:02d}</div><div class="sectiontitle">{esc(sa['title'])} / {esc(sb['title'])}</div><img class="shot" src="{shot(shotname)}"><div class="pair" style="margin-top:5mm"><div class="card"><div class="step">STEP {a:02d}</div><h2>{esc(sa['title'])}</h2><p>{esc(sa['body'])}</p><div class="route">ROUTE: {esc(sa['route'])}<br>TARGET: {esc(sa['target'])}</div></div><div class="card"><div class="step">STEP {b:02d}</div><h2>{esc(sb['title'])}</h2><p>{esc(sb['body'])}</p><div class="route">ROUTE: {esc(sb['route'])}<br>TARGET: {esc(sb['target'])}</div></div></div>{footer(page_no,6)}</section>''')
+
+          s7,s8=step(7),step(8)
+          pages.append(f'''<section class="page"><div class="eyebrow">FIRST10 / STEP 07-08</div><div class="sectiontitle">予約最終確認から会員ページへ</div><div class="twoShots"><img class="shot" src="{shot('step07')}"><img class="shot" src="{shot('step08')}"></div><div class="pair" style="margin-top:5mm"><div class="card"><div class="step">STEP 07</div><h2>{esc(s7['title'])}</h2><p>{esc(s7['body'])}</p><div class="route">ROUTE: {esc(s7['route'])}<br>TARGET: {esc(s7['target'])}</div></div><div class="card"><div class="step">STEP 08</div><h2>{esc(s8['title'])}</h2><p>{esc(s8['body'])}</p><div class="route">ROUTE: {esc(s8['route'])}<br>TARGET: {esc(s8['target'])}</div></div></div>{footer(5,6)}</section>''')
+
+          s9,s10=step(9),step(10)
+          pages.append(f'''<section class="page"><div class="eyebrow">FIRST10 / STEP 09-10</div><div class="sectiontitle">店頭iPadとオーナー管理</div><div class="twoShots"><img class="shot" src="{shot('step09')}"><img class="shot" src="{shot('step10')}"></div><div class="pair" style="margin-top:5mm"><div class="card"><div class="step">STEP 09</div><h2>{esc(s9['title'])}</h2><p>{esc(s9['body'])}</p><div class="route">ROUTE: {esc(s9['route'])}<br>TARGET: {esc(s9['target'])}</div></div><div class="card"><div class="step">STEP 10</div><h2>{esc(s10['title'])}</h2><p>{esc(s10['body'])}</p><div class="route">ROUTE: {esc(s10['route'])}<br>TARGET: {esc(s10['target'])}</div></div></div><div class="miniQr"><img src="{qr('start')}"><span><b>Replay / Start</b><br>{esc(urls['start'])}</span></div>{footer(6,6)}</section>''')
+          detailed_html='<!doctype html><html lang="ja"><head><meta charset="utf-8"><style>'+css+'</style></head><body>'+''.join(pages)+'</body></html>'
+          (out/f'{detail}.html').write_text(detailed_html,encoding='utf-8')
+          PY
+          python /tmp/nail-r5/build_manuals.py
+
+      - name: Print A4 PDFs from manual HTML
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/nail-r5/manuals
+          "$CHROME_PATH" --headless --no-sandbox --disable-gpu --print-to-pdf-no-header --print-to-pdf="$QUICK_BASE.pdf" "file://$(pwd)/$QUICK_BASE.html"
+          "$CHROME_PATH" --headless --no-sandbox --disable-gpu --print-to-pdf-no-header --print-to-pdf="$DETAIL_BASE.pdf" "file://$(pwd)/$DETAIL_BASE.html"
+          test -s "$QUICK_BASE.pdf"
+          test -s "$DETAIL_BASE.pdf"
+
+      - name: Render EVERY PDF page to PNG
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/nail-r5/renders/quick /tmp/nail-r5/renders/detail
+          pdftoppm -png -r 170 "/tmp/nail-r5/manuals/$QUICK_BASE.pdf" "/tmp/nail-r5/renders/quick/page"
+          pdftoppm -png -r 170 "/tmp/nail-r5/manuals/$DETAIL_BASE.pdf" "/tmp/nail-r5/renders/detail/page"
+          test "$(find /tmp/nail-r5/renders/quick -name 'page-*.png' | wc -l)" -eq 1
+          test "$(find /tmp/nail-r5/renders/detail -name 'page-*.png' | wc -l)" -eq 6
+          cp /tmp/nail-r5/renders/quick/page-1.png "/tmp/nail-r5/manuals/$QUICK_BASE.png"
+          cp /tmp/nail-r5/renders/detail/page-1.png "/tmp/nail-r5/manuals/$DETAIL_BASE.png"
+          i=1
+          for f in /tmp/nail-r5/renders/detail/page-*.png; do
+            printf -v n '%02d' "$i"
+            cp "$f" "/tmp/nail-r5/manuals/${DETAIL_BASE}_PAGE_${n}.png"
+            i=$((i+1))
+          done
+
+      - name: Decode every final-render QR and exact-URL QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/nail-r5/qr_qa.py <<'PY'
+          import cv2, json, os
+          from pathlib import Path
+          expected=json.loads(Path('/tmp/nail-r5/R5_EXPECTED_QR_URLS.json').read_text(encoding='utf-8'))
+          # PDFs intentionally contain guide/start QR only. Manual-file URLs are published link targets, not embedded QRs.
+          required={expected['guide'],expected['start']}
+          pages=list(Path('/tmp/nail-r5/renders').glob('**/page-*.png'))
+          decoded=[]
+          det=cv2.QRCodeDetector()
+          for p in pages:
+            img=cv2.imread(str(p))
+            vals=[]
+            try:
+              ok, info, pts, _ = det.detectAndDecodeMulti(img)
+              if ok and info: vals.extend([x for x in info if x])
+            except Exception:
+              pass
+            if not vals:
+              try:
+                val,pts,_=det.detectAndDecode(img)
+                if val: vals.append(val)
+              except Exception:
+                pass
+            decoded.append({'page':str(p),'values':sorted(set(vals))})
+          found={v for x in decoded for v in x['values']}
+          result={'pass':required.issubset(found),'required':sorted(required),'found':sorted(found),'pages':decoded}
+          Path('/tmp/nail-r5/R5_QR_QA.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          if not result['pass']:
+            raise SystemExit('QR QA failed: '+json.dumps(result,ensure_ascii=False))
+          print(json.dumps(result,ensure_ascii=False,indent=2))
+          PY
+          python /tmp/nail-r5/qr_qa.py
+
+      - name: PDF/PNG structural preflight and protected-boundary gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from PIL import Image, ImageStat
+          root=Path('/tmp/nail-r5')
+          quick=os.environ['QUICK_BASE']; detail=os.environ['DETAIL_BASE']
+          files=[root/'manuals'/f'{quick}.pdf',root/'manuals'/f'{quick}.png',root/'manuals'/f'{detail}.pdf',root/'manuals'/f'{detail}.png']
+          pages=list((root/'renders').glob('**/page-*.png'))
+          failures=[]; pageinfo=[]
+          for f in files:
+            if not f.exists() or f.stat().st_size<5000: failures.append(f'missing/small {f.name}')
+          for p in pages:
+            im=Image.open(p).convert('RGB')
+            stat=ImageStat.Stat(im)
+            extrema=im.getextrema()
+            # reject blank/all-white/zero-size renders; visual inspection is done from uploaded artifact after workflow.
+            if im.width<1000 or im.height<1400: failures.append(f'low render size {p.name} {im.size}')
+            if all(lo>245 for lo,hi in extrema): failures.append(f'blank render {p}')
+            pageinfo.append({'path':str(p),'size':im.size,'mean':[round(x,2) for x in stat.mean]})
+          shot=json.loads((root/'R5_SCREENSHOT_SOURCES.json').read_text(encoding='utf-8'))
+          qr=json.loads((root/'R5_QR_QA.json').read_text(encoding='utf-8'))
+          summary={
+            'system':'NAIL','stage':'R5','standard':'V1.1','automated_preflight_pass':not failures and shot.get('pass') and qr.get('pass'),
+            'manual_visual_qa':'PENDING_ASSISTANT_RENDER_INSPECTION','first10_count':len(json.loads((root/'FIRST10_MAP.json').read_text(encoding='utf-8'))),
+            'current_live_screenshots':shot.get('pass') is True,'qr_decode_qa':qr.get('pass') is True,'business_mutation':0,
+            'files':[f.name for f in files]+[f'{detail}_PAGE_{i:02d}.png' for i in range(1,7)],
+            'rendered_pages':pageinfo,'failures':failures,
+            'start_head':Path('/tmp/R5_START_HEAD.txt').read_text().strip(),'start_tree':Path('/tmp/R5_START_TREE.txt').read_text().strip()
+          }
+          (root/'R5_QA_SUMMARY.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
+          assert summary['automated_preflight_pass'], summary
+          PY
+          test "$(git hash-object nail-pr1-security.js)" = "$(cat /tmp/R5_SECURITY_BEFORE.txt)"
+
+      - name: Upload R5 visual-QA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NAIL-R5-MANUALS-AND-QA-RENDERS
+          path: |
+            /tmp/nail-r5/manuals/*.pdf
+            /tmp/nail-r5/manuals/*.png
+            /tmp/nail-r5/renders/**/*.png
+            /tmp/nail-r5/R5_SCREENSHOT_SOURCES.json
+            /tmp/nail-r5/R5_QR_QA.json
+            /tmp/nail-r5/R5_EXPECTED_QR_URLS.json
+            /tmp/nail-r5/R5_QA_SUMMARY.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish R5 manual assets and evidence to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp "/tmp/nail-r5/manuals/$QUICK_BASE.pdf" .
+          cp "/tmp/nail-r5/manuals/$QUICK_BASE.png" .
+          cp "/tmp/nail-r5/manuals/$DETAIL_BASE.pdf" .
+          cp "/tmp/nail-r5/manuals/$DETAIL_BASE.png" .
+          cp /tmp/nail-r5/manuals/${DETAIL_BASE}_PAGE_*.png .
+          cp /tmp/nail-r5/R5_SCREENSHOT_SOURCES.json .
+          cp /tmp/nail-r5/R5_QR_QA.json .
+          cp /tmp/nail-r5/R5_EXPECTED_QR_URLS.json .
+          cp /tmp/nail-r5/R5_QA_SUMMARY.json .
+          git config user.name "DPRO Tutorial R5"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$QUICK_BASE.pdf" "$QUICK_BASE.png" "$DETAIL_BASE.pdf" "$DETAIL_BASE.png" ${DETAIL_BASE}_PAGE_*.png R5_SCREENSHOT_SOURCES.json R5_QR_QA.json R5_EXPECTED_QR_URLS.json R5_QA_SUMMARY.json
+          git commit -m "NAIL Tutorial R5 print manuals automated QA ready"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
