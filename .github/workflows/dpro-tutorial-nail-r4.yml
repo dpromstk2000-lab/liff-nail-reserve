@@ -110,7 +110,7 @@ jobs:
           from pathlib import Path
           p=Path('demo-guide.html')
           s=p.read_text(encoding='utf-8')
-          marker='<a class="button button-ghost" href="guide-center.html">First10 Guide Center</a>'
+          marker='<a class="button button-ghost" href="guide-center.html?guide=1">First10 Guide Center</a>'
           if marker not in s:
               needle='<a class="button button-ghost" href="index.html">まず予約を試す</a>'
               if needle not in s:
@@ -125,7 +125,9 @@ jobs:
           assert 'DPRO NAIL GUIDE CENTER R4 V1.0' in html
           assert 'dpro-tutorial-nail.js?guide=1' in html
           assert html.count('id="first10Grid"') == 1
-          changed=set(__import__('subprocess').check_output(['git','diff','--name-only'],text=True).split())
+          import subprocess
+          changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).split())
+          changed.update(subprocess.check_output(['git','ls-files','--others','--exclude-standard'],text=True).split())
           assert changed == {'guide-center.html','demo-guide.html'}, changed
           print('R4 changed files:', sorted(changed))
           PY
@@ -150,7 +152,7 @@ jobs:
           SHA="${{ steps.r4commit.outputs.sha }}"
           ok=0
           for i in $(seq 1 80); do
-            body="$(curl -fsSL --retry 2 "$BASE_URL/guide-center.html?qa=$SHA-$i" || true)"
+            body="$(curl -fsSL --retry 2 "$BASE_URL/guide-center.html?guide=1&qa=$SHA-$i" || true)"
             if printf '%s' "$body" | grep -q 'DPRO NAIL GUIDE CENTER R4 V1.0'; then ok=1; break; fi
             sleep 5
           done
@@ -194,7 +196,7 @@ jobs:
                 page.on('pageerror',e=>pageErrors.push(String(e?.message||e)));
                 page.on('request',req=>{const m=req.method().toUpperCase();if(req.url().includes('dpro-nail-line-api.dpromstk2000.workers.dev')&&!['GET','HEAD','OPTIONS'].includes(m))result.businessMutationRequests.push({viewport:vp.w,method:m,url:req.url()})});
                 let gotoError='';
-                try{await page.goto(`${BASE}/guide-center.html?qa=${Date.now()}`,{waitUntil:'networkidle2',timeout:60000})}catch(e){gotoError=String(e.message||e)}
+                try{await page.goto(`${BASE}/guide-center.html?guide=1&qa=${Date.now()}`,{waitUntil:'networkidle2',timeout:60000})}catch(e){gotoError=String(e.message||e)}
                 await sleep(300);
                 const metrics=await page.evaluate(async()=>{
                   const map=window.DPRO_NAIL_TUTORIAL_MAP||[];
@@ -202,12 +204,15 @@ jobs:
                   const routeLinks=[...document.querySelectorAll('a[data-route]')].map(a=>({step:Number(a.dataset.step),route:a.dataset.route,href:a.href,title:a.closest('article')?.querySelector('h3')?.textContent||''}));
                   const routeChecks=[];
                   for(const x of routeLinks){try{const r=await fetch(x.href,{method:'GET',cache:'no-store'});routeChecks.push({step:x.step,status:r.status,ok:r.ok,url:r.url})}catch(e){routeChecks.push({step:x.step,status:0,ok:false,error:String(e)})}}
-                  const first=document.querySelector('a[data-route]');
-                  first?.focus();
-                  const cs=first?getComputedStyle(first):null;
-                  return {scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth,mapCount:map.length,cardCount:cards.length,steps:cards.map(x=>Number(x.dataset.guideStep)),titles:cards.map(x=>x.querySelector('h3')?.textContent||''),mapTitles:map.map(x=>x.title),routes:routeLinks.map(x=>x.route),mapRoutes:map.map(x=>x.route),routeChecks,focusTag:document.activeElement?.tagName||'',focusStep:document.activeElement?.dataset?.step||'',focusOutline:cs?`${cs.outlineStyle}/${cs.outlineWidth}`:''};
+                  return {scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth,mapCount:map.length,cardCount:cards.length,steps:cards.map(x=>Number(x.dataset.guideStep)),titles:cards.map(x=>x.querySelector('h3')?.textContent||''),mapTitles:map.map(x=>x.title),routes:routeLinks.map(x=>x.route),mapRoutes:map.map(x=>x.route),routeChecks};
                 });
-                const row={viewport:`${vp.w}x${vp.h}`,gotoError,consoleMessages,pageErrors,...metrics,overflow:metrics.scrollWidth>metrics.clientWidth};
+                let focus={tag:'',step:'',outline:''};
+                for(let i=0;i<20;i++){
+                  await page.keyboard.press('Tab');
+                  focus=await page.evaluate(()=>{const a=document.activeElement;const cs=a?getComputedStyle(a):null;return {tag:a?.tagName||'',step:a?.dataset?.step||'',outline:cs?`${cs.outlineStyle}/${cs.outlineWidth}`:''}});
+                  if(focus.step)break;
+                }
+                const row={viewport:`${vp.w}x${vp.h}`,gotoError,consoleMessages,pageErrors,...metrics,focusTag:focus.tag,focusStep:focus.step,focusOutline:focus.outline,overflow:metrics.scrollWidth>metrics.clientWidth};
                 result.viewports.push(row);
                 if(gotoError)fail(`${vp.w}: goto failed ${gotoError}`);
                 if(metrics.mapCount!==10||metrics.cardCount!==10)fail(`${vp.w}: exactly10 failed map=${metrics.mapCount} cards=${metrics.cardCount}`);
@@ -215,8 +220,8 @@ jobs:
                 if(JSON.stringify(metrics.titles)!==JSON.stringify(metrics.mapTitles))fail(`${vp.w}: title single-source mismatch`);
                 if(JSON.stringify(metrics.routes)!==JSON.stringify(metrics.mapRoutes))fail(`${vp.w}: route single-source mismatch`);
                 if(metrics.routeChecks.some(x=>!x.ok))fail(`${vp.w}: route link failed ${JSON.stringify(metrics.routeChecks.filter(x=>!x.ok))}`);
-                if(metrics.focusTag!=='A'||!metrics.focusStep)fail(`${vp.w}: keyboard focus target failed ${metrics.focusTag}/${metrics.focusStep}`);
-                if(metrics.focusOutline.startsWith('none/')||metrics.focusOutline.endsWith('/0px'))fail(`${vp.w}: focus-visible outline missing ${metrics.focusOutline}`);
+                if(row.focusTag!=='A'||!row.focusStep)fail(`${vp.w}: keyboard focus target failed ${row.focusTag}/${row.focusStep}`);
+                if(row.focusOutline.startsWith('none/')||row.focusOutline.endsWith('/0px'))fail(`${vp.w}: focus-visible outline missing ${row.focusOutline}`);
                 if((vp.w===390||vp.w===320)&&row.overflow)fail(`${vp.w}: horizontal overflow ${metrics.scrollWidth}>${metrics.clientWidth}`);
                 const guideErrors=consoleMessages.filter(x=>/DPRO Guide Center/i.test(x.text));if(guideErrors.length)fail(`${vp.w}: Guide Center console ${JSON.stringify(guideErrors)}`);
                 if(pageErrors.length)fail(`${vp.w}: page errors ${JSON.stringify(pageErrors)}`);
