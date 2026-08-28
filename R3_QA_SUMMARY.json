@@ -1,0 +1,18 @@
+{
+  "system": "NAIL",
+  "stage": "R3",
+  "standard": "V1.1",
+  "first10_count": 10,
+  "pre_live_pass": true,
+  "post_live_pass": true,
+  "business_mutation": 0,
+  "r3_qa_pass": true,
+  "tested_viewports": [
+    "1440x900",
+    "1024x768",
+    "390x844",
+    "320x740"
+  ],
+  "source_sha": null,
+  "generated_at": "2026-08-28T00:49:15.310312+00:00"
+}
