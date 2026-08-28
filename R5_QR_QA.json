@@ -1,0 +1,57 @@
+{
+  "pass": true,
+  "required": [
+    "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=1",
+    "https://dpromstk2000-lab.github.io/liff-nail-reserve/guide-center.html"
+  ],
+  "found": [
+    "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=1",
+    "https://dpromstk2000-lab.github.io/liff-nail-reserve/guide-center.html"
+  ],
+  "pages": [
+    {
+      "page": "/tmp/nail-r5/renders/detail/page-1.png",
+      "values": [
+        "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=1",
+        "https://dpromstk2000-lab.github.io/liff-nail-reserve/guide-center.html"
+      ],
+      "regions_scanned": 14
+    },
+    {
+      "page": "/tmp/nail-r5/renders/detail/page-2.png",
+      "values": [],
+      "regions_scanned": 14
+    },
+    {
+      "page": "/tmp/nail-r5/renders/detail/page-3.png",
+      "values": [],
+      "regions_scanned": 14
+    },
+    {
+      "page": "/tmp/nail-r5/renders/detail/page-4.png",
+      "values": [],
+      "regions_scanned": 14
+    },
+    {
+      "page": "/tmp/nail-r5/renders/detail/page-5.png",
+      "values": [],
+      "regions_scanned": 14
+    },
+    {
+      "page": "/tmp/nail-r5/renders/detail/page-6.png",
+      "values": [
+        "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=1"
+      ],
+      "regions_scanned": 14
+    },
+    {
+      "page": "/tmp/nail-r5/renders/quick/page-1.png",
+      "values": [
+        "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?tutorial=nail&step=1",
+        "https://dpromstk2000-lab.github.io/liff-nail-reserve/guide-center.html"
+      ],
+      "regions_scanned": 14
+    }
+  ],
+  "render_dpi": 300
+}

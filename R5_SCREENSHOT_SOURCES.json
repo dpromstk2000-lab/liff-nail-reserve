@@ -1,0 +1,160 @@
+{
+  "base": "https://dpromstk2000-lab.github.io/liff-nail-reserve",
+  "time": "2026-08-28T02:14:11.369Z",
+  "captures": [
+    {
+      "name": "guide-center",
+      "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/guide-center.html",
+      "status": 200,
+      "path": "/tmp/nail-r5/screens/guide-center.png",
+      "errors": [],
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "title": "DPRO ネイルサロン LINE｜Guide Center"
+    },
+    {
+      "name": "step01",
+      "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/demo-guide.html?demo=1&tutorial=nail&step=1",
+      "status": 200,
+      "path": "/tmp/nail-r5/screens/step01.png",
+      "errors": [],
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "title": "DPRO ネイルサロン LINE｜公開操作デモ・画面一覧"
+    },
+    {
+      "name": "step03",
+      "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?demo=1&tutorial=nail&step=3",
+      "status": 200,
+      "path": "/tmp/nail-r5/screens/step03.png",
+      "errors": [],
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "title": "DPRO ネイルサロン LINE｜公開操作デモ・LINE予約"
+    },
+    {
+      "name": "step05",
+      "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?demo=1&tutorial=nail&step=5",
+      "status": 200,
+      "path": "/tmp/nail-r5/screens/step05.png",
+      "errors": [],
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "title": "DPRO ネイルサロン LINE｜公開操作デモ・LINE予約"
+    },
+    {
+      "name": "step07",
+      "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/index.html?demo=1&tutorial=nail&step=7",
+      "status": 200,
+      "path": "/tmp/nail-r5/screens/step07.png",
+      "errors": [],
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "title": "DPRO ネイルサロン LINE｜公開操作デモ・LINE予約"
+    },
+    {
+      "name": "step08",
+      "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/member.html?demo=1&tutorial=nail&step=8",
+      "status": 200,
+      "path": "/tmp/nail-r5/screens/step08.png",
+      "errors": [],
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "title": "DPRO ネイルサロン LINE｜公開操作デモ・会員ページ"
+    },
+    {
+      "name": "step09",
+      "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/owner-ipad.html?demo=1&tutorial=nail&step=9",
+      "status": 200,
+      "path": "/tmp/nail-r5/screens/step09.png",
+      "errors": [],
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "title": "DPRO ネイルサロン LINE｜公開操作デモ・店頭iPad"
+    },
+    {
+      "name": "step10",
+      "url": "https://dpromstk2000-lab.github.io/liff-nail-reserve/owner.html?demo=1&tutorial=nail&step=10",
+      "status": 200,
+      "path": "/tmp/nail-r5/screens/step10.png",
+      "errors": [],
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "title": "DPRO ネイルサロン LINE｜公開操作デモ・オーナー管理"
+    }
+  ],
+  "map": [
+    {
+      "n": 1,
+      "route": "demo-guide.html",
+      "target": "section.hero",
+      "title": "ネイルサロン業務を4画面で確認",
+      "body": "予約、会員ページ、店頭iPad、オーナー管理を順番に見る公開デモです。"
+    },
+    {
+      "n": 2,
+      "route": "demo-guide.html",
+      "target": ".notice",
+      "title": "デモでは架空情報だけを使用",
+      "body": "実在する氏名・電話番号・アレルギー情報・爪の状態・施術写真は使いません。店舗側デモ管理コードは1234です。"
+    },
+    {
+      "n": 3,
+      "route": "index.html",
+      "target": "#stepMethod",
+      "title": "予約内容の選び方",
+      "body": "写真付きデザイン、メニュー、前回と同じ内容から予約の入口を選びます。"
+    },
+    {
+      "n": 4,
+      "route": "index.html",
+      "target": "#stepDetail",
+      "title": "オフ・長さ出し・補強",
+      "body": "追加内容が施術時間と空き枠へ影響する場所です。Tutorialでは値を保存しません。"
+    },
+    {
+      "n": 5,
+      "route": "index.html",
+      "target": "#stepStaff",
+      "title": "担当ネイリスト",
+      "body": "指名あり・指名なしを選ぶ場所です。Tutorialでは担当確定や予約送信を行いません。"
+    },
+    {
+      "n": 6,
+      "route": "index.html",
+      "target": "#stepDate",
+      "title": "日付と30分単位の時間枠",
+      "body": "営業日を選び、その後の時間画面で空き枠を確認します。ここでは日時確定や予約送信はしません。"
+    },
+    {
+      "n": 7,
+      "route": "index.html",
+      "target": "#stepInfo",
+      "title": "お客様情報と最終確認",
+      "body": "名前・電話番号・相談内容を入力し、次の確認画面から予約送信します。First10では送信ボタンを押さず、機能説明だけで次へ進みます。"
+    },
+    {
+      "n": 8,
+      "route": "member.html",
+      "target": "#reservations",
+      "title": "会員ページで予約と履歴を確認",
+      "body": "予約確認・変更・キャンセル、施術履歴、次回来店目安、前回と同じ再予約の入口を確認します。Tutorialでは変更・キャンセル・再予約を実行しません。"
+    },
+    {
+      "n": 9,
+      "route": "owner-ipad.html",
+      "target": "#view-today",
+      "title": "店頭iPadで来店からカルテまで",
+      "body": "本日の予約、来店、施術開始、施術カルテ、写真、会計、次回予約が同じ画面につながっています。管理コード1234は既存デモログインにのみ使います。"
+    },
+    {
+      "n": 10,
+      "route": "owner.html",
+      "target": "#view-dashboard",
+      "title": "オーナー管理で全体を確認",
+      "body": "ダッシュボードから本日の施術、顧客・カルテ、再来店フォロー、デザイン、電話・店頭予約、店舗設定へ移動できます。これでFirst10は完了です。"
+    }
+  ],
+  "pass": true,
+  "failures": []
+}

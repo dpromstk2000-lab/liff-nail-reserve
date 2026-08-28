@@ -1,0 +1,112 @@
+{
+  "system": "NAIL",
+  "stage": "R5",
+  "standard": "V1.1",
+  "automated_preflight_pass": true,
+  "manual_visual_qa": "PENDING_ASSISTANT_RENDER_INSPECTION",
+  "first10_count": 10,
+  "current_live_screenshots": true,
+  "qr_decode_qa": true,
+  "business_mutation": 0,
+  "files": [
+    "DPRO_TUTORIAL_NAIL_QUICK_START_V1.0.pdf",
+    "DPRO_TUTORIAL_NAIL_QUICK_START_V1.0.png",
+    "DPRO_TUTORIAL_NAIL_DETAILED_MANUAL_V1.0.pdf",
+    "DPRO_TUTORIAL_NAIL_DETAILED_MANUAL_V1.0.png",
+    "DPRO_TUTORIAL_NAIL_DETAILED_MANUAL_V1.0_PAGE_01.png",
+    "DPRO_TUTORIAL_NAIL_DETAILED_MANUAL_V1.0_PAGE_02.png",
+    "DPRO_TUTORIAL_NAIL_DETAILED_MANUAL_V1.0_PAGE_03.png",
+    "DPRO_TUTORIAL_NAIL_DETAILED_MANUAL_V1.0_PAGE_04.png",
+    "DPRO_TUTORIAL_NAIL_DETAILED_MANUAL_V1.0_PAGE_05.png",
+    "DPRO_TUTORIAL_NAIL_DETAILED_MANUAL_V1.0_PAGE_06.png"
+  ],
+  "rendered_pages": [
+    {
+      "path": "/tmp/nail-r5/renders/detail/page-1.png",
+      "size": [
+        2479,
+        3508
+      ],
+      "mean": [
+        221.38,
+        210.23,
+        204.74
+      ]
+    },
+    {
+      "path": "/tmp/nail-r5/renders/detail/page-4.png",
+      "size": [
+        2479,
+        3508
+      ],
+      "mean": [
+        244.02,
+        238.14,
+        235.09
+      ]
+    },
+    {
+      "path": "/tmp/nail-r5/renders/detail/page-5.png",
+      "size": [
+        2479,
+        3508
+      ],
+      "mean": [
+        243.46,
+        236.85,
+        233.48
+      ]
+    },
+    {
+      "path": "/tmp/nail-r5/renders/detail/page-2.png",
+      "size": [
+        2479,
+        3508
+      ],
+      "mean": [
+        241.25,
+        234.64,
+        231.3
+      ]
+    },
+    {
+      "path": "/tmp/nail-r5/renders/detail/page-6.png",
+      "size": [
+        2479,
+        3508
+      ],
+      "mean": [
+        243.77,
+        237.49,
+        234.24
+      ]
+    },
+    {
+      "path": "/tmp/nail-r5/renders/detail/page-3.png",
+      "size": [
+        2479,
+        3508
+      ],
+      "mean": [
+        247.01,
+        241.26,
+        238.26
+      ]
+    },
+    {
+      "path": "/tmp/nail-r5/renders/quick/page-1.png",
+      "size": [
+        2479,
+        3508
+      ],
+      "mean": [
+        216.99,
+        206.13,
+        201.46
+      ]
+    }
+  ],
+  "failures": [],
+  "start_head": "dadfafff81dfd57e35a3f2f9abe15cf146435ec9",
+  "start_tree": "c94dbe4c986ac8f90ea8913c822014cb4f88f3b1"
+}
