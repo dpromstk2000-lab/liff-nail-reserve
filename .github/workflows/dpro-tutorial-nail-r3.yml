@@ -1,0 +1,244 @@
+name: NAIL Tutorial R3 First10 Apply and LIVE QA
+
+on:
+  push:
+    branches:
+      - dpro-tutorial-nail-r3
+    paths:
+      - dpro-tutorial-nail.js
+      - dpro-tutorial-nail.css
+      - .github/workflows/dpro-tutorial-nail-r3.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dpro-tutorial-nail-r3
+  cancel-in-progress: false
+
+env:
+  ACCEPTED_HEAD: 72fe716c93ccb7180ac348b4b881ef43eecef135
+  BASE_URL: https://dpromstk2000-lab.github.io/liff-nail-reserve
+
+jobs:
+  apply-and-live-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install browser QA dependency
+        run: npm install --no-save puppeteer-core@24
+
+      - name: Resolve Chrome
+        id: chrome
+        shell: bash
+        run: |
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          test -n "$CHROME"
+          echo "path=$CHROME" >> "$GITHUB_OUTPUT"
+          "$CHROME" --version
+
+      - name: Create LIVE QA runner
+        shell: bash
+        run: |
+          cat > /tmp/nail-live-qa.cjs <<'NODE'
+          const fs=require('fs');
+          const puppeteer=require('puppeteer-core');
+          const mode=process.argv[2];
+          const out=process.argv[3];
+          const chrome=process.env.CHROME_PATH;
+          const BASE=process.env.BASE_URL;
+          const routes=['demo-guide.html','index.html','member.html','owner-ipad.html','owner.html'];
+          const viewports=[{w:1440,h:900},{w:1024,h:768},{w:390,h:844},{w:320,h:740}];
+          const result={mode,base:BASE,time:new Date().toISOString(),viewports:[],interaction:null,pass:true,failures:[]};
+          const fail=m=>{result.pass=false;result.failures.push(m);};
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:chrome,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+            try{
+              for(const vp of viewports){
+                for(const route of routes){
+                  const page=await browser.newPage();
+                  await page.setViewport({width:vp.w,height:vp.h,isMobile:vp.w<=390,hasTouch:vp.w<=390,deviceScaleFactor:1});
+                  const consoleMessages=[]; const pageErrors=[];
+                  page.on('console',msg=>{if(['error','warn'].includes(msg.type()))consoleMessages.push({type:msg.type(),text:msg.text()});});
+                  page.on('pageerror',err=>pageErrors.push(String(err&&err.message||err)));
+                  let gotoError='';
+                  try{await page.goto(`${BASE}/${route}?qa=${Date.now()}`,{waitUntil:'networkidle2',timeout:60000});}catch(e){gotoError=String(e.message||e);}
+                  await sleep(450);
+                  const metrics=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth,bodyScrollWidth:document.body?.scrollWidth||0,title:document.title}));
+                  const row={viewport:`${vp.w}x${vp.h}`,route,...metrics,overflow:metrics.scrollWidth>metrics.clientWidth,gotoError,consoleMessages,pageErrors};
+                  result.viewports.push(row);
+                  if((vp.w===390||vp.w===320)&&row.overflow)fail(`${mode}: horizontal overflow ${vp.w}px ${route}: ${metrics.scrollWidth}>${metrics.clientWidth}`);
+                  if(gotoError)fail(`${mode}: goto failed ${route} ${vp.w}: ${gotoError}`);
+                  await page.close();
+                }
+              }
+
+              if(mode==='post'){
+                const page=await browser.newPage();
+                await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true,deviceScaleFactor:1});
+                const mutationRequests=[]; const tutorialConsole=[]; const pageErrors=[];
+                page.on('request',req=>{const m=req.method().toUpperCase();if(req.url().includes('dpro-nail-line-api.dpromstk2000.workers.dev')&&!['GET','HEAD','OPTIONS'].includes(m))mutationRequests.push({method:m,url:req.url()});});
+                page.on('console',msg=>{if(['error','warn'].includes(msg.type())&&msg.text().includes('[DPRO Tutorial]'))tutorialConsole.push({type:msg.type(),text:msg.text()});});
+                page.on('pageerror',err=>pageErrors.push(String(err&&err.message||err)));
+                const waitStep=async n=>{await page.waitForFunction(n=>window.DPRO_NAIL_TUTORIAL&&window.DPRO_NAIL_TUTORIAL.state().currentStep===n&&!document.querySelector('#dproTutorialNailCard').hidden,{timeout:30000},n);await sleep(120);const focus=await page.evaluate(()=>document.activeElement?.id||'');if(focus!=='dproTutorialNailTitle')fail(`focus not recovered at step ${n}: ${focus}`);};
+                const keyboardNext=async()=>{await page.evaluate(()=>document.querySelector('#dproTutorialNailNext').focus());await page.keyboard.press('Enter');await sleep(550);};
+                await page.goto(`${BASE}/demo-guide.html?tutorial=nail&step=1&qa=${Date.now()}`,{waitUntil:'networkidle2',timeout:60000});
+                await waitStep(1);
+                const mapCount=await page.evaluate(()=>window.DPRO_NAIL_TUTORIAL_MAP?.length||0);if(mapCount!==10)fail(`First10 count ${mapCount}, expected 10`);
+
+                const mouseBefore=await page.$eval('#dproTutorialNailCard',e=>{const r=e.getBoundingClientRect();return {x:r.left,y:r.top,w:r.width,h:r.height}});
+                const handle=await page.$('#dproTutorialNailHandle');const hb=await handle.boundingBox();
+                await page.mouse.move(hb.x+20,hb.y+15);await page.mouse.down();await page.mouse.move(2,2,{steps:4});await page.mouse.up();await sleep(100);
+                let rect=await page.$eval('#dproTutorialNailCard',e=>{const r=e.getBoundingClientRect();return {l:r.left,t:r.top,r:r.right,b:r.bottom}});
+                if(rect.l<0||rect.t<0||rect.r>390.5||rect.b>844.5)fail(`mouse drag clamp failed ${JSON.stringify(rect)}`);
+
+                const client=await page.target().createCDPSession();
+                const hb2=await handle.boundingBox();
+                await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:hb2.x+25,y:hb2.y+15,radiusX:2,radiusY:2,force:1,id:1}]});
+                await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:385,y:835,radiusX:2,radiusY:2,force:1,id:1}]});
+                await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await sleep(120);
+                rect=await page.$eval('#dproTutorialNailCard',e=>{const r=e.getBoundingClientRect();return {l:r.left,t:r.top,r:r.right,b:r.bottom}});
+                if(rect.l<0||rect.t<0||rect.r>390.5||rect.b>844.5)fail(`touch drag clamp failed ${JSON.stringify(rect)}`);
+
+                await page.keyboard.press('Escape');await sleep(120);
+                let hidden=await page.$eval('#dproTutorialNailCard',e=>e.hidden);if(!hidden)fail('Esc did not close Tutorial');
+                await page.$eval('#dproTutorialNailLauncher',e=>e.click());await waitStep(1);
+                await page.$eval('#dproTutorialNailSkip',e=>e.click());await sleep(100);
+                const launcherText=await page.$eval('#dproTutorialNailLauncher',e=>e.textContent);if(!launcherText.includes('再開'))fail(`Skip not replayable/resumable: ${launcherText}`);
+                await page.$eval('#dproTutorialNailLauncher',e=>e.click());await waitStep(1);
+
+                await keyboardNext();await waitStep(2);
+                await keyboardNext();await waitStep(3);
+                await keyboardNext();await waitStep(4);
+                await keyboardNext();await waitStep(5);
+                await keyboardNext();await waitStep(6);
+                await keyboardNext();await waitStep(7);
+
+                const productCardBefore=await page.$eval('#dproTutorialNailCard',e=>{const r=e.getBoundingClientRect();return {x:r.left,y:r.top}});
+                const input=await page.$('#customerName');if(input){const ib=await input.boundingBox();if(ib){await page.mouse.move(ib.x+10,ib.y+10);await page.mouse.down();await page.mouse.move(ib.x+70,ib.y+30,{steps:3});await page.mouse.up();}}
+                const productCardAfter=await page.$eval('#dproTutorialNailCard',e=>{const r=e.getBoundingClientRect();return {x:r.left,y:r.top}});
+                if(Math.abs(productCardBefore.x-productCardAfter.x)>1||Math.abs(productCardBefore.y-productCardAfter.y)>1)fail('product input initiated Tutorial drag');
+
+                await keyboardNext();await waitStep(8);
+                await keyboardNext();await waitStep(9);
+                const ipadLoginBypassed=await page.evaluate(()=>document.querySelector('#loginScreen')?.classList.contains('dpro-tutorial-transient-login')||document.querySelector('#loginScreen')?.classList.contains('hidden'));
+                if(!ipadLoginBypassed)fail('Step 9 demo presentation entrance not available');
+                await keyboardNext();await waitStep(10);
+                const ownerUnlockBypassed=await page.evaluate(()=>document.querySelector('#unlock')?.classList.contains('dpro-tutorial-transient-login')||document.querySelector('#unlock')?.classList.contains('hidden'));
+                if(!ownerUnlockBypassed)fail('Step 10 demo presentation entrance not available');
+                await keyboardNext();await page.waitForFunction(()=>window.DPRO_NAIL_TUTORIAL?.state().completed===true,{timeout:10000});
+                const completed=await page.evaluate(()=>window.DPRO_NAIL_TUTORIAL.state());
+                if(!completed.completed||completed.currentStep!==10)fail(`completion state invalid ${JSON.stringify(completed)}`);
+                if(mutationRequests.length)fail(`business mutation requests observed: ${JSON.stringify(mutationRequests)}`);
+                if(tutorialConsole.length)fail(`Tutorial console warnings/errors: ${JSON.stringify(tutorialConsole)}`);
+                const tutPageErrors=pageErrors.filter(x=>/tutorial|dproTutorial/i.test(x));if(tutPageErrors.length)fail(`Tutorial page errors: ${JSON.stringify(tutPageErrors)}`);
+                result.interaction={mapCount,mouseBefore,finalCardRect:rect,mutationRequests,tutorialConsole,pageErrors,completed};
+                await page.close();
+              }
+            } finally {await browser.close();}
+            fs.writeFileSync(out,JSON.stringify(result,null,2));
+            console.log(JSON.stringify({mode:result.mode,pass:result.pass,failures:result.failures},null,2));
+            if(!result.pass)process.exit(2);
+          })().catch(e=>{result.pass=false;result.failures.push(String(e.stack||e));fs.writeFileSync(out,JSON.stringify(result,null,2));console.error(e);process.exit(2);});
+          NODE
+
+      - name: PRE-WRITE LIVE baseline 1440 1024 390 320
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.path }}
+        run: node /tmp/nail-live-qa.cjs pre /tmp/R3_PRE_LIVE_QA.json
+
+      - name: Re-fetch newest main and verify forward-only
+        shell: bash
+        run: |
+          git fetch origin main
+          MAIN_SHA="$(git rev-parse origin/main)"
+          echo "Newest main before product write: $MAIN_SHA"
+          git merge-base --is-ancestor "$ACCEPTED_HEAD" origin/main
+          if [ "$MAIN_SHA" != "$ACCEPTED_HEAD" ]; then
+            git rebase origin/main
+          fi
+
+      - name: Inject minimal Tutorial hooks
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          files=['demo-guide.html','index.html','member.html','owner-ipad.html','owner.html']
+          css='<link rel="stylesheet" href="dpro-tutorial-nail.css?v=TUTORIAL-NAIL-R3-V1.1">'
+          js='<script src="dpro-tutorial-nail.js?v=TUTORIAL-NAIL-R3-V1.1" defer></script>'
+          for name in files:
+              p=Path(name); s=p.read_text(encoding='utf-8')
+              if 'dpro-tutorial-nail.css' not in s:
+                  if '</head>' not in s: raise SystemExit(f'{name}: no </head>')
+                  s=s.replace('</head>',f'  {css}\n</head>',1)
+              if 'dpro-tutorial-nail.js' not in s:
+                  if '</body>' not in s: raise SystemExit(f'{name}: no </body>')
+                  s=s.replace('</body>',f'  {js}\n</body>',1)
+              p.write_text(s,encoding='utf-8')
+          PY
+          for f in demo-guide.html index.html member.html owner-ipad.html owner.html; do
+            grep -q 'dpro-tutorial-nail.css' "$f"
+            grep -q 'dpro-tutorial-nail.js' "$f"
+          done
+
+      - name: Commit R3 and fast-forward main
+        id: r3commit
+        shell: bash
+        run: |
+          git config user.name "DPRO Tutorial R3"
+          git config user.email "actions@users.noreply.github.com"
+          git add dpro-tutorial-nail.js dpro-tutorial-nail.css demo-guide.html index.html member.html owner-ipad.html owner.html .github/workflows/dpro-tutorial-nail-r3.yml
+          git commit -m "NAIL Tutorial R3 First10 STANDARD V1.1"
+          git fetch origin main
+          git merge-base --is-ancestor "$ACCEPTED_HEAD" origin/main
+          git rebase origin/main
+          R3_SHA="$(git rev-parse HEAD)"
+          git push origin HEAD:main
+          echo "sha=$R3_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for GitHub Pages R3 deployment
+        shell: bash
+        run: |
+          SHA="${{ steps.r3commit.outputs.sha }}"
+          ok=0
+          for i in $(seq 1 80); do
+            body="$(curl -fsSL --retry 2 "$BASE_URL/demo-guide.html?qa=$SHA-$i" || true)"
+            if printf '%s' "$body" | grep -q 'dpro-tutorial-nail.js'; then ok=1; break; fi
+            sleep 5
+          done
+          test "$ok" = "1"
+
+      - name: POST-WRITE LIVE QA STANDARD V1.1
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.path }}
+        run: node /tmp/nail-live-qa.cjs post /tmp/R3_POST_LIVE_QA.json
+
+      - name: Write R3 QA evidence to main
+        shell: bash
+        run: |
+          cp /tmp/R3_PRE_LIVE_QA.json R3_PRE_LIVE_QA.json
+          cp /tmp/R3_POST_LIVE_QA.json R3_POST_LIVE_QA.json
+          python - <<'PY'
+          import json, hashlib, datetime
+          pre=json.load(open('R3_PRE_LIVE_QA.json'))
+          post=json.load(open('R3_POST_LIVE_QA.json'))
+          summary={
+            'system':'NAIL','stage':'R3','standard':'V1.1','first10_count':10,
+            'pre_live_pass':pre['pass'],'post_live_pass':post['pass'],
+            'business_mutation':0,'r3_qa_pass':bool(pre['pass'] and post['pass']),
+            'tested_viewports':['1440x900','1024x768','390x844','320x740'],
+            'source_sha':open('.git/refs/heads/main').read().strip() if False else None,
+            'generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat()
+          }
+          json.dump(summary,open('R3_QA_SUMMARY.json','w'),ensure_ascii=False,indent=2)
+          PY
+          git add R3_PRE_LIVE_QA.json R3_POST_LIVE_QA.json R3_QA_SUMMARY.json
+          git commit -m "NAIL Tutorial R3 LIVE QA PASS evidence"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
