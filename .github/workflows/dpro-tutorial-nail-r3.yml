@@ -1,9 +1,10 @@
 name: NAIL Tutorial R3 First10 Apply and LIVE QA
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - dpro-tutorial-nail-r3
+      - main
     paths:
       - dpro-tutorial-nail.js
       - dpro-tutorial-nail.css
