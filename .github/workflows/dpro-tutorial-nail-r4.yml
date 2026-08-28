@@ -1,0 +1,282 @@
+name: NAIL Tutorial R4 Guide Center Apply and LIVE QA
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/dpro-tutorial-nail-r4.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dpro-tutorial-nail-r4
+  cancel-in-progress: false
+
+env:
+  BASE_URL: https://dpromstk2000-lab.github.io/liff-nail-reserve
+
+jobs:
+  apply-and-live-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: R3 PASS gate and newest-main gate
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          q=json.load(open('R3_QA_SUMMARY.json',encoding='utf-8'))
+          assert q.get('r3_qa_pass') is True, q
+          assert q.get('first10_count') == 10, q
+          assert q.get('business_mutation') == 0, q
+          print('R3 gate PASS')
+          PY
+          git fetch origin main
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
+          git hash-object nail-pr1-security.js > /tmp/R4_SECURITY_BEFORE.txt
+          git rev-parse HEAD > /tmp/R4_START_HEAD.txt
+          git rev-parse HEAD^{tree} > /tmp/R4_START_TREE.txt
+
+      - name: Build Guide Center from First10 single source
+        shell: bash
+        run: |
+          cat > guide-center.html <<'HTML'
+          <!doctype html>
+          <!-- DPRO NAIL GUIDE CENTER R4 V1.0 / First10 single-source renderer -->
+          <html lang="ja">
+          <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+          <meta name="theme-color" content="#68473e">
+          <meta name="robots" content="noindex,nofollow,noarchive">
+          <title>DPRO ネイルサロン LINE｜Guide Center</title>
+          <style>
+          :root{--bg:#f6efeb;--card:#fff;--ink:#302926;--muted:#776d68;--line:#e5d8d0;--brand:#8c6558;--deep:#68473e;--brand2:#c99b87;--soft:#fff8f4;--ok:#47745f;--shadow:0 16px 46px rgba(67,45,36,.10);--focus:#2f6fed}
+          *{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif;background:radial-gradient(circle at 8% 0,rgba(201,155,135,.22),transparent 30%),linear-gradient(180deg,#fffaf7 0%,var(--bg) 52%,#f2e7e1 100%);line-height:1.65}
+          a{color:inherit}.page{width:min(1140px,calc(100% - 24px));margin:0 auto;padding:20px 0 52px}.hero{padding:32px;border-radius:28px;color:#fff;background:linear-gradient(135deg,#3f2a24,#68473e 63%,#9b6f61);box-shadow:0 23px 58px rgba(67,45,36,.23)}.kicker{font-size:11px;font-weight:1000;letter-spacing:.14em;opacity:.9}.hero h1{margin:9px 0 0;font-size:clamp(27px,5vw,48px);line-height:1.22}.hero p{max-width:860px;margin:13px 0 0;font-size:14px;opacity:.94}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.button{min-height:45px;display:inline-flex;align-items:center;justify-content:center;padding:9px 15px;border-radius:999px;text-decoration:none;font-size:12px;font-weight:950}.primary{background:#fff;color:var(--deep)}.ghost{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.09);color:#fff}
+          .notice{margin-top:15px;padding:15px 17px;border:1px solid #e5cda3;border-radius:15px;background:#fff5e5;color:#725013;font-size:12px;font-weight:760}.summary{margin:18px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.summary>div{padding:14px;border:1px solid var(--line);border-radius:15px;background:#fff;box-shadow:var(--shadow)}.summary small{display:block;color:var(--brand);font-size:9px;font-weight:1000;letter-spacing:.08em}.summary strong{display:block;margin-top:4px;font-size:14px}
+          .section-head{margin:32px 0 15px}.section-head small{color:var(--brand);font-size:10px;font-weight:1000;letter-spacing:.12em}.section-head h2{margin:5px 0 0;font-size:clamp(23px,4vw,34px)}.section-head p{max-width:850px;margin:7px 0 0;color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.card{min-width:0;padding:20px;border:1px solid var(--line);border-radius:20px;background:#fff;box-shadow:var(--shadow)}.step{color:var(--brand);font-size:10px;font-weight:1000;letter-spacing:.1em}.card h3{margin:6px 0 0;font-size:20px;line-height:1.4}.card p{margin:8px 0 0;color:var(--muted);font-size:12px}.meta{margin-top:12px;padding:10px 11px;border-radius:12px;background:#fbf5f1;color:#675a54;font-size:10px;word-break:break-all}.meta b{color:var(--deep)}.open{margin-top:13px;min-height:44px;display:flex;align-items:center;justify-content:center;padding:9px 13px;border-radius:12px;text-decoration:none;font-size:11px;font-weight:950;color:#fff;background:linear-gradient(135deg,var(--deep),var(--brand2))}.footer{margin-top:28px;color:#82736c;font-size:10px;text-align:center}
+          a:focus-visible{outline:3px solid var(--focus);outline-offset:3px}.error{padding:20px;border:2px solid #a53b3b;border-radius:16px;background:#fff;color:#7a2020;font-weight:900}
+          @media(max-width:760px){.hero{padding:25px 20px}.summary,.grid{grid-template-columns:1fr}}@media(max-width:420px){.page{width:min(100% - 16px,1140px)}.actions{display:grid}.button{width:100%}}
+          </style>
+          <script src="dpro-tutorial-nail.js?guide=1&R4=V1.0"></script>
+          </head>
+          <body>
+          <main class="page">
+            <section class="hero" aria-labelledby="guideTitle">
+              <div class="kicker">DPRO TUTORIAL / GUIDE CENTER / R4</div>
+              <h1 id="guideTitle">ネイルサロン First10<br>Guide Center</h1>
+              <p>R3で実装したFirst10と同じ10ステップ・同じ順番・同じ説明を、いつでも一覧から確認できます。各カードから、そのステップ位置でTutorialを再開できます。</p>
+              <div class="actions">
+                <a class="button primary" href="demo-guide.html?tutorial=nail&step=1">First10を最初から開始</a>
+                <a class="button ghost" href="demo-guide.html">公開操作デモ一覧へ戻る</a>
+              </div>
+            </section>
+            <div class="notice">Guide Centerは説明・画面移動専用です。予約送信、変更・キャンセル、カルテ保存、写真アップロード、会計、設定変更などの業務データ更新は行いません。</div>
+            <section class="summary" aria-label="Guide Center基準">
+              <div><small>STANDARD</small><strong>V1.1 / exactly 10</strong></div>
+              <div><small>SAFETY</small><strong>business mutation 0</strong></div>
+              <div><small>SINGLE SOURCE</small><strong>dpro-tutorial-nail.js</strong></div>
+            </section>
+            <div class="section-head"><small>FIRST10 MAP</small><h2>10ステップ一覧</h2><p>内容はR3 Tutorialの <code>DPRO_NAIL_TUTORIAL_MAP</code> から読み込みます。Guide Center側に別のステップ定義を持ちません。</p></div>
+            <section id="first10Grid" class="grid" aria-live="polite"></section>
+            <div class="footer">DPRO NAIL Tutorial Guide Center R4 / STANDARD V1.1 / business mutation 0</div>
+          </main>
+          <script>
+          (()=>{
+            'use strict';
+            const grid=document.getElementById('first10Grid');
+            const map=window.DPRO_NAIL_TUTORIAL_MAP;
+            if(!Array.isArray(map)||map.length!==10){grid.innerHTML='<div class="error">First10 single sourceを読み込めませんでした。</div>';console.error('[DPRO Guide Center] First10 map unavailable');return;}
+            const esc=s=>String(s).replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+            grid.innerHTML=map.map(item=>{
+              const u=new URL(item.route,location.href);u.searchParams.set('tutorial','nail');u.searchParams.set('step',String(item.n));
+              return `<article class="card" data-guide-step="${item.n}"><div class="step">STEP ${String(item.n).padStart(2,'0')} / 10</div><h3>${esc(item.title)}</h3><p>${esc(item.body)}</p><div class="meta"><b>ROUTE</b> ${esc(item.route)}<br><b>TARGET</b> ${esc(item.target)}</div><a class="open" data-route="${esc(item.route)}" data-step="${item.n}" href="${esc(u.toString())}">このステップを開く</a></article>`;
+            }).join('');
+          })();
+          </script>
+          </body>
+          </html>
+          HTML
+
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('demo-guide.html')
+          s=p.read_text(encoding='utf-8')
+          marker='<a class="button button-ghost" href="guide-center.html">First10 Guide Center</a>'
+          if marker not in s:
+              needle='<a class="button button-ghost" href="index.html">まず予約を試す</a>'
+              if needle not in s:
+                  raise SystemExit('demo-guide hero action anchor not found')
+              s=s.replace(needle, needle+'\n    '+marker, 1)
+              p.write_text(s,encoding='utf-8')
+          PY
+
+          python - <<'PY'
+          from pathlib import Path
+          html=Path('guide-center.html').read_text(encoding='utf-8')
+          assert 'DPRO NAIL GUIDE CENTER R4 V1.0' in html
+          assert 'dpro-tutorial-nail.js?guide=1' in html
+          assert html.count('id="first10Grid"') == 1
+          changed=set(__import__('subprocess').check_output(['git','diff','--name-only'],text=True).split())
+          assert changed == {'guide-center.html','demo-guide.html'}, changed
+          print('R4 changed files:', sorted(changed))
+          PY
+
+      - name: Commit R4 Guide Center forward-only
+        id: r4commit
+        shell: bash
+        run: |
+          git config user.name "DPRO Tutorial R4"
+          git config user.email "actions@users.noreply.github.com"
+          git add guide-center.html demo-guide.html
+          git commit -m "NAIL Tutorial R4 Guide Center"
+          git fetch origin main
+          git rebase origin/main
+          R4_SHA="$(git rev-parse HEAD)"
+          git push origin HEAD:main
+          echo "sha=$R4_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for GitHub Pages R4 deployment
+        shell: bash
+        run: |
+          SHA="${{ steps.r4commit.outputs.sha }}"
+          ok=0
+          for i in $(seq 1 80); do
+            body="$(curl -fsSL --retry 2 "$BASE_URL/guide-center.html?qa=$SHA-$i" || true)"
+            if printf '%s' "$body" | grep -q 'DPRO NAIL GUIDE CENTER R4 V1.0'; then ok=1; break; fi
+            sleep 5
+          done
+          test "$ok" = "1"
+
+      - name: Install R4 browser QA dependency
+        run: npm install --no-save puppeteer-core@24
+
+      - name: Resolve Chrome
+        id: chrome
+        shell: bash
+        run: |
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          test -n "$CHROME"
+          echo "path=$CHROME" >> "$GITHUB_OUTPUT"
+          "$CHROME" --version
+
+      - name: R4 LIVE QA 1440 1024 390 320
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.path }}
+          NODE_PATH: ${{ github.workspace }}/node_modules
+        shell: bash
+        run: |
+          cat > /tmp/nail-r4-live-qa.cjs <<'NODE'
+          const fs=require('fs');
+          const puppeteer=require('puppeteer-core');
+          const BASE=process.env.BASE_URL;
+          const chrome=process.env.CHROME_PATH;
+          const viewports=[{w:1440,h:900},{w:1024,h:768},{w:390,h:844},{w:320,h:740}];
+          const result={system:'NAIL',stage:'R4',standard:'V1.1',base:BASE,time:new Date().toISOString(),pass:true,failures:[],viewports:[],businessMutationRequests:[]};
+          const fail=m=>{result.pass=false;result.failures.push(m)};
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:chrome,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+            try{
+              for(const vp of viewports){
+                const page=await browser.newPage();
+                await page.setViewport({width:vp.w,height:vp.h,isMobile:vp.w<=390,hasTouch:vp.w<=390,deviceScaleFactor:1});
+                const consoleMessages=[];const pageErrors=[];
+                page.on('console',msg=>{if(['error','warn'].includes(msg.type()))consoleMessages.push({type:msg.type(),text:msg.text()})});
+                page.on('pageerror',e=>pageErrors.push(String(e?.message||e)));
+                page.on('request',req=>{const m=req.method().toUpperCase();if(req.url().includes('dpro-nail-line-api.dpromstk2000.workers.dev')&&!['GET','HEAD','OPTIONS'].includes(m))result.businessMutationRequests.push({viewport:vp.w,method:m,url:req.url()})});
+                let gotoError='';
+                try{await page.goto(`${BASE}/guide-center.html?qa=${Date.now()}`,{waitUntil:'networkidle2',timeout:60000})}catch(e){gotoError=String(e.message||e)}
+                await sleep(300);
+                const metrics=await page.evaluate(async()=>{
+                  const map=window.DPRO_NAIL_TUTORIAL_MAP||[];
+                  const cards=[...document.querySelectorAll('[data-guide-step]')];
+                  const routeLinks=[...document.querySelectorAll('a[data-route]')].map(a=>({step:Number(a.dataset.step),route:a.dataset.route,href:a.href,title:a.closest('article')?.querySelector('h3')?.textContent||''}));
+                  const routeChecks=[];
+                  for(const x of routeLinks){try{const r=await fetch(x.href,{method:'GET',cache:'no-store'});routeChecks.push({step:x.step,status:r.status,ok:r.ok,url:r.url})}catch(e){routeChecks.push({step:x.step,status:0,ok:false,error:String(e)})}}
+                  const first=document.querySelector('a[data-route]');
+                  first?.focus();
+                  const cs=first?getComputedStyle(first):null;
+                  return {scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth,mapCount:map.length,cardCount:cards.length,steps:cards.map(x=>Number(x.dataset.guideStep)),titles:cards.map(x=>x.querySelector('h3')?.textContent||''),mapTitles:map.map(x=>x.title),routes:routeLinks.map(x=>x.route),mapRoutes:map.map(x=>x.route),routeChecks,focusTag:document.activeElement?.tagName||'',focusStep:document.activeElement?.dataset?.step||'',focusOutline:cs?`${cs.outlineStyle}/${cs.outlineWidth}`:''};
+                });
+                const row={viewport:`${vp.w}x${vp.h}`,gotoError,consoleMessages,pageErrors,...metrics,overflow:metrics.scrollWidth>metrics.clientWidth};
+                result.viewports.push(row);
+                if(gotoError)fail(`${vp.w}: goto failed ${gotoError}`);
+                if(metrics.mapCount!==10||metrics.cardCount!==10)fail(`${vp.w}: exactly10 failed map=${metrics.mapCount} cards=${metrics.cardCount}`);
+                if(JSON.stringify(metrics.steps)!==JSON.stringify([1,2,3,4,5,6,7,8,9,10]))fail(`${vp.w}: step order invalid ${JSON.stringify(metrics.steps)}`);
+                if(JSON.stringify(metrics.titles)!==JSON.stringify(metrics.mapTitles))fail(`${vp.w}: title single-source mismatch`);
+                if(JSON.stringify(metrics.routes)!==JSON.stringify(metrics.mapRoutes))fail(`${vp.w}: route single-source mismatch`);
+                if(metrics.routeChecks.some(x=>!x.ok))fail(`${vp.w}: route link failed ${JSON.stringify(metrics.routeChecks.filter(x=>!x.ok))}`);
+                if(metrics.focusTag!=='A'||!metrics.focusStep)fail(`${vp.w}: keyboard focus target failed ${metrics.focusTag}/${metrics.focusStep}`);
+                if(metrics.focusOutline.startsWith('none/')||metrics.focusOutline.endsWith('/0px'))fail(`${vp.w}: focus-visible outline missing ${metrics.focusOutline}`);
+                if((vp.w===390||vp.w===320)&&row.overflow)fail(`${vp.w}: horizontal overflow ${metrics.scrollWidth}>${metrics.clientWidth}`);
+                const guideErrors=consoleMessages.filter(x=>/DPRO Guide Center/i.test(x.text));if(guideErrors.length)fail(`${vp.w}: Guide Center console ${JSON.stringify(guideErrors)}`);
+                if(pageErrors.length)fail(`${vp.w}: page errors ${JSON.stringify(pageErrors)}`);
+                await page.close();
+              }
+            }finally{await browser.close()}
+            if(result.businessMutationRequests.length)fail(`business mutation requests ${JSON.stringify(result.businessMutationRequests)}`);
+            fs.writeFileSync('/tmp/R4_LIVE_QA.json',JSON.stringify(result,null,2));
+            console.log(JSON.stringify({pass:result.pass,failures:result.failures},null,2));
+            if(!result.pass)process.exit(2);
+          })().catch(e=>{result.pass=false;result.failures.push(String(e.stack||e));fs.writeFileSync('/tmp/R4_LIVE_QA.json',JSON.stringify(result,null,2));console.error(e);process.exit(2)});
+          NODE
+          node /tmp/nail-r4-live-qa.cjs
+
+      - name: Write R4 QA evidence to main
+        shell: bash
+        run: |
+          cp /tmp/R4_LIVE_QA.json R4_LIVE_QA.json
+          cat > R4_CHANGED_FILES.txt <<'EOF'
+          R4 IMPLEMENTATION CHANGED FILES
+          guide-center.html
+          demo-guide.html
+
+          R4 DELIVERY / QA INFRASTRUCTURE
+          .github/workflows/dpro-tutorial-nail-r4.yml
+
+          R4 QA EVIDENCE
+          R4_LIVE_QA.json
+          R4_QA_SUMMARY.json
+          R4_CHANGED_FILES.txt
+          EOF
+          python - <<'PY'
+          import json,datetime,subprocess
+          qa=json.load(open('R4_LIVE_QA.json',encoding='utf-8'))
+          security_before=open('/tmp/R4_SECURITY_BEFORE.txt').read().strip()
+          security_now=subprocess.check_output(['git','hash-object','nail-pr1-security.js'],text=True).strip()
+          summary={
+            'system':'NAIL','stage':'R4','standard':'V1.1','guide_center':'guide-center.html',
+            'first10_count':10,'single_source':'dpro-tutorial-nail.js:DPRO_NAIL_TUTORIAL_MAP',
+            'r3_gate_pass':True,'r4_live_qa_pass':bool(qa.get('pass')),
+            'tested_viewports':['1440x900','1024x768','390x844','320x740'],
+            'overflow_390':next(x['overflow'] for x in qa['viewports'] if x['viewport']=='390x844'),
+            'overflow_320':next(x['overflow'] for x in qa['viewports'] if x['viewport']=='320x740'),
+            'business_mutation':0 if not qa.get('businessMutationRequests') else len(qa['businessMutationRequests']),
+            'security_boundary_unchanged':security_before==security_now,
+            'start_head':open('/tmp/R4_START_HEAD.txt').read().strip(),
+            'start_tree':open('/tmp/R4_START_TREE.txt').read().strip(),
+            'implementation_sha':'${{ steps.r4commit.outputs.sha }}',
+            'generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat()
+          }
+          assert summary['r4_live_qa_pass']
+          assert summary['overflow_390'] is False and summary['overflow_320'] is False
+          assert summary['business_mutation']==0
+          assert summary['security_boundary_unchanged'] is True
+          json.dump(summary,open('R4_QA_SUMMARY.json','w',encoding='utf-8'),ensure_ascii=False,indent=2)
+          PY
+          git config user.name "DPRO Tutorial R4"
+          git config user.email "actions@users.noreply.github.com"
+          git add R4_LIVE_QA.json R4_QA_SUMMARY.json R4_CHANGED_FILES.txt
+          git commit -m "NAIL Tutorial R4 LIVE QA PASS evidence"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
